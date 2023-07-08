@@ -45,12 +45,12 @@ $config = [
         'rbac' => 'dektrium\rbac\RbacWebModule',
     ],
     'components' => [
-        'redis' => [
+       /* 'redis' => [
             'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',
             'port' => 6379,
             'database' => 8,
-        ],
+        ], */
         'formatter' => [
             'class' => 'yii\i18n\Formatter',
             'nullDisplay' => ' ',

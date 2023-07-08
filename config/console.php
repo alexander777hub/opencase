@@ -18,12 +18,12 @@ $config = [
             'class' => 'dektrium\rbac\components\DbManager',
             'defaultRoles' => ['user'],
         ],
-        'redis' => [
+       /* 'redis' => [
             'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',
             'port' => 6379,
             'database' => 8,
-        ],
+        ], */
 
         'cache' => [
             'class' => 'yii\redis\Cache',
