@@ -51,7 +51,7 @@ class SiteController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post'],
+                    'logout' => ['get'],
 
 
                 ],
@@ -107,7 +107,7 @@ class SiteController extends Controller
                 $id = $openid->identity;
                 $sid64 = intval(preg_replace('/[^0-9]/', '', $id));
                 $profile = Profile::find()->where(['steam_id' => $sid64])->one();
-               /* $key = Yii::$app->params['steam_api_key'];
+               $key = Yii::$app->params['steam_api_key'];
 
 
                 $client = new \GuzzleHttp\Client();
@@ -119,7 +119,7 @@ class SiteController extends Controller
                             'Accept' => 'application/json',
                         ],
                 ]);
-                $r = json_decode((string)$response->getBody()); */
+                $res = json_decode((string)$response->getBody());
 
                 if(!($profile)){
                     $user = new User();
@@ -127,6 +127,13 @@ class SiteController extends Controller
                     $user->save(false);
                     $profile = Profile::find()->where(['user_id' => $user->id])->one();
                     if($profile){
+                        $res = json_decode((string)$response->getBody(), true);
+
+                        if ($res && isset($res['response']['players'][0])) {
+                            $data = $res['response']['players'][0];
+                            $profile->name = $data['personaname'];
+                            $profile->photo = $data['avatar'];
+                        }
                         $profile->steam_id = $sid64;
                         $profile->save(false);
 

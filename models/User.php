@@ -61,8 +61,17 @@ class User extends BaseUser
     {
         return $this->username;
     }
+    public function getProfile()
+    {
+        return Profile::find()->where(['user_id' => $this->getId()])->one();
+    }
     public function register()
     {
         return parent::register();
+    }
+
+    public static function getUser($id)
+    {
+        return User::findOne($id)  ? User::findOne($id) : null;
     }
 }

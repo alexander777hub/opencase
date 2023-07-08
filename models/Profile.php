@@ -274,6 +274,11 @@ class Profile extends BaseProfile
         $age = $interval->y;
         return $age;
     }
+
+    public function getName()
+    {
+        return $this->name ? $this->name : null;
+    }
 }
 
 
