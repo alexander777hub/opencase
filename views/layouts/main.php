@@ -1431,9 +1431,7 @@ use app\models\Userform;
                         <div class="header-bottom__logo">
                             <a class="header-logo" href="/" title="Go to the main page"></a>
                         </div>
-                        <?php if(Yii::$app->user->isGuest) : ?>
-                            <a href="http://yahoo.com">This will only display if $condition is true</a>
-                        <?php endif; ?>
+
                         <div class="header-bottom__userbar">
                             <?php if(!Yii::$app->user->isGuest): ?>
                             <div class="header-bottom__userbar">
