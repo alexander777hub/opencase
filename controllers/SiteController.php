@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Ad;
 use app\models\AdSearch;
+use app\models\Client;
 use app\models\ContactForm;
 use app\models\LightOpenID;
 use app\models\Profile;
@@ -106,6 +107,20 @@ class SiteController extends Controller
                 $id = $openid->identity;
                 $sid64 = intval(preg_replace('/[^0-9]/', '', $id));
                 $profile = Profile::find()->where(['steam_id' => $sid64])->one();
+               /* $key = Yii::$app->params['steam_api_key'];
+
+
+                $client = new \GuzzleHttp\Client();
+
+
+                $response = $client->request('GET', 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' .$key. '&steamids='. $sid64 , [
+                    'headers' =>
+                        ['Content-Type' => 'application/json',
+                            'Accept' => 'application/json',
+                        ],
+                ]);
+                $r = json_decode((string)$response->getBody()); */
+
                 if(!($profile)){
                     $user = new User();
                     $user->username = "Test";
