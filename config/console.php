@@ -25,9 +25,9 @@ $config = [
             'database' => 8,
         ], */
 
-        'cache' => [
+       /* 'cache' => [
             'class' => 'yii\redis\Cache',
-        ],
+        ], */
         'log' => [
             'targets' => [
                 [
