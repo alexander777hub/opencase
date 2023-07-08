@@ -73,16 +73,7 @@ use app\models\Userform;
                         <div class="header-top__nav-socials">
                             <div class="socials-links">
 
-                                <a target="_blank" rel="noreferrer noopener" href="https://www.tiktok.com/@forcedrop_csgo" class="socials-links__link socials-links__link_tiktok"></a>
-                                <!-- <a target="_blank" rel="noreferrer noopener" href="https://vk.com/forcedropnet" class="socials-links__link socials-links__link_vk"></a> -->
 
-                                <a target="_blank" rel="noreferrer noopener" href="https://www.facebook.com/ForceDropcsgo" class="socials-links__link socials-links__link_facebook"></a>
-                                <a target="_blank" rel="noreferrer noopener" href="https://instagram.com/forcedrop_csgo" class="socials-links__link socials-links__link_instagram"></a>
-
-                                <a target="_blank" rel="noreferrer noopener" href="https://twitter.com/fd_case" class="socials-links__link socials-links__link_twitter"></a>
-                                <a target="_blank" rel="noreferrer noopener" href="https://t.me/forcedropofficial" class="socials-links__link socials-links__link_telegram"></a>
-                                <!-- <a target="_blank" rel="noreferrer noopener" href="https://steamcommunity.com/groups/forcedropnet" class="socials-links__link socials-links__link_steam"></a> -->
-                                <a target="_blank" rel="noreferrer noopener" href="https://www.youtube.com/channel/UC3S6DOfECJleRf2pwYNXxmA" class="socials-links__link socials-links__link_youtube"></a>
 
                             </div>
                         </div>
