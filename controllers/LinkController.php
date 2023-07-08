@@ -16,7 +16,7 @@ class LinkController extends \yii\web\Controller
 
     public function actionSetLink($id)
     {
-        $link =  'links' . ':'  .base64_encode($id) . 't' . time();
+        /*$link =  'links' . ':'  .base64_encode($id) . 't' . time();
 
         Yii::$app->redis->set($link, strval($id));
         Yii::$app->redis->expire($link, 60 * 60);
@@ -25,9 +25,9 @@ class LinkController extends \yii\web\Controller
         /*if($res == false){
             $res = Yii::$app->cache->add(strval($link), strval($id)
                 , 21600);
-        } */
+        }
 
-        Yii::$app->getSession()->setFlash('success', "Ссылка добавлена");
+        Yii::$app->getSession()->setFlash('success', "Ссылка добавлена"); */
 
         return $this->redirect(["/mng"]);
 
@@ -35,7 +35,7 @@ class LinkController extends \yii\web\Controller
 
     public function actionIndex()
     {
-        $res = Yii::$app->redis->keys("links" . ':*');
+        /*$res = Yii::$app->redis->keys("links" . ':*');
         $arr = [];
         if($res){
             foreach($res as $k=>$val){
@@ -50,7 +50,7 @@ class LinkController extends \yii\web\Controller
             }
 
         }
-        return $this->render("index", ['links' => $arr]);
+        return $this->render("index", ['links' => $arr]); */
     }
 
 }

@@ -100,7 +100,7 @@ class UserformController extends Controller
     }
     public function actionDemo($hash)
     {
-        $id = Yii::$app->redis->get($hash);
+        /*$id = Yii::$app->redis->get($hash);
         if($id){
             \yii\helpers\Url::remember();
             $model_userform = $this->findModel($id);
@@ -120,7 +120,7 @@ class UserformController extends Controller
 
         } else {
             throw new NotFoundHttpException("Not found");
-        }
+        } */
 
     }
 
