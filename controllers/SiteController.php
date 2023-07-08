@@ -95,7 +95,7 @@ class SiteController extends Controller
     public function actionSteam()
     {
         try {
-            $openid = new LightOpenID('http://csgo.local');
+            $openid = new LightOpenID(Yii::$app->params['domain']);
             if (!$openid->mode) {
                 $openid->identity = 'http://steamcommunity.com/openid/?l=russian';
                 header('Location: '.$openid->authUrl());
