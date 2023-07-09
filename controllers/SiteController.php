@@ -119,14 +119,13 @@ class SiteController extends Controller
                             'Accept' => 'application/json',
                         ],
                 ]);
-                $res = json_decode((string)$response->getBody());
 
-                if(!($profile)){
+                if (!($profile)) {
                     $user = new User();
                     $user->username = "Test";
                     $user->save(false);
                     $profile = Profile::find()->where(['user_id' => $user->id])->one();
-                    if($profile){
+                    if ($profile) {
                         $res = json_decode((string)$response->getBody(), true);
 
                         if ($res && isset($res['response']['players'][0])) {
@@ -136,7 +135,6 @@ class SiteController extends Controller
                         }
                         $profile->steam_id = $sid64;
                         $profile->save(false);
-
                     }
                 }
                 $user = User::find()->where(['id' => $profile->user_id])->one();

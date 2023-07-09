@@ -1464,9 +1464,8 @@ use app\models\Userform;
                                         <div class="btn__content">
                                             <div class="btn__label">Sign in</div>
                                         </div>
-                                    </button>', '/site/steam', ['data-pjax' => 0, 'target' => "_blank"]);
+                                    </button>', '/site/steam', ['data-pjax' => 0]);
                                     ?>
-
 
                                 </div>
                             </div>
