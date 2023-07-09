@@ -1431,7 +1431,7 @@ use app\models\Userform;
                                         <div class="user-stat">
                                             <div class="user-stat__balance refill">
                                                 <div class="user-stat__nums">
-                                                    <span class="price">0.00</span>
+                                                    <span class="price"><?=  \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->credit ? \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->credit : '0.00' ?></span>
                                                 </div>
                                                 <div class="user-stat__refill"></div>
                                             </div>
