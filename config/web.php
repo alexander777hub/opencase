@@ -45,6 +45,9 @@ $config = [
         'rbac' => 'dektrium\rbac\RbacWebModule',
     ],
     'components' => [
+        'assetManager' => [
+            'appendTimestamp' => true,
+        ],
        /* 'redis' => [
             'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',
