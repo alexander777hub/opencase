@@ -448,7 +448,7 @@ button, input, textarea {
     outline: none;
     border-radius: 0;
     border: none;
-
+    background-color: red;
 
     font-family: inherit
 }
