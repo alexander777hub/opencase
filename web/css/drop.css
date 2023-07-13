@@ -452,6 +452,17 @@ button, input, textarea {
     -moz-appearance: none;
     font-family: inherit
 }
+.contact {
+    width: 40% !important;
+    height: 30px;
+}
+
+
+.contact-textarea {
+    width: 40% !important;
+    height: 80px;
+}
+
 
 button {
     cursor: pointer

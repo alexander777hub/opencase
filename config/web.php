@@ -100,10 +100,10 @@ $config = [
             // for the mailer to send real emails.
             'transport' => [
                     'class' => 'Swift_SmtpTransport',
-                    'host' => 'smtp.yandex.ru',
+                    'host' => 'mail.up-drop.ru',
                     'username' => getenv('APP_MAILER_USERNAME'),
                     'password' => getenv('APP_MAILER_PASSWORD'),
-                    'port' => 465,
+                    'port' => 8443,
                     'encryption' => 'ssl',
              ],
             'enableSwiftMailerLogging' =>false,

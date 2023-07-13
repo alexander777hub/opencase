@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = "Контакты";
 \app\assets\JQAsset::register($this);
 ?>
 
-<div class="site-contact">
+
     <h1> Контакты</h1>
 
     <?php if (Yii::$app->session->hasFlash('contactFormSubmitted')): ?>
@@ -60,22 +60,22 @@ $this->params['breadcrumbs'][] = "Контакты";
                     <div class="col-lg-4">
                         <?= $form->field($model, 'name',[
                             'template' => "{beginWrapper}\n{input}\n{label}\n{hint}\n{error}\n<div class=\"icon form-icon mdi mdi-account-outline  text-primary\"></div>{endWrapper}"
-                        ])->textInput(); ?>
+                        ])->textInput(['class'=>'contact']); ?>
                     </div>
                     <div class="col-lg-4">
                         <?= $form->field($model, 'email',[
                             'template' => "{beginWrapper}\n{input}\n{label}\n{hint}\n{error}\n<div class=\"icon form-icon mdi mdi-email-outline text-primary\"></div>{endWrapper}"
-                        ])->textInput(); ?>
+                        ])->textInput(['class'=>'contact']); ?>
                     </div>
                     <div class="col-lg-4">
                         <?= $form->field($model, 'subject',[
                             'template' => "{beginWrapper}\n{input}\n{label}\n{hint}\n{error}\n<div class=\"icon form-icon mdi  mdi-label text-primary\"></div>{endWrapper}"
-                        ])->textInput(); ?>
+                        ])->textInput(['class'=>'contact']); ?>
                     </div>
                     <div class="col-12">
                         <?= $form->field($model, 'body',[
                             'template' => "{beginWrapper}\n{input}\n{label}\n{hint}\n{error}\n<div class=\"icon form-icon mdi mdi-message-outline text-primary\"></div>{endWrapper}"
-                        ])->textarea(); ?>
+                        ])->textarea(['class'=>'contact-textarea']); ?>
                     </div>
                     <div class="col-12">
                         <?php
@@ -146,7 +146,7 @@ $this->params['breadcrumbs'][] = "Контакты";
  <?php */ ?>
 
     <?php endif; ?>
-</div>
+
 <?php
 $validation_key = $this->context->validation_key;
 $script = <<< JS
