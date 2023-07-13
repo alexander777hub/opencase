@@ -22,7 +22,7 @@ use app\models\Userform;
     <!-- Mirrored from forcedrop.app/ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 08 Jul 2023 15:31:40 GMT -->
     <!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
     <head>
-        <link rel="stylesheet" type="text/css" class="__meteor-css__" href="/css/drop.css?meteor_css_resource=true">
+        <link rel="stylesheet" type="text/css" href="/css/drop.css">
         <link rel="stylesheet" href="/css/fonts.googleapis.com/css19c1.css?family=Exo+2:400,400i,500,500i,700,700i,800&amp;subset=cyrillic">
         <link rel="stylesheet" href="/css/widget.css" class="jv-css">
         <meta property="vk:title" content="UpDrop - кейсы CS:GO, новые кейсы CS:GO!">
