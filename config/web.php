@@ -103,7 +103,7 @@ $config = [
                     'host' => 'mail.up-drop.ru',
                     'username' => getenv('APP_MAILER_USERNAME'),
                     'password' => getenv('APP_MAILER_PASSWORD'),
-                    'port' => 8443,
+                    'port' => 465,
                     'encryption' => 'ssl',
              ],
             'enableSwiftMailerLogging' =>false,
