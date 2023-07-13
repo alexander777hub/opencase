@@ -105,13 +105,13 @@ $config = [
                     'password' => getenv('APP_MAILER_PASSWORD'),
                     'port' => 465,
                     'encryption' => 'ssl',
-                   /* 'streamOptions' => [
+                    'streamOptions' => [
                         'ssl' => [
                             'allow_self_signed' => true,
                             'verify_peer' => false,
                             'verify_peer_name' => false,
                         ],
-                    ], */
+                    ],
              ],
             'enableSwiftMailerLogging' =>false,
             'useFileTransport' => false,

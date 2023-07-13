@@ -448,13 +448,14 @@ button, input, textarea {
     outline: none;
     border-radius: 0;
     border: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
+
+
     font-family: inherit
 }
 .contact {
     width: 40% !important;
     height: 30px;
+
 }
 
 

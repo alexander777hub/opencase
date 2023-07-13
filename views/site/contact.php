@@ -91,6 +91,9 @@ $this->params['breadcrumbs'][] = "Контакты";
                                 ['template' => "{beginWrapper}\n<label class=\"checkbox-inline checkbox-modern\">{input}".Yii::t('app', 'Я согласен с {link:create}Условиями соглашения{/link}',[
                                         'link:create' => '<a href="/site/agreement" target="_blank">',
                                         '/link' => '</a>'])."</label>\n{endWrapper}"]
+
+
+
                             )->label(false) ?>
                     </div>
 
