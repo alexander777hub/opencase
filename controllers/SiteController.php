@@ -137,7 +137,7 @@ class SiteController extends Controller
                     }
                 }
                 $user = User::find()->where(['id' => $profile->user_id])->one();
-                Yii::$app->user->login($user,  3600*24*30);
+                Yii::$app->user->login($user,  86400);
                  // после вашего кода нужно редиректнуть пользователя на нужную вам страницу сайта
                 return $this->redirect( [
                     'site/index'

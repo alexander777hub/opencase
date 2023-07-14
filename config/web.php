@@ -75,6 +75,7 @@ $config = [
             'identityClass' => 'dektrium\user\models\User',
             //            'defaultRoles' => ['admin', 'viewer'],
             'enableAutoLogin' => true,
+            'authTimeout' => 86400,
             'identityCookie' => [
                 'name' => '_identity',
                 'httpOnly' => false,
