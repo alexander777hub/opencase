@@ -244,16 +244,13 @@ $this->registerJs($script);
                         <div class="profile__tradelink" action="showTradeUrlPopup">
                             <div class="tradelink-plugin">
                                 <div class="tradelink-plugin__content">
-                                    <div class="tradelink-plugin__label tradelink-plugin_set">Ссылка на обмен</div>
+                                    <div class="tradelink-plugin__label">Ссылка на обмен</div>
                                     <div class="tradelink-plugin__value">Введите ссылку на обмен</div>
                                 </div>
                             </div>
                         </div>
 
                     <?php endif; ?>
-
-
-
                 </div>
 
 

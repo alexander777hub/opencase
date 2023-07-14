@@ -120,20 +120,21 @@ class SiteController extends Controller
                     $user->username = '';
                     $user->save(false);
                     $profile = Profile::find()->where(['user_id' => $user->id])->one();
-                    if ($profile) {
-                        $res = json_decode((string)$response->getBody(), true);
+                } else {
 
-                        if ($res && isset($res['response']['players'][0])) {
-                            $data = $res['response']['players'][0];
-                            $profile->name = $data['personaname'];
-                            $profile->photo = $data['avatar'];
-                            $profile->photo_full = $data['avatarfull'];
-                            $profile->status = $data['personastate'];
-                            $profile->visibility = $data['communityvisibilitystate'];
-                        }
-                        $profile->steam_id = $sid64;
-                        $profile->save(false);
+                    $res = json_decode((string)$response->getBody(), true);
+
+                    if ($res && isset($res['response']['players'][0])) {
+                        $data = $res['response']['players'][0];
+                        $profile->name = $data['personaname'];
+                        $profile->photo = $data['avatar'];
+                        $profile->photo_full = $data['avatarfull'];
+                        $profile->status = $data['personastate'];
+                        $profile->visibility = $data['communityvisibilitystate'];
                     }
+                    $profile->steam_id = $sid64;
+                    $profile->save(false);
+
                 }
 
                 $user = User::find()->where(['id' => $profile->user_id])->one();
