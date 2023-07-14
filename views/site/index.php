@@ -13,7 +13,6 @@ use app\models\Ad;
 
 $this->params['breadcrumbs'][] = $this->title;
 
-
 ?>
 <div class="topbar">
     <div class="topbar__hometop">
@@ -154,6 +153,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 </div>
+<div class="wrapper wrapper_"></div>
 <div class="home decorated-page">
     <!-- <div class="no-items no-items_home icon icon_drops">
 					<div class="no-items__title">{{_ "CASES_NOT_FOUND"}}</div>

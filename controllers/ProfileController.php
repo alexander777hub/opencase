@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Profile;
 use app\models\ProfileSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -21,11 +22,30 @@ class ProfileController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'only' => ['view', 'update', 'delete', 'create', 'index'],
+
+                    'rules' => [
+                        [
+                            'actions' => ['view'],
+                            'allow' => true,
+                            'roles' => ['@'],
+
+                        ],
+                    ],
+                    'denyCallback' => function ($rule, $action) {
+                        $this->redirect([ '/' ]);
+                        return null;
+                    }
+
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
                     ],
+
                 ],
             ]
         );

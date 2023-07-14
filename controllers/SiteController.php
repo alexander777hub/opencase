@@ -128,6 +128,9 @@ class SiteController extends Controller
                             $data = $res['response']['players'][0];
                             $profile->name = $data['personaname'];
                             $profile->photo = $data['avatar'];
+                            $profile->photo_full = $data['avatarfull'];
+                            $profile->status = $data['personastate'];
+                            $profile->visibility = $data['communityvisibilitystate'];
                         }
                         $profile->steam_id = $sid64;
                         $profile->save(false);

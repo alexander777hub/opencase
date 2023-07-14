@@ -40,7 +40,9 @@ use app\modules\manager\models\Manager;
  * @property float   $vk_link
  * @property User    $user
  * @property string|null $steam_id
- *
+ * @property integer|null $visibility
+ * @property integer $status
+ * @property string  $photo_full
  * @author Dmitry Erofeev <dmeroff@gmail.com
  */
 class Profile extends BaseProfile
@@ -84,9 +86,11 @@ class Profile extends BaseProfile
     public function rules()
     {
         $rules = parent::rules();
-        $rules[] =  [['photo','vk_link'], 'string', 'max' => 255];
+        $rules[] =  [['photo','vk_link', 'photo_full'], 'string', 'max' => 255];
         $rules[] =  [['photo','credit','bio','_avatar'], 'safe'];
-        $rules[] =  [['city_id','sex'], 'integer'];
+        $rules[] =  [['city_id','sex',], 'integer'];
+        $rules[] = [['visibility'], 'integer',  'in', 'range' => [null, 1, 2, 3]];
+        $rules[] = [['status'], 'integer',  'in', 'range' => [0, 1, 2, 3, 4,5]];
         $rules[] =  [['steam_id'], 'string'];
         //$rules[] =  [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'];
         $rules[] = [['_avatar'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg'];
@@ -103,6 +107,7 @@ class Profile extends BaseProfile
     {
         $labels = parent::attributeLabels();
         $labels['photo'] = Yii::t('app', 'Фото');
+        $labels['photo_full'] = Yii::t('app', 'Фото полное');
         $labels['_avatar'] = Yii::t('app', 'Фото');
         $labels['credit'] = Yii::t('app', 'Баланс');
 //        $labels['referrer_id'] = 'Реферер';

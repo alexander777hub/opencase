@@ -1421,7 +1421,7 @@ use app\models\Userform;
                                 <div class="userbar-block">
                                     <div class="userbar-block__user-picture">
                                         <div class="user-picture">
-                                            <a href="/user/4666219" class="user-picture__img user-picture__img_without-rank">
+                                            <a href=<?= "/profile/view?user_id=" .   \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->user_id  ?> class="user-picture__img user-picture__img_without-rank">
                                                 <img src=<?=  \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->photo ?> alt="Аватар">
 
                                             </a>
@@ -1444,7 +1444,7 @@ use app\models\Userform;
 
                                             <div class="user-stat__name-and-signout">
                                                 <a href=<?= "/profile/view?user_id=" .   \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->user_id  ?> class="user-stat__name"> <?= \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->getName()  ?></a>
-                                                <?= Html::a(' ', ['/site/logout'], ['data' => ['method' => 'post'], 'class'=> 'user-stat__signout quit']) ?>
+                                                <?= Html::a(' ', ['/site/logout'], ['data' => ['method' => 'get'], 'class'=> 'user-stat__signout quit']) ?>
 
                                             </div>
                                         </div>
@@ -1504,6 +1504,8 @@ use app\models\Userform;
 
                     <?= Alert::widget() ?>
                     <?= $content ?>
+                </div>
+            </div>
 
 
             <div class="layout__footer">
