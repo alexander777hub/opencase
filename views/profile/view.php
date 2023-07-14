@@ -1,7 +1,7 @@
 <?php
 
 use \app\models\User;
-
+use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\Profile $model */
@@ -12,9 +12,22 @@ $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 \app\assets\JQAsset::register($this);
 $script = <<< JS
-   $(".profile__tradelink").on("click", function(){
+   $(document).ready(function(){
+       $('#trade-save').on('click', function(){
+           
+           $('#trade-form').submit();
+       });
+       $(".profile__tradelink").on("click", function(){
        $("#trade").show();
-   })
+   });
+       
+
+
+  $("#trade-close").on('click', function(){
+      $("#trade").hide();
+  })
+   });
+   
 JS;
 $this->registerJs($script);
 
@@ -42,14 +55,32 @@ $this->registerJs($script);
                         <div class="tradelink-popup__section">
                             <div class="tradelink-popup__text">Найти ссылку можно <a target="_blank" rel="noreferrer noopener" href="https://steamcommunity.com/id/me/tradeoffers/privacy#trade_offer_access_url">на сайте Steam</a></div>
                             <div class="tradelink-popup__form">
-                                <input type="url" class="tradelink-popup__input" name="tradeurl" placeholder="Введите ссылку на обмен">
-                                <div class="tradelink-popup__btn" action="saveTradeUrl">
+                                <?php $form = ActiveForm::begin(
+                                        [
+                                            'action' => ['/profile/trade'],
+                                            'id' => 'trade-form', 'method' => 'post',
+                                            'options' => [
+
+                                                'style' => "width:100%",
+
+                                ]]); ?>
+                                <?= $form->field($model, 'user_id')->hiddenInput(['value'=> $model->user_id])->label(false); ?>
+                                <?= $form->field($model, 'trade_link')->textInput(['maxlength' => true, 'style' => 'width: 100%',  'class'=>"tradelink-popup__input",'placeholder'=>"Введите ссылку на обмен" ]) ?>
+
+                                <div style="margin-top: 20px;" class="tradelink-popup__btn">
                                     <div class="btn btn_fullwidth btn_color-success btn_uppercase">
-                                        <div class="btn__content">
-                                            <div class="btn__label">Сохранить</div>
-                                        </div>
+
+                                          <?=  \yii\helpers\Html::button('Сохранить', ['type'=>'submit',
+                                              'class' => 'btn btn-primary',
+                                              'id'=> 'trade-save',
+                                              'style' => 'background-color: #7ed321;'
+
+
+                                            ]) ?>
+
                                     </div>
                                 </div>
+                                <?php ActiveForm::end(); ?>
                             </div>
                         </div>
                         <div class="tradelink-popup__section">
@@ -74,7 +105,7 @@ $this->registerJs($script);
                                         Очень важно!
                                         У вас украдут предметы, если не быть внимательными!
                                         ОФИЦИАЛЬНЫЕ КОНТАКТЫ
-                                        <a target="_blank" rel="noreferrer noopener" href="https://vk.com/forcedropnet">в группе Вконтакте</a>
+                                        <a target="_blank" rel="noreferrer noopener" href="#">в группе Вконтакте</a>
                                         (блок 'Контакты').
                                     </div>
                                 </div>
@@ -200,16 +231,28 @@ $this->registerJs($script);
                                 </div>
                             </div>
                         </div> !-->
-
-
-                    <div class="profile__tradelink" action="showTradeUrlPopup">
-                        <div class="tradelink-plugin">
-                            <div class="tradelink-plugin__content">
-                                <div class="tradelink-plugin__label">Ссылка на обмен</div>
-                                <div class="tradelink-plugin__value">Введите ссылку на обмен</div>
+                    <?php if ($model->trade_link): ?>
+                        <div class="profile__tradelink" action="showTradeUrlPopup">
+                            <div class="tradelink-plugin tradelink-plugin_set">
+                                <div class="tradelink-plugin__content">
+                                    <div class="tradelink-plugin__label">Ссылка на обмен</div>
+                                    <div class="tradelink-plugin__value">Установлена</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    <?php else: ?>
+                        <div class="profile__tradelink" action="showTradeUrlPopup">
+                            <div class="tradelink-plugin">
+                                <div class="tradelink-plugin__content">
+                                    <div class="tradelink-plugin__label tradelink-plugin_set">Ссылка на обмен</div>
+                                    <div class="tradelink-plugin__value">Введите ссылку на обмен</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    <?php endif; ?>
+
+
 
                 </div>
 

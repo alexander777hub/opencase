@@ -122,6 +122,21 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function actionTrade()
+    {
+        $model = Profile::findOne(\Yii::$app->request->post('Profile')['user_id']);
+        $model->trade_link = \Yii::$app->request->post('Profile')['trade_link'];
+        if ($model->validate() && $model->save()) {
+            return $this->redirect(['view', 'user_id' => $model->user_id]
+            );
+        }
+        $this->render('view', [
+            'model' => $model,
+        ]);
+
+
+    }
+
     /**
      * Deletes an existing Profile model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

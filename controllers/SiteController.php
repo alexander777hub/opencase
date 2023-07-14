@@ -94,31 +94,30 @@ class SiteController extends Controller
             $openid = new LightOpenID(Yii::$app->params['domain']);
             if (!$openid->mode) {
                 $openid->identity = 'http://steamcommunity.com/openid/?l=russian';
-                header('Location: '.$openid->authUrl());
-            }
-            elseif ($openid->mode == 'cancel') {
+                header('Location: ' . $openid->authUrl());
+            } elseif ($openid->mode == 'cancel') {
                 header('Location: /'); // здесь можно редиректить пользователя, если он начал процесс авторизации через steam, но отказался от него
-            }
-            elseif ($openid->validate()) {
+            } elseif ($openid->validate()) {
                 $id = $openid->identity;
                 $sid64 = intval(preg_replace('/[^0-9]/', '', $id));
                 $profile = Profile::find()->where(['steam_id' => $sid64])->one();
-               $key = Yii::$app->params['steam_api_key'];
+                $key = Yii::$app->params['steam_api_key'];
 
 
                 $client = new \GuzzleHttp\Client();
 
 
-                $response = $client->request('GET', 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' .$key. '&steamids='. $sid64 , [
+                $response = $client->request('GET', 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' . $key . '&steamids=' . $sid64, [
                     'headers' =>
-                        ['Content-Type' => 'application/json',
+                        [
+                            'Content-Type' => 'application/json',
                             'Accept' => 'application/json',
                         ],
                 ]);
 
                 if (!($profile)) {
                     $user = new User();
-                    $user->username = "Test";
+                    $user->username = '';
                     $user->save(false);
                     $profile = Profile::find()->where(['user_id' => $user->id])->one();
                     if ($profile) {
@@ -136,16 +135,19 @@ class SiteController extends Controller
                         $profile->save(false);
                     }
                 }
+
                 $user = User::find()->where(['id' => $profile->user_id])->one();
-                Yii::$app->user->login($user,  86400);
-                 // после вашего кода нужно редиректнуть пользователя на нужную вам страницу сайта
-                return $this->redirect( [
-                    'site/index'
+                $model = new LoginForm();
+                $model->user = $user;
+                $model->login();
+                // после вашего кода нужно редиректнуть пользователя на нужную вам страницу сайта
+                return $this->redirect([
+                    'site/index',
                 ]);
+            } else {
+                header('Location: /');
             }
-            else header('Location: /');
-        }
-        catch(\ErrorException $e) {
+        } catch (\ErrorException $e) {
             header('Location: /');
         }
     }

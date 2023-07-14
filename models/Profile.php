@@ -43,6 +43,7 @@ use app\modules\manager\models\Manager;
  * @property integer|null $visibility
  * @property integer $status
  * @property string  $photo_full
+ * @property string  $trade_link
  * @author Dmitry Erofeev <dmeroff@gmail.com
  */
 class Profile extends BaseProfile
@@ -89,9 +90,9 @@ class Profile extends BaseProfile
         $rules[] =  [['photo','vk_link', 'photo_full'], 'string', 'max' => 255];
         $rules[] =  [['photo','credit','bio','_avatar'], 'safe'];
         $rules[] =  [['city_id','sex',], 'integer'];
-        $rules[] = [['visibility'], 'integer',  'in', 'range' => [null, 1, 2, 3]];
-        $rules[] = [['status'], 'integer',  'in', 'range' => [0, 1, 2, 3, 4,5]];
-        $rules[] =  [['steam_id'], 'string'];
+        $rules[] = [['visibility'],  'in', 'range' => [1, 2, 3]];
+        $rules[] = [['status'],   'in', 'range' => [0, 1, 2, 3, 4,5]];
+        $rules[] =  [['trade_link'], 'url', 'defaultScheme' => 'https'];
         //$rules[] =  [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'];
         $rules[] = [['_avatar'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg'];
        // $rules[] =  [['city_id','sex'], 'required'];
