@@ -203,6 +203,9 @@ class Profile extends BaseProfile
 
         $cases = $user->getOpenings();
         if($cases){
+            if(!$cases->all()[0]){
+                return null;
+            }
             $avatarId =  $cases->all()[0]['avatar_id'];
             $photo = PhotoEntity::findOne($avatarId);
             $name = explode('/', $photo->url)[4];
@@ -220,9 +223,10 @@ class Profile extends BaseProfile
             throw new NotFoundHttpException("Not found");
         }
         $cases = $user->getOpenings();
-        if ($cases) {
+        if ($cases && $cases->all()[0]) {
             return $cases->all()[0]['name'];
         }
+        return null;
     }
 
     public function getReferrer()

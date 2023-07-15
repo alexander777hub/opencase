@@ -252,6 +252,7 @@ $this->registerJs($script);
 
                     <?php endif; ?>
                 </div>
+                <?php if(\app\models\User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCase()):   ?>
                 <div class="profile__favorite-case">
                     <div class="profile__sub-title profile__favorite-case-title">Любимый кейс</div>
 
@@ -263,6 +264,7 @@ $this->registerJs($script);
                         <div class="profile__favorite-case-label">Количество открытий: 1</div>
                     </div>
                 </div>
+                <?php  endif;  ?>
 
                 <div class="profile__stats">
                     <div class="profile__sub-title">Статистика</div>
