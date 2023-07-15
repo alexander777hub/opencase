@@ -252,7 +252,17 @@ $this->registerJs($script);
 
                     <?php endif; ?>
                 </div>
+                <div class="profile__favorite-case">
+                    <div class="profile__sub-title profile__favorite-case-title">Любимый кейс</div>
 
+                    <a href="#" class="profile__favorite-case-item">
+                        <img src=<?= \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCasePhoto()   ?> class="case-image">
+                    </a>
+                    <div class="profile__favorite-case-label-value">
+                        <div class="profile__favorite-case-value"> <?= \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCase()   ?></div>
+                        <div class="profile__favorite-case-label">Количество открытий: 1</div>
+                    </div>
+                </div>
 
                 <div class="profile__stats">
                     <div class="profile__sub-title">Статистика</div>

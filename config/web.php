@@ -42,7 +42,9 @@ $config = [
         'photo_module' => [
             'class' => 'app\modules\photo_module\Module',
         ],
-        'rbac' => 'dektrium\rbac\RbacWebModule',
+        'rbac' => ['class' => 'dektrium\rbac\RbacWebModule',
+            'layout' => '//admin',
+            ],
     ],
     'components' => [
         'assetManager' => [
@@ -72,16 +74,20 @@ $config = [
         ],
 
         'user' => [
-            'identityClass' => 'dektrium\user\models\User',
+            'identityClass' => 'app\models\User',
             //            'defaultRoles' => ['admin', 'viewer'],
             'enableAutoLogin' => true,
-            'authTimeout' => 86400,
+            'authTimeout' => 3600, //
             'identityCookie' => [
                 'name' => '_identity',
                 'httpOnly' => false,
                 'domain' => '.' . $params['domain'],
             ],
             'loginUrl' => ['/user/security/login'],
+        ],
+        'session' => [
+            'class' => 'yii\web\Session',
+            'cookieParams' => ['lifetime' => 7 * 24 *60 * 60]
         ],
         'authManager'=>[
             'class' => 'dektrium\rbac\components\DbManager',

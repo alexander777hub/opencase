@@ -2,13 +2,21 @@
 
 namespace app\models;
 
+use app\modules\mng\models\Opening;
 use dektrium\user\helpers\Password;
 use Yii;
 use yii\helpers\ArrayHelper;
 use dektrium\user\models\User as BaseUser;
 use yii\web\ForbiddenHttpException;
 
-
+/**
+ * This is the model class for table "opening".
+ *
+ * @property int $id
+ * @property Opening[] $openings
+ *
+ *
+ */
 
 
 class User extends BaseUser
@@ -68,6 +76,22 @@ class User extends BaseUser
     public function register()
     {
         return parent::register();
+    }
+
+    public static function findByUsername($username, $password)
+    {
+        $user = self::find()->where(['username' => $username])->one();
+
+        if (hash('sha256', $password) == $user->username)
+        {
+            return new static($user);
+        }
+    }
+
+
+    public function getOpenings() {
+        return $this->hasMany(Opening::className(), ['id' => 'case_id'])
+            ->viaTable('opening_user', ['user_id' => 'id']);
     }
 
     public static function getUser($id)

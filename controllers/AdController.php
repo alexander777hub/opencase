@@ -57,9 +57,9 @@ class AdController extends Controller
     public function actionIndex()
     {
         $searchModel = new AdSearch();
-        if((!Yii::$app->user->can(Profile::ROLE_ADMINISTRATOR) && !Yii::$app->user->can(Profile::ROLE_MAIN_MANAGER) &&   !Yii::$app->user->can(Profile::ROLE_MANAGER))){
+       /* if((!Yii::$app->user->can(Profile::ROLE_ADMINISTRATOR) && !Yii::$app->user->can(Profile::ROLE_MAIN_MANAGER) &&   !Yii::$app->user->can(Profile::ROLE_MANAGER))){
             throw new ForbiddenHttpException("This action is not allowed");
-        }
+        } */
 
         $dataProvider = $searchModel->search($this->request->queryParams);
 

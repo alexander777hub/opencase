@@ -3,16 +3,16 @@
 use yii\db\Migration;
 
 /**
- * Class m230714_162801_add_trade_link_column
+ * Class m230715_141921_add_user_id_field_to_opening
  */
-class m230714_162801_add_trade_link_column extends Migration
+class m230715_141921_add_user_id_field_to_opening extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->addColumn('{{%profile}}', 'trade_link', $this->string()->null());
+        $this->addColumn('{{%opening}}', 'user_id', $this->integer(11)->null());
     }
 
     /**
@@ -20,7 +20,7 @@ class m230714_162801_add_trade_link_column extends Migration
      */
     public function safeDown()
     {
-        $this->dropColumn('{{%profile}}', 'trade_link');
+        $this->dropColumn('{{%opening}}', 'user_id');
         return true;
     }
 
@@ -33,7 +33,7 @@ class m230714_162801_add_trade_link_column extends Migration
 
     public function down()
     {
-        echo "m230714_162801_add_trade_link_column cannot be reverted.\n";
+        echo "m230715_141921_add_user_id_field_to_opening cannot be reverted.\n";
 
         return false;
     }

@@ -78,7 +78,7 @@ if(!Yii::$app->user->isGuest){
  */
 
     NavBar::begin([
-        'brandLabel' => 'Свидание',
+        'brandLabel' => 'Админка',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar navbar-dark bg-dark',
@@ -90,8 +90,8 @@ if(!Yii::$app->user->isGuest){
             //['label' => 'Контакты', 'url' => ['/site/contact']],
             // '<li style="padding-top: 8px">'.LanguageDropdown::widget().'</li>',
             ['label' => 'Войти', 'url' => ['/user/security/login'], 'visible' => Yii::$app->user->isGuest],
-            ['label' => 'Зарегистрироваться', 'url' => ['/user/registration/register'], 'visible' => Yii::$app->user->isGuest],
-            [
+        //    ['label' => 'Зарегистрироваться', 'url' => ['/user/registration/register'], 'visible' => Yii::$app->user->isGuest],
+           /* [
                 'label' => (!Yii::$app->user->isGuest) ? 'Личный кабинет ' .Yii::$app->user->identity->username : 'Гость',
                 'template' => '<a href="{url}" ><i class="ti-user"></i> {label} <i class="fa fa-angle-down"></i></a>',
                 'items' => [
@@ -110,9 +110,9 @@ if(!Yii::$app->user->isGuest){
 
                 ],
                 'visible' => !Yii::$app->user->isGuest,
-            ],
-            ['label' => 'Кабинет менеджера', 'url' => ['/mng'], 'visible' =>  \Yii::$app->user->can(Profile::ROLE_ADMINISTRATOR) || \Yii::$app->user->can(Profile::ROLE_MAIN_MANAGER) ||   \Yii::$app->user->can(Profile::ROLE_MANAGER)],
-            [
+            ], */
+           // ['label' => 'Кабинет менеджера', 'url' => ['/mng'], 'visible' =>  \Yii::$app->user->can(Profile::ROLE_ADMINISTRATOR) || \Yii::$app->user->can(Profile::ROLE_MAIN_MANAGER) ||   \Yii::$app->user->can(Profile::ROLE_MANAGER)],
+           /* [
                 'label' => 'Администрирование',
                 'template' => '<a href="{url}" ><i class="ti-user"></i> {label} <i class="fa fa-angle-down"></i></a>',
                 'items' => [
@@ -131,8 +131,8 @@ if(!Yii::$app->user->isGuest){
 
                 ],
                 'visible' =>   \Yii::$app->user->can(Profile::ROLE_ADMINISTRATOR),
-            ],
-            ['label' => 'Контакты', 'url' => ['/site/contact']],
+            ], */
+        //    ['label' => 'Контакты', 'url' => ['/site/contact']],
             ['label' => Yii::t('app', 'Выйти'), 'url' => ['/site/logout'],
              'visible' => !\Yii::$app->user->isGuest,
              'linkOptions' => [

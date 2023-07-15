@@ -11,10 +11,13 @@
 
 namespace app\models;
 
+use alexander777hub\crop\models\PhotoEntity;
 use Yii;
 use dektrium\user\models\Profile as BaseProfile;
 use dektrium\user\models\User;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 use  yii\db\Query;
 use dosamigos\taggable\Taggable;
@@ -188,6 +191,40 @@ class Profile extends BaseProfile
         } 
     }
 
+    public function getFavoritCasePhoto()
+    {
+
+        /**
+         *  @var $user \app\models\User.
+         */
+        if(!$user = \app\models\User::findOne($this->user_id)){
+            throw new NotFoundHttpException("Not found");
+        }
+
+        $cases = $user->getOpenings();
+        if($cases){
+            $avatarId =  $cases->all()[0]['avatar_id'];
+            $photo = PhotoEntity::findOne($avatarId);
+            $name = explode('/', $photo->url)[4];
+
+            return '/uploads/profile/original/' . $name;
+        }
+    }
+
+    public function getFavoritCase()
+    {
+        /**
+         * @var $user \app\models\User.
+         */
+        if (!$user = \app\models\User::findOne($this->user_id)) {
+            throw new NotFoundHttpException("Not found");
+        }
+        $cases = $user->getOpenings();
+        if ($cases) {
+            return $cases->all()[0]['name'];
+        }
+    }
+
     public function getReferrer()
     {
         return $this->hasOne(User::className(), ['id' => 'referrer_id']);
@@ -284,6 +321,11 @@ class Profile extends BaseProfile
     public function getName()
     {
         return $this->name ? $this->name : null;
+    }
+
+    public static function getFullList() {
+        $models =  self::find()->all();
+        return ArrayHelper::map($models,'user_id','name');
     }
 }
 

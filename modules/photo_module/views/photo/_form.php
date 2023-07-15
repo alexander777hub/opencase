@@ -36,8 +36,8 @@ if(!$model->isNewRecord){
 </div>
 
 <?php if (!$model->isNewRecord):   ?>
-    <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src=<?= $model->link ? Yii::$app->urlManager->createAbsoluteUrl(['/']) . 'uploads/photo/' . $model->link : null   ?> alt="Card image cap">
+    <div class="card">
+        <img class="card-img-top" width = "300" height = "300" src=<?= $model->link ? Yii::$app->urlManager->createAbsoluteUrl(['/']) . 'uploads/photo/' . $model->link : null   ?> alt="Card image cap">
     </div>
 
 

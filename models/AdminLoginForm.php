@@ -7,18 +7,19 @@ use Yii;
 use yii\base\Model;
 
 /**
- * LoginForm is the model behind the login form.
+ * AdminLoginForm is the model behind the login form.
  *
- * @property User|null $user
+ * @property-read User|null $user
  *
  */
-class LoginForm extends Model
+class AdminLoginForm extends Model
 {
     public $username;
     public $password;
     public $rememberMe = true;
 
-    public $user = null;
+    private $_user = false;
+
 
     /**
      * @return array the validation rules.
@@ -27,8 +28,9 @@ class LoginForm extends Model
     {
         return [
 
-            [['username'], 'required'],
+            [['username', 'password'], 'required'],
             ['rememberMe', 'boolean'],
+            ['password', 'validatePassword'],
         ];
     }
 
@@ -56,15 +58,11 @@ class LoginForm extends Model
      */
     public function login()
     {
+        $this->rememberMe = false;
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(),3600 );
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
         }
         return false;
-    }
-
-    public function validate($attributeNames = null, $clearErrors = true)
-    {
-        return $this->user instanceof  User;
     }
     public function load($data, $formName = null)
     {
@@ -84,6 +82,10 @@ class LoginForm extends Model
      */
     public function getUser()
     {
-        return $this->user;
+        if ($this->_user === false) {
+            $this->_user = User::findByUsername($this->username);
+        }
+
+        return $this->_user;
     }
 }

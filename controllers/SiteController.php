@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Ad;
+use app\models\AdminLoginForm;
 use app\models\AdSearch;
 use app\models\Client;
 use app\models\ContactForm;
@@ -83,7 +84,6 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-
         return $this->render('index', [
 
         ]);
@@ -188,7 +188,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model = new LoginForm();
+        $model = new AdminLoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }

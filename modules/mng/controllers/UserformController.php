@@ -142,7 +142,7 @@ class UserformController extends ManagerController
      */
     public function actionIndex()
     {
-        $searchModel = new UserformSearch();
+       /* $searchModel = new UserformSearch();
         $manager      = new UserformManager($searchModel);
         if (Yii::$app->user->can(Profile::ROLE_MAIN_MANAGER) || Yii::$app->user->can(Profile::ROLE_ADMINISTRATOR)) {
             $dataProvider = $manager->getAll($this->request->queryParams);
@@ -172,11 +172,11 @@ class UserformController extends ManagerController
 
             }
 
-        }
-        return $this->render('index', [
-            'searchModel' => $searchModel,
+        } */
+        return $this->render('index');
+          /*  'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-        ]);
+        ]); */
     }
 
     /**

@@ -19,7 +19,7 @@ class AdController extends \yii\web\Controller
 {
     public function actionCreateAd($userform_id)
     {
-        if(Yii::$app->user->isGuest){
+       /* if(Yii::$app->user->isGuest){
             throw new ForbiddenHttpException("Not Allowed");
         }
         $model = new Ad();
@@ -42,10 +42,10 @@ class AdController extends \yii\web\Controller
             }
         } else {
             $model->loadDefaultValues();
-        }
+        } */
 
         return $this->render('create', [
-            'model' => $model,
+
         ]);
     }
 
