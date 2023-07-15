@@ -31,7 +31,7 @@
                 'options' => ['class' => 'sidebar-menu tree', 'data-widget'=> 'tree'],
                 'items' => [
                     ['label' => 'Управление', 'options' => ['class' => 'header']],
-                    ['label' => 'Панель управления', 'icon' => 'user-o', 'url' => ['/blog/default'], 'visible' => Yii::$app->user->can('client')],
+                    ['label' => 'Панель управления кейсами', 'icon' => 'user-o', 'url' => ['/mng/case/index'], 'visible' =>  Yii::$app->user->can('administrator')],
                     [
                         'label' => 'Системные шаблоны',
                         'icon' => 'share',

@@ -1443,7 +1443,7 @@ use app\models\Userform;
                                             </a> !-->
 
                                             <div class="user-stat__name-and-signout">
-                                                <a href=<?= "/profile/view?user_id=" .   \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->user_id  ?> class="user-stat__name"> <?= \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->getName()  ?></a>
+                                                <a href=<?= "/profile/view?user_id=" .   \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->user_id  ?> class="user-stat__name"> <?= \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->getName() ? \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->getName() : \app\models\User::getUser(Yii::$app->user->getId())->username   ?></a>
                                                 <?= Html::a(' ', ['/site/logout'], ['data' => ['method' => 'get'], 'class'=> 'user-stat__signout quit']) ?>
 
                                             </div>
@@ -1479,6 +1479,13 @@ use app\models\Userform;
                                     <a href="/site/contact" class="nav-site__link">
                                         <span class="nav-site__link-inner nav-site__link-inner_contracts">Contacts</span>
                                     </a>
+
+                                    <?php if(Yii::$app->user->can('administrator')): ?>
+                                        <a href="/user/admin" class="nav-site__link">
+                                            <span class="nav-site__link-inner nav-site__link-inner_contracts">Админ панель</span>
+                                        </a>
+
+                                    <?php   endif; ?>
 
 
 
