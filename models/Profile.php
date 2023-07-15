@@ -223,7 +223,7 @@ class Profile extends BaseProfile
             throw new NotFoundHttpException("Not found");
         }
         $cases = $user->getOpenings();
-        if ($cases && $cases->all()[0]) {
+        if ($cases && isset($cases->all()[0])) {
             return $cases->all()[0]['name'];
         }
         return null;
