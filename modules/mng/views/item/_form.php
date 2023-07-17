@@ -24,12 +24,6 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'internal_name')->textInput() ?>
 
 
-    <?= $form->field($model, 'app_id')->textInput() ?>
-
-    <?= $form->field($model, 'class_id')->textInput() ?>
-
-    <?= $form->field($model, 'currency')->textInput() ?>
-
     <?= $form->field($model, 'icon')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'icon_large')->textInput(['maxlength' => true]) ?>
