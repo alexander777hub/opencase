@@ -47,7 +47,7 @@ use app\modules\manager\models\Manager;
  * @property integer $status
  * @property string  $photo_full
  * @property string  $trade_link
- * @author Dmitry Erofeev <dmeroff@gmail.com
+ * @property Item[] $items
  */
 class Profile extends BaseProfile
 {   
@@ -330,6 +330,15 @@ class Profile extends BaseProfile
     public static function getFullList() {
         $models =  self::find()->all();
         return ArrayHelper::map($models,'user_id','name');
+    }
+
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getItems()
+    {
+        return $this->hasMany(Item::className(), ['profile_id' => 'user_id']);
     }
 }
 

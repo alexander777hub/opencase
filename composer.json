@@ -12,7 +12,7 @@
         "irc": "irc://irc.freenode.net/yii",
         "source": "https://github.com/yiisoft/yii2"
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.6.0",
         "yiisoft/yii2": "~2.0.14",
@@ -28,7 +28,8 @@
         "yiisoft/yii2-jui": "^2.0",
         "kartik-v/yii2-widget-fileinput": "dev-master",
         "et-soft/yii2-widget-select-year": "*",
-        "alexander777hub/yii2-crop": "dev-main"
+        "alexander777hub/yii2-crop": "dev-main",
+        "steamwebapi/php-steam-api": "dev-main"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -75,5 +76,6 @@
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
-    ]
+    ],
+    "prefer-stable": true
 }

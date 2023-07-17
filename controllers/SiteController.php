@@ -11,6 +11,7 @@ use app\models\LightOpenID;
 use app\models\Profile;
 use app\models\User;
 use dektrium\user\models\RegistrationForm;
+use SteamWebApi\SteamWebApi;
 use Yii;
 use yii\authclient\OpenId;
 use yii\base\InvalidConfigException;
@@ -197,6 +198,89 @@ class SiteController extends Controller
         return $this->render('login', [
             'model' => $model,
         ]);
+    }
+
+
+    public function actionInventory()
+    {
+        $client = new \GuzzleHttp\Client();
+        $key = Yii::$app->params['steam_api_key'];
+
+        $response = $client->request('GET', 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='.$key.'&steamids=' . 76561199524928583, [
+            'headers' =>
+                [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
+        ]);
+        $res = json_decode((string)$response->getBody(), true);
+
+        //https://steamcommunity.com/profiles/76561199524928583/inventory/json/730/2 private
+        $url = "http://api.steampowered.com/IEconItems_730/GetPlayerItems/v0001/?key=".$key."&format=json&SteamID=76561199524928583";
+            //76561199524928583
+        $response = $client->request('GET', $url);
+        //http://api.steampowered.com/IEconItems_<ID>/GetPlayerItems/v0001/
+        //SteamID
+        //https://partner.steam-api.com/IInventoryService/GetInventory/v1/
+        $sid64 = 76561199524928583;
+       // $res = file_get_contents("https://partner.steam-api.com/IInventoryService/GetInventory/v1/?key=81BC68E11726D3E38D6192B6E2DCE31E&appid=730&steamid=76561199524928583");
+
+
+
+       $res = json_decode((string)$response->getBody(), true);
+        $r = $res;
+
+    }
+
+    public function actionPackage()
+    {
+        $key = "TSZI1ZF43Y1KA27E";
+
+        $steamWebApi = new SteamWebApi($key);
+
+        // Get Inventory
+        $res =   $steamWebApi->getInventory('76561199524928583');
+      $res2 =   $steamWebApi->getInventoryWorth('76561199524928583');
+        $r = $res;
+        // Get Inventory And Worth
+
+    }
+
+    public function actionItems()
+    {
+        $client = new \GuzzleHttp\Client([
+            // Base URI is used with relative requests
+            'base_uri' => 'https://www.steamwebapi.com/steam/api/',
+            // You can set any number of default request options.
+            'timeout' => 60,
+            'debug' => false,
+        ]);
+        $request = $client->request('GET', 'inventory', [
+            'query' => [
+                'steam_id' => '76561199524928583',
+                'game' => 'csgo',
+                'language' => 'english',
+                'parse' => true,
+                'key' => 'TSZI1ZF43Y1KA27E',
+            ],
+            'timeout' => 120,
+        ]);
+
+        $r =  json_decode($request->getBody()->getContents(), true);
+
+        $request = $client->request('GET', 'items', [
+            'query' => [
+                'steam_id' => '76561199524928583',
+                'game' => 'csgo',
+                'language' => 'english',
+                'parse' => true,
+                'key' => 'TSZI1ZF43Y1KA27E',
+            ],
+            'timeout' => 120,
+        ]);
+
+        $r =  json_decode($request->getBody()->getContents(), true);
+        $a = $r;
     }
 
     /**
