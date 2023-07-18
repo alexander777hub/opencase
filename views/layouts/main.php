@@ -10,9 +10,18 @@ use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
 use app\models\Profile;
 use app\models\Userform;
+use app\models\User;
 
 
 \app\assets\AppAsset::register($this);
+
+
+if(!Yii::$app->user->isGuest){
+    $user_id =  User::getUser(Yii::$app->user->getId())->getProfile() ?  User::getUser(Yii::$app->user->getId())->getProfile()->user_id : Yii::$app->user->getId();
+    $photo = User::getUser(Yii::$app->user->getId())->getProfile() ? User::getUser(Yii::$app->user->getId())->getProfile()->photo : '/uploads/photo/default.png';
+    $credit = \app\models\User::getUser(Yii::$app->user->getId())->getProfile() ? \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->credit : '0.00';
+    $name = User::getUser(Yii::$app->user->getId())->getProfile() ? User::getUser(Yii::$app->user->getId())->getProfile()->getName() : User::getUser(Yii::$app->user->getId())->username;
+}
 
 ?>
 <?php $this->beginPage() ?>
@@ -1421,8 +1430,8 @@ use app\models\Userform;
                                 <div class="userbar-block">
                                     <div class="userbar-block__user-picture">
                                         <div class="user-picture">
-                                            <a href=<?= "/profile/view?user_id=" .   \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->user_id  ?> class="user-picture__img user-picture__img_without-rank">
-                                                <img src=<?=  \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->photo ?> alt="Аватар">
+                                            <a href=<?= "/profile/view?user_id=" .  $user_id    ?> class="user-picture__img user-picture__img_without-rank">
+                                                <img src=<?= $photo   ?> alt="Аватар">
 
                                             </a>
 
@@ -1432,7 +1441,7 @@ use app\models\Userform;
                                         <div class="user-stat">
                                             <div class="user-stat__balance refill">
                                                 <div class="user-stat__nums">
-                                                    <span class="price"><?=  \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->credit ? \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->credit : '0.00' ?></span>
+                                                    <span class="price"><?= $credit ?></span>
                                                 </div>
                                                 <div class="user-stat__refill"></div>
                                             </div>
@@ -1443,7 +1452,7 @@ use app\models\Userform;
                                             </a> !-->
 
                                             <div class="user-stat__name-and-signout">
-                                                <a href=<?= "/profile/view?user_id=" .   \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->user_id  ?> class="user-stat__name"> <?= \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->getName() ? \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->getName() : \app\models\User::getUser(Yii::$app->user->getId())->username   ?></a>
+                                                <a href=<?= "/profile/view?user_id=" .   $user_id  ?> class="user-stat__name"> <?= $name  ?></a>
                                                 <?= Html::a(' ', ['/site/logout'], ['data' => ['method' => 'get'], 'class'=> 'user-stat__signout quit']) ?>
 
                                             </div>

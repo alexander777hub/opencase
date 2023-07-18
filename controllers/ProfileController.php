@@ -2,8 +2,10 @@
 
 namespace app\controllers;
 
+use app\models\ItemSearch;
 use app\models\Profile;
 use app\models\ProfileSearch;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -75,8 +77,21 @@ class ProfileController extends Controller
      */
     public function actionView($user_id)
     {
+
+        $model = $this->findModel($user_id);
+       /* $q =  (new \yii\db\Query())
+            ->select('case_id, item_id')
+            ->from('item')
+            ->where(['user_id' => $profile->user_id])
+            ->andWhere(['item_id' => $model->id]); */
+
+
+
+
+       $dataProvider = $model->getItems();
         return $this->render('view', [
             'model' => $this->findModel($user_id),
+            'dataProvider' => $dataProvider,
         ]);
     }
 

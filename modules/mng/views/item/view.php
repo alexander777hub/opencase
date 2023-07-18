@@ -29,12 +29,19 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'app_id',
-            'class_id',
-            'currency',
+            'internal_name',
             'icon',
             'icon_large',
+            [
+                'class' => yii\grid\DataColumn::className(),
+                'label' =>'Цвет',
+                'attribute' => 'scin_type',
+                'format'=>'html',
+                'value' => function ($model) {
+                    return \app\models\Item::getScins()[$model->scin_type] ? \app\models\Item::getScins()[$model->scin_type] : null;
+                },
+                //  'filter' => yii\helpers\ArrayHelper::map(app\models\Customobj::find()->all(), 'Id', 'Key')
+            ],
         ],
     ]) ?>
 

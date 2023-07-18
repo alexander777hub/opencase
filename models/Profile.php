@@ -15,6 +15,7 @@ use alexander777hub\crop\models\PhotoEntity;
 use Yii;
 use dektrium\user\models\Profile as BaseProfile;
 use dektrium\user\models\User;
+use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -202,15 +203,21 @@ class Profile extends BaseProfile
         }
 
         $cases = $user->getOpenings();
+        $c = $cases->asArray()->all();
         if($cases){
-            if(!$cases->all()[0]){
+            if(!isset($cases->all()[0])){
                 return null;
             }
             $avatarId =  $cases->all()[0]['avatar_id'];
+            if(!$avatarId){
+                return '/uploads/photo/default.png';
+            }
+
             $photo = PhotoEntity::findOne($avatarId);
+
             $name = explode('/', $photo->url)[4];
 
-            return '/uploads/profile/original/' . $name;
+            return  '/uploads/profile/original/' . $name;;
         }
     }
 
@@ -329,17 +336,71 @@ class Profile extends BaseProfile
 
     public static function getFullList() {
         $models =  self::find()->all();
-        return ArrayHelper::map($models,'user_id','name');
+
+        $arr = ArrayHelper::map($models,'user_id','name');
+        $arr[0] = 'Не выбран';
+        ksort($arr);
+
+        return $arr;
     }
 
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getItems()
+    public function getItems() : ActiveDataProvider
     {
-        return $this->hasMany(Item::className(), ['profile_id' => 'user_id']);
+        $query = new \yii\db\Query();
+        $query->from(['i' => 'item'])
+            ->leftJoin(['oi' => 'opening_item'],'`i`.`id` = `item_id`')
+            ->select(['`i`.`id` as item_id,`i`.`internal_name` as internal_name ,`i`.`icon` as icon , `oi`.`case_id`, `oi`.`price`'])
+            ->where(['user_id' => $this->user_id])
+        ;
+
+        $dataProvider = new ActiveDataProvider([
+
+            'query' => $query,
+
+            'pagination' => [
+                'pageSize' => 9,
+            ],
+        ]);
+        return $dataProvider;
     }
+
+    public function getBestDrop($dataProvider) : array
+    {
+        if(!$dataProvider){
+            return [];
+        }
+        $arr = $dataProvider->getModels();
+
+
+        usort($arr, function ($item1, $item2) {
+            return $item2['price'] <=> $item1['price'];
+        });
+        return $arr;
+
+
+    }
+    public function getBestDropPhoto($array)
+    {
+        if(empty($array)){
+            return  '/uploads/photo/default.png';
+        }
+        $icon =  $array[0]['icon'] ? $array[0]['icon'] : '/uploads/photo/default.png';
+        $icon = str_replace('public', 'original', $icon);
+        return $icon;
+
+    }
+    public function getBestDropName($array)
+    {
+        if (empty($array)) {
+            return 'Не задано';
+        }
+
+        return $array[0]['internal_name'] ? $array[0]['internal_name'] : 'Не задано';
+
+    }
+
+
+
 }
 
 

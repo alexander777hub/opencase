@@ -5,6 +5,7 @@ namespace app\modules\mng\controllers;
 use alexander777hub\crop\models\PhotoEntity;
 use app\models\Item;
 use app\models\ItemSearch;
+use app\modules\mng\models\ItemPhotoEntity;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -93,15 +94,15 @@ class ItemController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $r = \Yii::$app->request->getBodyParams();
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             $file = \Yii::$app->request->getBodyParams()['Item']['photo'];
             if($file != '/uploads/photo/default.png'){
-                $photo = new PhotoEntity();
+                $photo = new ItemPhotoEntity();
                 $url = $photo->movePhoto($file);
                 if ($url){
-                    $photo_id =  \Yii::$app->request->getBodyParams()['Opening']['photo_id'];
-                    $old_model = PhotoEntity::findOne(intval($photo_id));
+                    $photo_id =  \Yii::$app->request->getBodyParams()['Item']['photo_id'];
+                    $old_model = ItemPhotoEntity::findOne(intval($photo_id));
                     if($old_model){
                         $old_model->url = $url;
                         $old_model->save(false);
@@ -111,12 +112,14 @@ class ItemController extends Controller
                         $photo->type = 7;
                         if(!$photo->save()){
                             foreach($photo->getErrors() as $error){
-                                Yii::$app->getSession()->setFlash('danger', $error);
+                                \Yii::$app->getSession()->setFlash('danger', $error);
                             }
                         }
 
                     }
                 }
+                $model->icon = $photo->url;
+                $model->save(false);
             }
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -154,5 +157,25 @@ class ItemController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+    public function actionAssignAvatar($photo_id)
+    {
+        $model = ItemPhotoEntity::findOne(intval($photo_id));
+        $item = Item::find()->where(['id' =>$model->bind_obj_id])->one();
+        $item->icon = $model->url;
+        $item->save(false);
+        \Yii::$app->getSession()->setFlash('success', "Аватар назначен");
+        return $this->redirect(['index']);
+    }
+    public function actionRemovePhoto($photo_id)
+    {
+        $model = ItemPhotoEntity::findOne(intval($photo_id));
+        $userform = Item::find()->where(['id' =>$model->bind_obj_id])->one();
+        $userform->icon = null;
+        $userform->save(false);
+
+        $model->delete();
+        \Yii::$app->getSession()->setFlash('success', "Фото удалено");
+        return $this->redirect(['index']);
     }
 }

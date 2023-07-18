@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\Profile $model */
+/* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Profiles', 'url' => ['index']];
@@ -30,7 +31,10 @@ $script = <<< JS
    
 JS;
 $this->registerJs($script);
+$best_drop = User::getUser(Yii::$app->user->getId())->getProfile()->getBestDrop($dataProvider);
+$best_photo = User::getUser(Yii::$app->user->getId())->getProfile()->getBestDropPhoto($best_drop);
 
+$best_drop_name = User::getUser(Yii::$app->user->getId())->getProfile()->getBestDropName($best_drop);
 
 ?>
 <div id="trade" style="display: none">
@@ -264,6 +268,17 @@ $this->registerJs($script);
                         <div class="profile__favorite-case-label">Количество открытий: 1</div>
                     </div>
                 </div>
+                    <div class="profile__favorite-case">
+                        <div class="profile__sub-title profile__favorite-case-title">Лучший дроп</div>
+
+                        <a href="#" class="profile__favorite-case-item">
+                            <img src=<?= $best_photo   ?> class="case-image">
+                        </a>
+                        <div class="profile__favorite-case-label-value">
+                            <div class="profile__favorite-case-value"> <?= $best_drop_name   ?></div>
+                            <div class="profile__favorite-case-label">Количество открытий: 1</div>
+                        </div>
+                    </div>
                 <?php  endif;  ?>
 
                 <div class="profile__stats">
@@ -394,310 +409,37 @@ $this->registerJs($script);
                               </div>
                           </div>
 
-                          <?php     if($model->items): ?>
+                          <?php     if($dataProvider->getModels()): ?>
                           <div class="items-block__grid">
                               <div class="grid">
                                   <div class="grid__items">
+                                      <?php echo \yii\widgets\ListView::widget([
+                                          'dataProvider' => $dataProvider,
+                                          'itemView' => '_item',
+                                          'layout' => "{items}",
+                                          'itemOptions' => ['class' => 'grid__item'],
+                                          'options' => [
+                                              'style' => 'display: grid;
+                                              grid-template-columns: 1fr 1fr 1fr;
+                                              grid-auto-flow: row;
+                                               grid-column-gap: 10px;
+                                                grid-row-gap: 10px
+                                              ',
+                                          ],
+                                          'viewParams'=>['profile'=>$model],
+                                          'pager' => [
+                                              'firstPageLabel' => 'first',
+                                              'lastPageLabel' => 'last',
+                                              'nextPageLabel' => 'next',
+                                              'prevPageLabel' => 'previous',
+                                              'maxButtonCount' => 3,
+                                          ],
+
+                                      ]); ?>
 
 
-                                      <div class="grid__item">
-                                          <div class="item uncommon">
 
-                                              <div class="item__content">
-                                                  <div class="item__img">
-                                                      <img src="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgporrf0e1Y07PvRTitD_tW1lY2EqPPxIL7DglRd4cJ5nqeZrN-ki1ayrUE9MmrxLY-Xeg85ZlzS-gW-xOjug8S_vJucm3IysyF0-z-DyLOku5tY/140fx105f/image.png" srcset="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgporrf0e1Y07PvRTitD_tW1lY2EqPPxIL7DglRd4cJ5nqeZrN-ki1ayrUE9MmrxLY-Xeg85ZlzS-gW-xOjug8S_vJucm3IysyF0-z-DyLOku5tY/260fx194f/image.png 2x" class="case-image">
-                                                  </div>
 
-                                                  <div class="item__price"><span class="price price-RUB">5.58</span></div>
-                                                  <div class="item__icons">
-                                                      <a href="/case/hole" class="item__icon status linkcase" title="Кейс"></a>
-                                                      <div class="item__icon status selled">
-                                                          <span class="tooltip tooltip_center tooltip_extramin">Продано</span>
-                                                      </div>
-                                                  </div>
-                                                  <div class="item__btns">
-
-
-                                                  </div>
-
-                                                  <div class="item__type-and-name">
-                                                      <div class="item__type">XM1014</div>
-                                                      <div class="item__name">Калифорнийский камуфляж</div>
-                                                  </div>
-                                              </div>
-
-                                          </div>
-                                      </div>
-
-
-
-                                      <div class="grid__item">
-                                          <div class="item milspec">
-
-                                              <div class="item__content">
-                                                  <div class="item__img">
-                                                      <img src="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpos7asPwJf1OD3dShD4OOzmImfkuTLMLfQhXhY6_p9g-7J4cL00A3tqhdlNWumJdTHegM8Yw6ErwO-w-y8jJ_vupmay3ZmvCgg4yvcgVXp1kydJNnp/140fx105f/image.png" srcset="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpos7asPwJf1OD3dShD4OOzmImfkuTLMLfQhXhY6_p9g-7J4cL00A3tqhdlNWumJdTHegM8Yw6ErwO-w-y8jJ_vupmay3ZmvCgg4yvcgVXp1kydJNnp/260fx194f/image.png 2x" class="case-image">
-                                                  </div>
-
-                                                  <div class="item__price"><span class="price price-RUB">19.59</span></div>
-                                                  <div class="item__icons">
-                                                      <a href="/case/CS16" class="item__icon status linkcase" title="Кейс"></a>
-                                                      <div class="item__icon status progress">
-                                                          <span class="tooltip tooltip_center tooltip_extramin">В ожидании получения</span>
-                                                      </div>
-                                                  </div>
-                                                  <div class="item__btns">
-
-                                                      <div class="item__btn">
-                                                          <div class="btn btn_color-success btn_size-small btn_uppercase btn_with-icon tosell">
-                                                              <div class="btn__content">
-                                                                  <div class="btn__icon icon icon_cart"></div>
-                                                                  <div class="btn__label"><span class="price price-RUB">19.59</span></div>
-                                                              </div>
-                                                          </div>
-                                                      </div>
-
-
-
-
-                                                      <div class="item__btn">
-                                                          <div class="btn btn_type-square btn_with-icon btn_style-outline btn_color-primary btn_size-small btn_uppercase" action="resendItem">
-                                                              <div class="btn__content">
-                                                                  <div class="btn__icon icon icon_arrow"></div>
-                                                                  <!-- <div class="btn__label">{{_ "withdraw_items_1"}}</div> -->
-                                                              </div>
-                                                          </div>
-                                                      </div>
-
-
-
-                                                  </div>
-
-                                                  <div class="item__type-and-name">
-                                                      <div class="item__type">Dual Berettas</div>
-                                                      <div class="item__name">Elite 1.6</div>
-                                                  </div>
-                                              </div>
-
-                                          </div>
-                                      </div>
-
-
-
-                                      <div class="grid__item">
-                                          <div class="item milspec">
-
-                                              <div class="item__content">
-                                                  <div class="item__img">
-                                                      <img src="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpos7asPwJf1OD3dShD4OOzmImfkuTLMLfQhXhY6_p9g-7J4cL00A3tqhdlNWumJdTHegM8Yw6ErwO-w-y8jJ_vupmay3ZmvCgg4yvcgVXp1kydJNnp/140fx105f/image.png" srcset="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpos7asPwJf1OD3dShD4OOzmImfkuTLMLfQhXhY6_p9g-7J4cL00A3tqhdlNWumJdTHegM8Yw6ErwO-w-y8jJ_vupmay3ZmvCgg4yvcgVXp1kydJNnp/260fx194f/image.png 2x" class="case-image">
-                                                  </div>
-
-                                                  <div class="item__price"><span class="price price-RUB">19.59</span></div>
-                                                  <div class="item__icons">
-                                                      <a href="/case/CS16" class="item__icon status linkcase" title="Кейс"></a>
-                                                      <div class="item__icon status selled">
-                                                          <span class="tooltip tooltip_center tooltip_extramin">Продано</span>
-                                                      </div>
-                                                  </div>
-                                                  <div class="item__btns">
-
-
-                                                  </div>
-
-                                                  <div class="item__type-and-name">
-                                                      <div class="item__type">Dual Berettas</div>
-                                                      <div class="item__name">Elite 1.6</div>
-                                                  </div>
-                                              </div>
-
-                                          </div>
-                                      </div>
-
-
-
-                                      <div class="grid__item">
-                                          <div class="item milspec">
-
-                                              <div class="item__content">
-                                                  <div class="item__img">
-                                                      <img src="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpoo6m1FBRp3_bGcjhQ09ulq5WYh8jiPLfFl2xU18h0juDU-MKljgLjqRVuaj-gLIKUdQdtMgvS-VK_wrvpgZ7quM_Im3Qw6Cdz4CzZgVXp1o7eGVz_/140fx105f/image.png" srcset="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpoo6m1FBRp3_bGcjhQ09ulq5WYh8jiPLfFl2xU18h0juDU-MKljgLjqRVuaj-gLIKUdQdtMgvS-VK_wrvpgZ7quM_Im3Qw6Cdz4CzZgVXp1o7eGVz_/260fx194f/image.png 2x" class="case-image">
-                                                  </div>
-
-                                                  <div class="item__price"><span class="price price-RUB">33.71</span></div>
-                                                  <div class="item__icons">
-                                                      <a href="/case/jackpotcase" class="item__icon status linkcase" title="Кейс"></a>
-                                                      <div class="item__icon status selled">
-                                                          <span class="tooltip tooltip_center tooltip_extramin">Продано</span>
-                                                      </div>
-                                                  </div>
-                                                  <div class="item__btns">
-
-
-                                                  </div>
-
-                                                  <div class="item__type-and-name">
-                                                      <div class="item__type">USP-S</div>
-                                                      <div class="item__name">Lead Conduit</div>
-                                                  </div>
-                                              </div>
-
-                                          </div>
-                                      </div>
-
-
-
-                                      <div class="grid__item">
-                                          <div class="item uncommon">
-
-                                              <div class="item__content">
-                                                  <div class="item__img">
-                                                      <img src="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot621FBRw7P7NYjV9-N24q4iOluHtfemJxzkCv5V3ibCToN33igXj_hdqZTv6IIWWdwZoNQzT-1O7xO3tgJai_MOeifog2Vk/140fx105f/image.png" srcset="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot621FBRw7P7NYjV9-N24q4iOluHtfemJxzkCv5V3ibCToN33igXj_hdqZTv6IIWWdwZoNQzT-1O7xO3tgJai_MOeifog2Vk/260fx194f/image.png 2x" class="case-image">
-                                                  </div>
-
-                                                  <div class="item__price"><span class="price price-RUB">27.76</span></div>
-                                                  <div class="item__icons">
-                                                      <a href="/case/safarimesh" class="item__icon status linkcase" title="Кейс"></a>
-                                                      <div class="item__icon status selled">
-                                                          <span class="tooltip tooltip_center tooltip_extramin">Продано</span>
-                                                      </div>
-                                                  </div>
-                                                  <div class="item__btns">
-
-
-                                                  </div>
-
-                                                  <div class="item__type-and-name">
-                                                      <div class="item__type">AWP</div>
-                                                      <div class="item__name">Африканская сетка</div>
-                                                  </div>
-                                              </div>
-
-                                          </div>
-                                      </div>
-
-
-
-                                      <div class="grid__item">
-                                          <div class="item uncommon">
-
-                                              <div class="item__content">
-                                                  <div class="item__img">
-                                                      <img src="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhzw8zFdC5K08i3mr-HnvD8J_WBxTwD6ZB12b7Hodumig23rUY5YTymJ4TBcFA7NVvW-FW5l-zr1JXtot2XnkNBBWuK/140fx105f/image.png" srcset="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhzw8zFdC5K08i3mr-HnvD8J_WBxTwD6ZB12b7Hodumig23rUY5YTymJ4TBcFA7NVvW-FW5l-zr1JXtot2XnkNBBWuK/260fx194f/image.png 2x" class="case-image">
-                                                  </div>
-
-                                                  <div class="item__price"><span class="price price-RUB">17.64</span></div>
-                                                  <div class="item__icons">
-                                                      <a href="/case/safarimesh" class="item__icon status linkcase" title="Кейс"></a>
-                                                      <div class="item__icon status selled">
-                                                          <span class="tooltip tooltip_center tooltip_extramin">Продано</span>
-                                                      </div>
-                                                  </div>
-                                                  <div class="item__btns">
-
-
-                                                  </div>
-
-                                                  <div class="item__type-and-name">
-                                                      <div class="item__type">AK-47</div>
-                                                      <div class="item__name">Африканская сетка</div>
-                                                  </div>
-                                              </div>
-
-                                          </div>
-                                      </div>
-
-
-
-                                      <div class="grid__item">
-                                          <div class="item milspec">
-
-                                              <div class="item__content">
-                                                  <div class="item__img">
-                                                      <img src="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgposr-kLAtl7PLZTjlH7du6kb-ImOX9Pa_Zn2pf18h0juDU-MKm2ley-kE6MGGnJIOXclA2ZQ7Vr1Lrlem8gpfvuMzOySBjsyd3s3vUgVXp1hBYWgPe/140fx105f/image.png" srcset="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgposr-kLAtl7PLZTjlH7du6kb-ImOX9Pa_Zn2pf18h0juDU-MKm2ley-kE6MGGnJIOXclA2ZQ7Vr1Lrlem8gpfvuMzOySBjsyd3s3vUgVXp1hBYWgPe/260fx194f/image.png 2x" class="case-image">
-                                                  </div>
-
-                                                  <div class="item__price"><span class="price price-RUB">21.85</span></div>
-                                                  <div class="item__icons">
-                                                      <a href="/case/usercase964606" class="item__icon status linkcase" title="Кейс"></a>
-                                                      <div class="item__icon status selled">
-                                                          <span class="tooltip tooltip_center tooltip_extramin">Продано</span>
-                                                      </div>
-                                                  </div>
-                                                  <div class="item__btns">
-
-
-                                                  </div>
-
-                                                  <div class="item__type-and-name">
-                                                      <div class="item__type">Desert Eagle</div>
-                                                      <div class="item__name">Corinthian</div>
-                                                  </div>
-                                              </div>
-
-                                          </div>
-                                      </div>
-
-
-
-                                      <div class="grid__item">
-                                          <div class="item restricted">
-
-                                              <div class="item__content">
-                                                  <div class="item__img">
-                                                      <img src="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpos7asPwJf0v73ci9b_8i3mIyCjfLwDLndg25u5cB1g_zMu9qjjVDlrRBqamzzdYOXc1Q-NVHX_QDokOq6jcO5tZ7JzSEwsnFw4nzD30vgZ_ZT_P4/140fx105f/image.png" srcset="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpos7asPwJf0v73ci9b_8i3mIyCjfLwDLndg25u5cB1g_zMu9qjjVDlrRBqamzzdYOXc1Q-NVHX_QDokOq6jcO5tZ7JzSEwsnFw4nzD30vgZ_ZT_P4/260fx194f/image.png 2x" class="case-image">
-                                                  </div>
-
-                                                  <div class="item__price"><span class="price price-RUB">47.80</span></div>
-                                                  <div class="item__icons">
-                                                      <a href="/case/usercase1016147" class="item__icon status linkcase" title="Кейс"></a>
-                                                      <div class="item__icon status selled">
-                                                          <span class="tooltip tooltip_center tooltip_extramin">Продано</span>
-                                                      </div>
-                                                  </div>
-                                                  <div class="item__btns">
-
-
-                                                  </div>
-
-                                                  <div class="item__type-and-name">
-                                                      <div class="item__type">Dual Berettas</div>
-                                                      <div class="item__name">Синий кварц</div>
-                                                  </div>
-                                              </div>
-
-                                          </div>
-                                      </div>
-
-
-
-                                      <div class="grid__item">
-                                          <div class="item milspec">
-
-                                              <div class="item__content">
-                                                  <div class="item__img">
-                                                      <img src="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgposbaqKAxf0Ob3djFN79eJnY6PnvD7DLfYkWNFppYm0r_Coo-milHjr0NvNjzzIYWVdwZvN1qG_QC2xezogp6-u5nLnHN9-n516M620HI/140fx105f/image.png" srcset="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgposbaqKAxf0Ob3djFN79eJnY6PnvD7DLfYkWNFppYm0r_Coo-milHjr0NvNjzzIYWVdwZvN1qG_QC2xezogp6-u5nLnHN9-n516M620HI/260fx194f/image.png 2x" class="case-image">
-                                                  </div>
-
-                                                  <div class="item__price"><span class="price price-RUB">8.91</span></div>
-                                                  <div class="item__icons">
-                                                      <a href="/case/popit" class="item__icon status linkcase" title="Кейс"></a>
-                                                      <div class="item__icon status selled">
-                                                          <span class="tooltip tooltip_center tooltip_extramin">Продано</span>
-                                                      </div>
-                                                  </div>
-                                                  <div class="item__btns">
-
-
-                                                  </div>
-
-                                                  <div class="item__type-and-name">
-                                                      <div class="item__type">Glock-18</div>
-                                                      <div class="item__name">Пришелец</div>
-                                                  </div>
-                                              </div>
-
-                                          </div>
-                                      </div>
 
 
                                   </div>

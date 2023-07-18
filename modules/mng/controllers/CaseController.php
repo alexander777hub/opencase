@@ -74,6 +74,7 @@ class CaseController extends Controller
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 $model->addUser();
+                $model->addItem();
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -99,6 +100,7 @@ class CaseController extends Controller
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             $file = \Yii::$app->request->getBodyParams()['Opening']['photo'];
             $model->addUser();
+            $model->addItem();
             if($file != '/uploads/photo/default.png'){
                 $photo = new PhotoEntity();
                 $url = $photo->movePhoto($file);

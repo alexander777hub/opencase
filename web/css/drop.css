@@ -28164,7 +28164,6 @@ a.scammers-banner:hover .scammers-banner__subtitle {
 }
 
 .grid__items {
-    display: grid;
     grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
     grid-column-gap: 5px;
     grid-row-gap: 5px

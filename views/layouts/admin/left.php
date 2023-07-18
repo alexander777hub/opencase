@@ -1,3 +1,11 @@
+<?php
+
+
+use app\models\User;
+
+?>
+
+
 <aside class="main-sidebar">
 
     <section class="sidebar">
@@ -8,7 +16,7 @@
                 <img src="<?= /*Yii::$app->user->identity ? Yii::$app->user->identity->profile->photo :*/ '' ?>" class="img-circle" alt="User Image"/>
             </div>
             <div class="pull-left info">
-                <p><?= Yii::$app->user->identity ? Yii::$app->user->identity->profile->name : '' ?></p>
+                <p><?= $name = User::getUser(Yii::$app->user->getId())->getProfile() ? User::getUser(Yii::$app->user->getId())->getProfile()->getName() : User::getUser(Yii::$app->user->getId())->username; ?></p>
 
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
@@ -32,7 +40,7 @@
                 'items' => [
                     ['label' => 'Управление', 'options' => ['class' => 'header']],
                     ['label' => 'Кейсы', 'icon' => 'user-o', 'url' => ['/mng/case/index'], 'visible' =>  Yii::$app->user->can('administrator')],
-                    ['label' => 'Скины', 'icon' => 'user-o', 'url' => ['/mng/item/index'], 'visible' =>  Yii::$app->user->can('administrator')],
+                    ['label' => 'Предметы', 'icon' => 'user-o', 'url' => ['/mng/item/index'], 'visible' =>  Yii::$app->user->can('administrator')],
                     [
                         'label' => 'Системные шаблоны',
                         'icon' => 'share',

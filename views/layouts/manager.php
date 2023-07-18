@@ -134,12 +134,27 @@ if(!Yii::$app->user->isGuest){
             ], */
         //    ['label' => 'Контакты', 'url' => ['/site/contact']],
             ['label' => Yii::t('app', 'Выйти'), 'url' => ['/site/logout'],
-             'visible' => !\Yii::$app->user->isGuest,
+             'visible' => \Yii::$app->user->can('administrator'),
              'linkOptions' => [
-                 'data' => ['method' => 'post']
+                 'data' => ['method' => 'get']
              ],
              //                        'template' => '<a href="{url}" data-method="post" data-params="'.Yii::$app->request->csrfParam.'='.Yii::$app->request->getCsrfToken().'"><i class="ti-lock"></i> {label}</a>',
-             'template' => '<a href="{url}" data-method="post"><i class="ti-lock"></i> {label}</a>',
+             'template' => '<a href="{url}" data-method="get"><i class="ti-lock"></i> {label}</a>',
+            ],
+            ['label' => Yii::t('app', 'Кейсы'), 'url' => ['/mng/case/index'],
+             'visible' => \Yii::$app->user->can('administrator'),
+             //                        'template' => '<a href="{url}" data-method="post" data-params="'.Yii::$app->request->csrfParam.'='.Yii::$app->request->getCsrfToken().'"><i class="ti-lock"></i> {label}</a>',
+             'template' => '<a href="{url}" data-method="get"><i class="ti-lock"></i> {label}</a>',
+            ],
+            ['label' => Yii::t('app', 'Предметы'), 'url' => ['/mng/item/index'],
+                'visible' => \Yii::$app->user->can('administrator'),
+                //                        'template' => '<a href="{url}" data-method="post" data-params="'.Yii::$app->request->csrfParam.'='.Yii::$app->request->getCsrfToken().'"><i class="ti-lock"></i> {label}</a>',
+                'template' => '<a href="{url}" data-method="get"><i class="ti-lock"></i> {label}</a>',
+            ],
+            ['label' => Yii::t('app', 'Пользователи'), 'url' => ['/user/admin'],
+                'visible' => \Yii::$app->user->can('administrator'),
+                //                        'template' => '<a href="{url}" data-method="post" data-params="'.Yii::$app->request->csrfParam.'='.Yii::$app->request->getCsrfToken().'"><i class="ti-lock"></i> {label}</a>',
+                'template' => '<a href="{url}" data-method="get"><i class="ti-lock"></i> {label}</a>',
             ]
         ],
     ]);

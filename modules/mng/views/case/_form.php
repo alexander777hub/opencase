@@ -64,6 +64,8 @@ use yii\widgets\ActiveForm;
 
     <?php  endif; ?>
     <?= $form->field($model, 'user_id')->dropdownList(\app\models\Profile::getFullList()) ?>
+    <?= $form->field($model, 'item_id')->dropdownList(\app\models\Item::getFullList()) ?>
+    <?= $form->field($model, 'price')->input('numerical')->label(Yii::t('app', 'Price')) ?>
 
 
     <div class="form-group">
