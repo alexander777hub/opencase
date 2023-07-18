@@ -420,10 +420,11 @@ $best_drop_name = User::getUser(Yii::$app->user->getId())->getProfile()->getBest
                                           'itemOptions' => ['class' => 'grid__item'],
                                           'options' => [
                                               'style' => 'display: grid;
-                                              grid-template-columns: 1fr 1fr 1fr;
+                                              grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
                                               grid-auto-flow: row;
                                                grid-column-gap: 10px;
                                                 grid-row-gap: 10px
+                                        
                                               ',
                                           ],
                                           'viewParams'=>['profile'=>$model],
