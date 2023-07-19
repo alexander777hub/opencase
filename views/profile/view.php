@@ -172,13 +172,13 @@ $best_drop_name = User::getUser(Yii::$app->user->getId())->getProfile()->getBest
 
                                 </div>
                             </div>
-                            <!--<div class="user-balance-block__btn refill">
+                            <div class="user-balance-block__btn refill">
                                 <div class="btn btn_color-success btn_uppercase">
                                     <div class="btn__content">
-                                        <div class="btn__label">Пополнить</div>
+                                        <div class="btn__label"><a href="/payment/index">Пополнить</a></div>
                                     </div>
                                 </div>
-                            </div> !-->
+                            </div>
                         </div>
                     </div>
 
