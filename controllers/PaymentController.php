@@ -51,9 +51,7 @@ class PaymentController extends \yii\web\Controller
             $model->addParams();
             if ($model->load($this->request->post()) && $model->validate()) {
                 $model->save();
-
                 $array = [
-
                     $amount = $model->amount,
                     $payment = intval($model->payment),
                     $shop =  intval($model->shop),
@@ -66,7 +64,7 @@ class PaymentController extends \yii\web\Controller
                 // Соединение массива в строку и хеширование функцией md5
                 $sign = md5(implode('|', $array));
 
-                $url = 'https://payok.io/pay?amount='. intval($model->amount). '&payment='. intval($model->payment). '&shop='. intval($model->shop). '&currency='. $model->currency. '&method='. $model->method. '&desc='. $model->desc. '&sign='. $sign. '&user_id='. \Yii::$app->user->getId();
+                $url = 'https://payok.io/pay?amount='. $model->amount. '&payment='. intval($model->payment). '&shop='. intval($model->shop). '&currency='. $model->currency. '&method='. $model->method. '&desc='. $model->desc. '&sign='. $sign. '&user_id='. \Yii::$app->user->getId();
 
                 return $this->redirect($url);
             }

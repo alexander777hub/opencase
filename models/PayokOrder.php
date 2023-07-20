@@ -36,7 +36,7 @@ class PayokOrder extends \yii\db\ActiveRecord
             [['status'], 'integer'],
             [['method'],'string', 'max' => 2],
             [['currency'],'string', 'max' => 4],
-            [['amount'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',],
+            [['amount'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',"message" => "Amount should be decimal value. Format: 0.00"],
         ];
     }
 
