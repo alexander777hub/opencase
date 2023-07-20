@@ -63,6 +63,8 @@ class PayokController extends \yii\web\Controller
                 $post =  Json::decode(\Yii::$app->request->getRawBody());
 
             }
+            \Yii::info("POST REQUEST HERE");
+            \Yii::info($post);
             $array = array (
 
                 $secret,
