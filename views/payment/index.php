@@ -587,7 +587,7 @@ use yii\bootstrap4\ActiveForm;
 
                 <div class="refill-page-methods__info">
                     <p>Для пополнения баланса вы будете перемещены на сайт платёжной системы.</p>
-                    <p>Баланс пополняется моментально, но, если этого не произошло в течение часа, напишите нам на почту <a target="_blank" rel="noreferrer noopener" href="mailto:support@forcedrop.net?subject=forcedrop.app ProfileID 4666219" class="link">support@forcedrop.net</a>, указав подробные данные платежа.</p>
+                    <p>Баланс пополняется моментально, но, если этого не произошло в течение часа, напишите нам на почту <a target="_blank" rel="noreferrer noopener" href="#" class="link">supp.updrop23@gmail.com</a>, указав подробные данные платежа.</p>
                 </div>
             </div>
         </div>
