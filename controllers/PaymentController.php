@@ -53,7 +53,7 @@ class PaymentController extends \yii\web\Controller
                 $model->save();
                 $array = [
                     $amount = $model->amount,
-                    $payment = intval($model->payment),
+                    $payment = $model->payment,
                     $shop =  intval($model->shop),
                     $currency = $model->currency,
                     $desc = $model->desc,
