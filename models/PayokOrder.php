@@ -3,6 +3,8 @@
 
 namespace app\models;
 
+use yii\helpers\Url;
+
 /**
  * Class PayokForm
  *
@@ -40,7 +42,7 @@ class PayokOrder extends \yii\db\ActiveRecord
 
     public function addParams()
     {
-        $this->desc = 'Пополнение баланса';
+        $this->desc = 'Balance replenishment';
         $this->shop = \Yii::$app->params['shop_id'];
         $this->currency = 'RUB';
         $this->method = 'cd';
@@ -48,6 +50,16 @@ class PayokOrder extends \yii\db\ActiveRecord
 
     public function addSign()
     {
+        //$array = array (
+        //
+        //$amount = 100.5,
+        //$payment = 10000,
+        //$shop = 1,
+        //$currency = 'RUB',
+        //$desc = 'Тестовый товар',
+        //$secret = 'SECRET KEY' //Узнайте свой секретный ключ в личном кабинете
+        //
+        //);
         $array = [
 
             $amount = $this->amount,

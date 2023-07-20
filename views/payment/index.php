@@ -596,7 +596,7 @@ use yii\bootstrap4\ActiveForm;
                 'id' => 'payok-form',
                 'method' => 'post',
                 'options' => ['class' => 'refill-page__section'],
-                'enableAjaxValidation' => true,
+                'enableAjaxValidation' => false,
              //   'enableClientValidation' => true,
                 'validateOnBlur' => true,
                 'validateOnType' => true,

@@ -51,33 +51,24 @@ class PaymentController extends \yii\web\Controller
             $model->addParams();
             if ($model->load($this->request->post()) && $model->validate()) {
                 $model->save();
-                $payment = $model->payment;
-                $sign = $model->addSign();
-                $client = new \GuzzleHttp\Client([
-                    // Base URI is used with relative requests
-                    'base_uri' => 'https://payok.io/',
-                    // You can set any number of default request options.
-                    'timeout' => 60,
-                    'debug' => false,
-                ]);
-                $request = $client->request('GET', 'pay', [
-                    'query' => [
-                        'amount' => $model->amount,
-                        'payment' => $model->payment,
-                        'desc' => $model->desc,
-                        'sign' => $sign,
-                        'method' => $model->method,
-                       // 'email' => $model->email,
-                    ],
-                    'timeout' => 120,
-                ]);
 
+                $array = [
 
+                    $amount = $model->amount,
+                    $payment = intval($model->payment),
+                    $shop =  intval($model->shop),
+                    $currency = $model->currency,
+                    $desc = $model->desc,
+                    $secret = \Yii::$app->params['payok_key'] //Узнайте свой секретный ключ в личном кабинете
 
-                $r =  json_decode($request->getBody()->getContents(), true);
+                ];
 
-                var_dump("Redirecting");
-                exit;
+                // Соединение массива в строку и хеширование функцией md5
+                $sign = md5(implode('|', $array));
+
+                $url = 'https://payok.io/pay?amount='. intval($model->amount). '&payment='. intval($model->payment). '&shop='. intval($model->shop). '&currency='. $model->currency. '&method='. $model->method. '&desc='. $model->desc. '&sign='. $sign;
+
+                return $this->redirect($url);
             }
         } else {
             $model->loadDefaultValues();
