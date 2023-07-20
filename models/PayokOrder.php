@@ -29,7 +29,7 @@ class PayokOrder extends \yii\db\ActiveRecord
     {
         return [
             [['amount', 'shop', 'desc', 'method', 'currency', 'email'], 'required'],
-        //    [['payment'], 'string', 'max' => 36],
+            [['payment'], 'string', 'max' => 36],
             [['email'], 'email'],
             [['desc'], 'string', 'max' => 255],
             [['shop'], 'integer'],
@@ -46,6 +46,7 @@ class PayokOrder extends \yii\db\ActiveRecord
         $this->shop = \Yii::$app->params['shop_id'];
         $this->currency = 'RUB';
         $this->method = 'cd';
+        $this->payment = strtotime("now") . \Yii::$app->user->getId();
     }
 
     public function addSign()
