@@ -7,13 +7,14 @@ use app\models\PayokOrder;
 use app\models\User;
 use dektrium\user\models\Profile;
 use yii\helpers\Url;
+use yii\rest\Controller;
 
 /**
  * Class PayokController
  *
  * @package app\controllers
  */
-class PayokController extends \yii\web\Controller
+class PayokController extends Controller
 {
 
     public static function allowedDomains()
@@ -55,7 +56,7 @@ class PayokController extends \yii\web\Controller
     {
         if ($this->request->isPost) {
             $p = $_POST;
-            $post = $this->request->post();
+            $post = $_POST;
             $secret = \Yii::$app->params['payok_key']; // Ваш секретный ключ
 
             $array = array (
