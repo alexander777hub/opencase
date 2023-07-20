@@ -46,7 +46,7 @@ class PayokOrder extends \yii\db\ActiveRecord
         $this->shop = \Yii::$app->params['shop_id'];
         $this->currency = 'RUB';
         $this->method = 'cd';
-        $this->payment = strtotime("now") . '_' . \Yii::$app->user->getId();
+        $this->payment = strtotime("now") . \Yii::$app->user->getId();
     }
 
     public function addSign()
