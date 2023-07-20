@@ -56,69 +56,60 @@ class PayokController extends \yii\web\Controller
     public function actionSuccess()
     {
         if ($this->request->isPost) {
-            $secret = \Yii::$app->params['payok_key']; // Ваш секретный ключ
-            if(!empty( \Yii::$app->request->post())){
+
+            $secret = \Yii::$app->params['payok_key'];
+
+
+            if (!empty($_POST)) {
                 $post = \Yii::$app->request->post();
             } else {
-                $post =  Json::decode(\Yii::$app->request->getRawBody());
-
+                $post = json_decode(\Yii::$app->request->getRawBody(), true);
             }
             \Yii::info("POST REQUEST HERE");
             \Yii::info($post);
-            $array = array (
+            $array = [
 
                 $secret,
                 $desc = $post['desc'],
                 $currency = $post['currency'],
                 $shop = $post['shop'],
                 $payment_id = $post['payment_id'],
-                $amount = $post['amount']
+                $amount = $post['amount'],
 
-            );
+            ];
 
-       /*     $array = array (
 
-                $secret,
-                $desc = isset($post['desc']) ? $post['desc'] : '',
-                $currency = isset($post['currency']) ? $post['currency'] : '',
-                $shop = isset($post['shop']) ? $post['shop'] : $post['shop'],
-                $payment_id = isset($post['payment_id']) ? $post['payment_id'] : '',
-                $amount = isset($post['amount'])  ? $post['amount'] : ''
+            $sign = md5(implode('|', $array));
 
-            ); */
-
-            // Соединение массива в строку и хеширование функцией md5
-            $sign = md5 ( implode ( '|', $array ) );
-
-            if ($sign != $post['sign'] ) {
-                die( 'Подпись не совпадает.');
+            if ($sign != $post['sign']) {
+                \Yii::info("SIGN NOT VALID");
+                die('Подпись не совпадает.');
             }
 
             $record = PayokOrder::findOne($payment_id);
-            if(!$record){
-                die( 'Не найдено');
+            if (!$record) {
+                die('Не найдено');
             }
-            if($post['underpayment'] === 0) {
-                $record->status = 1;
-                $record->save(false);
+            $record->status = 1;
+            if (isset($post['underpayment']) && $post['underpayment'] === 1) {
+                $record->status = 2;
+            }
 
-            }
-            if(isset($post['user_id'])){
-                $profile = Profile::find()->where(['user_id' => intval($post['user_id']) ])->one();
-                if($profile && isset($post['profit'])){
+            $record->save(false);
+            if (isset($post['custom']['user_id'])) {
+                $profile = Profile::find()->where(['user_id' => intval($post['custom']['user_id'])])->one();
+                if ($profile && isset($post['profit'])) {
                     $profile->credit = $profile->credit + $post['profit'];
                     $profile->save(false);
                 }
             }
 
-            \Yii::$app->response->format =  \yii\web\Response::FORMAT_JSON;
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             \Yii::$app->response->statusCode = 200;
             return [
-                'success'
+                'success',
             ];
-
         }
-
     }
 
     public function actionIndex()
