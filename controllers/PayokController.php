@@ -6,6 +6,7 @@ namespace app\controllers;
 use app\models\PayokOrder;
 use app\models\User;
 use dektrium\user\models\Profile;
+use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\rest\Controller;
 
@@ -14,7 +15,7 @@ use yii\rest\Controller;
  *
  * @package app\controllers
  */
-class PayokController extends Controller
+class PayokController extends \yii\web\Controller
 {
 
     public static function allowedDomains()
@@ -55,10 +56,13 @@ class PayokController extends Controller
     public function actionSuccess()
     {
         if ($this->request->isPost) {
-            $p = $_POST;
-            $post = $_POST;
             $secret = \Yii::$app->params['payok_key']; // Ваш секретный ключ
+            if(!empty( \Yii::$app->request->post())){
+                $post = \Yii::$app->request->post();
+            } else {
+                $post =  Json::decode(\Yii::$app->request->getRawBody());
 
+            }
             $array = array (
 
                 $secret,
@@ -70,8 +74,6 @@ class PayokController extends Controller
 
             );
 
-
-            // Занесение параметров в массив
        /*     $array = array (
 
                 $secret,
@@ -86,7 +88,7 @@ class PayokController extends Controller
             // Соединение массива в строку и хеширование функцией md5
             $sign = md5 ( implode ( '|', $array ) );
 
-            if ($sign != $_POST[ 'sign' ] ) {
+            if ($sign != $post['sign'] ) {
                 die( 'Подпись не совпадает.');
             }
 
@@ -99,10 +101,14 @@ class PayokController extends Controller
                 $record->save(false);
 
             }
-            $profile = User::getUser(\Yii::$app->user->getId())->getProfile();
-            if($profile && isset($post['profit'])){
-                $profile->credit = $profile->credit + $post['profit'];
+            if(isset($post['user_id'])){
+                $profile = Profile::find()->where(['user_id' => intval($post['user_id']) ])->one();
+                if($profile && isset($post['profit'])){
+                    $profile->credit = $profile->credit + $post['profit'];
+                    $profile->save(false);
+                }
             }
+
             \Yii::$app->response->format =  \yii\web\Response::FORMAT_JSON;
             \Yii::$app->response->statusCode = 200;
             return [
