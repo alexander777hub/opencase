@@ -8,6 +8,8 @@ return [
     'steam_api_key' => getenv('STEAM_API_KEY'),
     'payok_key' => getenv('PAYOK_KEY'),
     'shop_id' => getenv('SHOP_ID'),
+    'crystal_secret' => getenv('CRYSTAL_SECRET'),
+    'crystal_sault' => getenv('CRYSTAL_SAULT'),
 
     'bsDependencyEnabled' => false, // this will not load Bootstrap CSS and JS for all Krajee extensions
     // you need to ensure you load the Bootstrap CSS/JS manually in your view layout before Krajee CSS/JS assets

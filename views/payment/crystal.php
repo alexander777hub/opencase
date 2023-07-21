@@ -475,14 +475,16 @@ use yii\bootstrap4\ActiveForm;
                             <img src="https://payok.io/files/image/logo_black.svg" alt="">
                         </div>
 
-                    <!--    <div class="payment-systems__payment" seo-paymethod="card">
+                        <div class="payment-systems__payment" seo-paymethod="card">
                             <a  href="/payment/crystal">
                                 <img src="/uploads/payment/crystal.png" alt="">
                             </a>
 
-                        </div>  !-->
+                        </div>
 
-
+                        <div class="payment-systems__payment" seo-paymethod="qiwi" action="choosePayMethod">
+                            <img src="https://images.steamcdn.io/shared/pay_methods/qiwi.svg" alt="">
+                        </div>
 
 
 
@@ -578,20 +580,20 @@ use yii\bootstrap4\ActiveForm;
 
                     </div>
                 </div>
-              <!--  <form name="refill" method="POST" class="payments-form" action="https://pay.gmpays.com/api/terminal/create">
-                    <input type="hidden" name="project" value="7">
-                    <input type="hidden" name="user" value="1564662855">
-                    <input type="hidden" name="add_steam_id" value="76561199524928583">
-                    <input type="hidden" name="comment" value="Adding funds to account balance №4666219 (https://forcedrop.gg/)">
-                    <input type="hidden" name="currency" value="RUB">
-                    <input type="hidden" name="language" value="ru">
-                    <input type="hidden" name="success_url" value="https://forcedrop.app/">
-                    <input type="hidden" name="fail_url" value="https://forcedrop.app/">
-                    <input type="hidden" name="terminal_allow_methods[]" value="">
-                    <input type="hidden" name="amount" value="">
-                    <input type="hidden" name="project_invoice" value="">
-                    <input type="hidden" name="signature" value="">
-                </form> !-->
+                <!--  <form name="refill" method="POST" class="payments-form" action="https://pay.gmpays.com/api/terminal/create">
+                      <input type="hidden" name="project" value="7">
+                      <input type="hidden" name="user" value="1564662855">
+                      <input type="hidden" name="add_steam_id" value="76561199524928583">
+                      <input type="hidden" name="comment" value="Adding funds to account balance №4666219 (https://forcedrop.gg/)">
+                      <input type="hidden" name="currency" value="RUB">
+                      <input type="hidden" name="language" value="ru">
+                      <input type="hidden" name="success_url" value="https://forcedrop.app/">
+                      <input type="hidden" name="fail_url" value="https://forcedrop.app/">
+                      <input type="hidden" name="terminal_allow_methods[]" value="">
+                      <input type="hidden" name="amount" value="">
+                      <input type="hidden" name="project_invoice" value="">
+                      <input type="hidden" name="signature" value="">
+                  </form> !-->
 
 
 
@@ -607,7 +609,7 @@ use yii\bootstrap4\ActiveForm;
                 'method' => 'post',
                 'options' => ['class' => 'refill-page__section'],
                 'enableAjaxValidation' => false,
-             //   'enableClientValidation' => true,
+                //   'enableClientValidation' => true,
                 'validateOnBlur' => true,
                 'validateOnType' => true,
                 'validateOnChange' => true,
@@ -669,10 +671,10 @@ use yii\bootstrap4\ActiveForm;
                 </div>
 
 
-            <!--    <div class="refill-page-form__sum">
-                    <div class="refill-page-form__sum-label">Вы получите на баланс</div>
-                    <div class="refill-page-form__sum-value price price-RUB">0</div>
-                </div> !-->
+                <!--    <div class="refill-page-form__sum">
+                        <div class="refill-page-form__sum-label">Вы получите на баланс</div>
+                        <div class="refill-page-form__sum-value price price-RUB">0</div>
+                    </div> !-->
 
 
                 <div class="refill-page-form__checkbox">
@@ -690,17 +692,17 @@ use yii\bootstrap4\ActiveForm;
                     <?=  \yii\helpers\Html::button('Пополнить баланс', ['type'=>'submit',
                         'class' => 'btn btn_color-success btn_size-big btn_type-fullwidth btn_uppercase',
                         'id'=> 'trade-save',
-                       // 'style' => 'background-color: #7ed321;'
+                        // 'style' => 'background-color: #7ed321;'
 
 
                     ]) ?>
-             <!--       <button class="btn btn_color-success btn_size-big btn_type-fullwidth btn_uppercase" action="refill" disabled="true">
-										<span class="btn__content">
-											<span class="btn__label">Пополнить баланс</span>
+                    <!--       <button class="btn btn_color-success btn_size-big btn_type-fullwidth btn_uppercase" action="refill" disabled="true">
+                                               <span class="btn__content">
+                                                   <span class="btn__label">Пополнить баланс</span>
 
 
-										</span>
-                    </button> !-->
+                                               </span>
+                           </button> !-->
                 </div>
                 <?php ActiveForm::end(); ?>
 
@@ -708,3 +710,4 @@ use yii\bootstrap4\ActiveForm;
         </div>
     </div>
 </div>
+

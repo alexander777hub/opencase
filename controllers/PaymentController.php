@@ -3,8 +3,10 @@
 
 namespace app\controllers;
 
+use app\models\CrystalOrder;
 use app\models\PayokOrder;
 use app\modules\mng\models\Opening;
+use GuzzleHttp\Client;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
@@ -75,5 +77,60 @@ class PaymentController extends \yii\web\Controller
         return $this->render('index', [
             'model' => $model,
         ]);
+    }
+
+    public function actionCrystal()
+    {
+        if(\Yii::$app->user->isGuest){
+            return $this->redirect('/');
+        }
+        $model = new CrystalOrder();
+
+        if ($this->request->isPost) {
+            $model->description = 'Balance replenishment';
+            $model->lifetime = '20';
+         //   $model->amount_currency = 'RUB';
+            $model->user_id = \Yii::$app->user->getId();
+            $model->type = 'topup';
+            if ($model->load($this->request->post()) && $model->validate()) {
+                $model->save();
+                $client = new Client();
+                $res = $client->request('POST', "https://api.crystalpay.io/v2/invoice/create/", [
+                    'json' => [
+                        'amount' => $model->amount,
+                        'auth_login' => "updrop",
+                        'auth_secret' => \Yii::$app->params['crystal_secret'],
+                        'type' => 'topup',
+                        'lifetime' => 20,
+                        'extra' => [
+                            'user_id' => $model->user_id,
+
+                        ],
+                        'callback_url' => 'https://updrop.ru/crystal/success',
+                        'redirect_url' => 'https://updrop.ru',
+                    ],
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                    ],
+                ]);
+                $res = json_decode((string)$res->getBody(), true);
+                $r = $res;
+
+                if($res && $res['error'] == false){
+                    $model->payment = $res['id'];
+                    $model->save(false);
+                    return $this->redirect($res['url']);
+                }
+
+            }
+        } else {
+            $model->loadDefaultValues();
+        }
+
+        return $this->render('crystal', [
+            'model' => $model,
+        ]);
+
+
     }
 }
