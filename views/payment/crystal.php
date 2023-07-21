@@ -471,11 +471,11 @@ use yii\bootstrap4\ActiveForm;
                     <div class="payment-systems">
 
 
-                        <div class="payment-systems__payment active" seo-paymethod="card">
+                        <div class="payment-systems__payment" seo-paymethod="card">
                             <img src="https://payok.io/files/image/logo_black.svg" alt="">
                         </div>
 
-                        <div class="payment-systems__payment" seo-paymethod="card">
+                        <div class="payment-systems__payment active" seo-paymethod="card">
                             <a  href="/payment/crystal">
                                 <img src="/uploads/payment/crystal.png" alt="">
                             </a>
