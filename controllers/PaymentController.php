@@ -116,9 +116,11 @@ class PaymentController extends \yii\web\Controller
                 $res = json_decode((string)$res->getBody(), true);
                 $r = $res;
 
-                if($res && $res['error'] == false){
-                    $model->payment = $res['id'];
+                if($res && isset($res['error']) && $res['error'] == false){
+                    $model->payment = isset($res['id']) ? $res['id'] : null;
+                    $model->link = isset($res['url']) ? $res['url'] : null;
                     $model->save(false);
+
                     return $this->redirect($res['url']);
                 }
 
