@@ -21,10 +21,8 @@ if(!Yii::$app->user->isGuest){
     $photo = User::getUser(Yii::$app->user->getId())->getProfile() && User::getUser(Yii::$app->user->getId())->getProfile()->photo ? User::getUser(Yii::$app->user->getId())->getProfile()->photo : '/uploads/photo/default.png';
     $credit = \app\models\User::getUser(Yii::$app->user->getId())->getProfile() ? \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->credit : '0.00';
     $name = User::getUser(Yii::$app->user->getId())->getProfile() ? User::getUser(Yii::$app->user->getId())->getProfile()->getName() : User::getUser(Yii::$app->user->getId())->username;
-    var_dump((Yii::$app->user->getId()));
-    var_dump($name);
-    var_dump( User::getUser(Yii::$app->user->getId())->getProfile());
-    exit;
+
+
     if(!User::getUser(Yii::$app->user->getId())->getProfile()->getName() && !User::getUser(Yii::$app->user->getId())->username){
         $name = 'Не задано';
     }
