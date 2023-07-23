@@ -32,12 +32,12 @@ $script = <<< JS
 JS;
 $this->registerJs($script);
 $best_drop = User::getUser(Yii::$app->user->getId())->getProfile()->getBestDrop($dataProvider);
-$best_drop_price = isset($best_drop['price']) ? $best_drop['price'] : '';
-$best_drop_case_name = \app\modules\mng\models\Opening::getCaseName($best_drop['case_id']);
+$best_drop_price = $best_drop && isset($best_drop['price']) ? $best_drop['price'] : '';
+$best_drop_case_name = $best_drop && isset($best_drop['case_id']) ? \app\modules\mng\models\Opening::getCaseName($best_drop['case_id']) : '';
 
-$best_photo = User::getUser(Yii::$app->user->getId())->getProfile()->getBestDropPhoto($best_drop);
+$best_photo = $best_drop ? User::getUser(Yii::$app->user->getId())->getProfile()->getBestDropPhoto($best_drop) : '';
 
-$best_drop_name = User::getUser(Yii::$app->user->getId())->getProfile()->getBestDropName($best_drop);
+$best_drop_name =  $best_drop ? User::getUser(Yii::$app->user->getId())->getProfile()->getBestDropName($best_drop) : '';
 
 ?>
 <div id="trade" style="display: none">
@@ -279,8 +279,7 @@ $best_drop_name = User::getUser(Yii::$app->user->getId())->getProfile()->getBest
                                  <!--   <div class="item__type">P250</div> !-->
                                     <div class="item__name"><?= $best_drop_name   ?></div>
                             </a>
-
-
+                            
                             <div class="item__price"><span class="price price-RUB"><?= $best_drop_price  ?></span></div>
                             <div class="profile__favorite-case-label"> Кейс <?= $best_drop_case_name  ?></div>
                             <div class="item__icons">
