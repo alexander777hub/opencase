@@ -143,6 +143,13 @@ class Opening extends \yii\db\ActiveRecord
 
     }
 
+    public static function getCaseName ($id)
+    {
+       $name = self::find()->where(['id' => $id]) ? self::find()->where(['id' => $id])->one()->name : null;
+       return $name;
+
+    }
+
     public function addItem()
     {
         if(!$this->item_id || !$this->user_id){

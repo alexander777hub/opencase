@@ -364,7 +364,7 @@ class Profile extends BaseProfile
         return $dataProvider;
     }
 
-    public function getBestDrop($dataProvider) : array
+    public function getBestDrop($dataProvider)
     {
         if(!$dataProvider){
             return [];
@@ -375,7 +375,7 @@ class Profile extends BaseProfile
         usort($arr, function ($item1, $item2) {
             return $item2['price'] <=> $item1['price'];
         });
-        return $arr;
+        return !empty($arr) ? $arr[0] : null;
 
 
     }
@@ -384,7 +384,7 @@ class Profile extends BaseProfile
         if(empty($array)){
             return  '/uploads/photo/default.png';
         }
-        $icon =  $array[0]['icon'] ? $array[0]['icon'] : '/uploads/photo/default.png';
+        $icon =  $array['icon'] ? $array['icon'] : '/uploads/photo/default.png';
         $icon = str_replace('public', 'original', $icon);
         return $icon;
 
@@ -395,7 +395,7 @@ class Profile extends BaseProfile
             return 'Не задано';
         }
 
-        return $array[0]['internal_name'] ? $array[0]['internal_name'] : 'Не задано';
+        return $array['internal_name'] ? $array['internal_name'] : 'Не задано';
 
     }
 
