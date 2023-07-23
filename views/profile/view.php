@@ -141,7 +141,7 @@ $best_drop_name =  $best_drop ? User::getUser(Yii::$app->user->getId())->getProf
                 <div class="profile__avatar-and-streamer-mode">
                     <a href="#" class="profile__avatar" target="_blank" rel="noreferrer noopener">
 							<span class="profile__img">
-								<img src=<?=  \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->photo_full ?> alt="">
+								<img src=<?=  \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->photo_full ? \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->photo_full : '/uploads/profile/default.png' ?> alt="">
 							</span>
                     </a>
 
