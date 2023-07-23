@@ -331,6 +331,8 @@ class Profile extends BaseProfile
 
     public function getName()
     {
+        var_dump($this->getAttribute('name'));
+        exit;
         return $this->name ? $this->name : null;
     }
 
