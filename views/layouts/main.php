@@ -18,7 +18,7 @@ use app\models\User;
 
 if(!Yii::$app->user->isGuest){
     $user_id =  User::getUser(Yii::$app->user->getId())->getProfile() ?  User::getUser(Yii::$app->user->getId())->getProfile()->user_id : Yii::$app->user->getId();
-    $photo = User::getUser(Yii::$app->user->getId())->getProfile() ? User::getUser(Yii::$app->user->getId())->getProfile()->photo : '/uploads/photo/default.png';
+    $photo = User::getUser(Yii::$app->user->getId())->getProfile() && User::getUser(Yii::$app->user->getId())->getProfile()->photo ? User::getUser(Yii::$app->user->getId())->getProfile()->photo : '/uploads/photo/default.png';
     $credit = \app\models\User::getUser(Yii::$app->user->getId())->getProfile() ? \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->credit : '0.00';
     $name = User::getUser(Yii::$app->user->getId())->getProfile() ? User::getUser(Yii::$app->user->getId())->getProfile()->getName() : User::getUser(Yii::$app->user->getId())->username;
 }
