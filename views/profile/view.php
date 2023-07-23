@@ -276,8 +276,8 @@ $best_drop_name = User::getUser(Yii::$app->user->getId())->getProfile()->getBest
                         <div class="item__content">
                             <a href="#" class="profile__favorite-case-item">
                                 <img src=<?= $best_photo   ?> class="case-image">
-                                    <div class="item__type">P250</div>
-                                    <div class="item__name">Северный лес</div>
+                                 <!--   <div class="item__type">P250</div> !-->
+                                    <div class="item__name"><?= $best_drop_name   ?></div>
                             </a>
 
 
