@@ -42,7 +42,8 @@ class CrystalOrder extends \yii\db\ActiveRecord
             [['payment'], 'string', 'max' => 36],
             [['required_method'], 'string', 'max' => 20],
             [['amount_currency'], 'string', 'max' => 20],
-            [['amount'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',"message" => "Amount should be decimal value. Format: 0.00"],
+            [['amount'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',"message" => "Amount should be decimal value. Format: 0.00", 'min' => 1.00, 'max' => 999999999.9999],
+
         ];
     }
 
