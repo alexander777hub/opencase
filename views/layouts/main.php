@@ -1422,7 +1422,10 @@ if(!Yii::$app->user->isGuest){
                 <div class="wrapper">
                     <header class="header-bottom">
                         <div class="header-bottom__logo">
-                            <a class="header-logo" href="/" title="Go to the main page"></a>
+
+                            <a class="header-logo" href="/" title="Go to the main page">
+                                <img src="/uploads/img.png">
+                            </a>
                         </div>
 
                         <div class="header-bottom__userbar">
