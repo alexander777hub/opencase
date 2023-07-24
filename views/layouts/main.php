@@ -1224,6 +1224,7 @@ if(!Yii::$app->user->isGuest){
 
 
 
+
                             <a href="/user/2823549" class="item-history covert js-drop-tooltip">
                                 <div class="item-history__inner">
                                     <div class="item-history__wrapper-img">
@@ -1402,10 +1403,6 @@ if(!Yii::$app->user->isGuest){
                                 <div class="item-history__tooltip js-item-history-tooltip"></div>
                             </a>
 
-
-
-
-
                             <a href="/user/1474561" class="item-history classified js-drop-tooltip">
                                 <div class="item-history__inner">
                                     <div class="item-history__wrapper-img">
@@ -1424,7 +1421,7 @@ if(!Yii::$app->user->isGuest){
                         <div class="header-bottom__logo">
 
                             <a class="header-logo" href="/" title="Go to the main page">
-                                <img src="/uploads/img.png">
+                                <img src="/uploads/LOGOmin.png">
                             </a>
                         </div>
 
