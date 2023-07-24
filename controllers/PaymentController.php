@@ -106,8 +106,8 @@ class PaymentController extends \yii\web\Controller
                             'user_id' => $model->user_id,
 
                         ],
-                        'callback_url' => 'https://updrop.ru/crystal/success',
-                        'redirect_url' => 'https://updrop.ru',
+                        'callback_url' => 'https://up-drop.ru/crystal/success',
+                        'redirect_url' => 'https://up-drop.ru',
                     ],
                     'headers' => [
                         'Content-Type' => 'application/json',
