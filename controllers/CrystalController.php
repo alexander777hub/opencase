@@ -25,7 +25,7 @@ class CrystalController extends \yii\web\Controller
     {
         if ($this->request->isPost) {
 
-            $secret = \Yii::$app->params['payok_key'];
+            $secret = \Yii::$app->params['crystal_secret'];
 
 
             $content = json_decode(\Yii::$app->request->getRawBody(), true);
@@ -36,7 +36,7 @@ class CrystalController extends \yii\web\Controller
             $id = $content["id"];
             $signature = $content["signature"];
 
-            $salt = "Salt " . \Yii::$app->params['crystal_sault'];
+            $salt =  \Yii::$app->params['crystal_sault'];
 
             $hash = sha1($id.":".$salt);
 

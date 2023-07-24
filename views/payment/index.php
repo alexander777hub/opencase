@@ -475,12 +475,12 @@ use yii\bootstrap4\ActiveForm;
                             <img src="https://payok.io/files/image/logo_black.svg" alt="">
                         </div>
 
-                    <!--    <div class="payment-systems__payment" seo-paymethod="card">
+                        <div class="payment-systems__payment" seo-paymethod="card">
                             <a  href="/payment/crystal">
                                 <img src="/uploads/payment/crystal.png" alt="">
                             </a>
 
-                        </div>  !-->
+                        </div>
 
 
 

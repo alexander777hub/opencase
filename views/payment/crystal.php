@@ -482,9 +482,6 @@ use yii\bootstrap4\ActiveForm;
 
                         </div>
 
-                        <div class="payment-systems__payment" seo-paymethod="qiwi" action="choosePayMethod">
-                            <img src="https://images.steamcdn.io/shared/pay_methods/qiwi.svg" alt="">
-                        </div>
 
 
 

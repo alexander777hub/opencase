@@ -4,23 +4,17 @@ namespace app\controllers;
 
 use app\models\Ad;
 use app\models\AdminLoginForm;
-use app\models\AdSearch;
-use app\models\Client;
 use app\models\ContactForm;
 use app\models\LightOpenID;
 use app\models\Profile;
 use app\models\User;
-use dektrium\user\models\RegistrationForm;
 use SteamWebApi\SteamWebApi;
 use Yii;
-use yii\authclient\OpenId;
-use yii\base\InvalidConfigException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\old;
 use Ziganshinalexey\Yii2SteamOpenIdAuth\actions\SteamAuthAction;
 use Ziganshinalexey\Yii2SteamOpenIdAuth\traits\SteamApiComponentTrait;
 
@@ -106,9 +100,7 @@ class SiteController extends Controller
                 $profile = Profile::find()->where(['steam_id' => $sid64])->one();
                 $key = Yii::$app->params['steam_api_key'];
 
-
                 $client = new \GuzzleHttp\Client();
-
 
                 $response = $client->request('GET', 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' . $key . '&steamids=' . $sid64, [
                     'headers' =>
@@ -137,8 +129,6 @@ class SiteController extends Controller
                 }
                 $profile->steam_id = $sid64;
                 $profile->save(false);
-
-
 
                 $user = User::find()->where(['id' => $profile->user_id])->one();
                 $model = new LoginForm();
