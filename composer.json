@@ -29,7 +29,8 @@
         "kartik-v/yii2-widget-fileinput": "dev-master",
         "et-soft/yii2-widget-select-year": "*",
         "alexander777hub/yii2-crop": "dev-main",
-        "steamwebapi/php-steam-api": "dev-main"
+        "steamwebapi/php-steam-api": "dev-main",
+        "kartik-v/yii2-widget-select2": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

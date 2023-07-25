@@ -98,4 +98,6 @@ class User extends BaseUser
     {
         return User::findOne($id)  ? User::findOne($id) : null;
     }
+
+
 }

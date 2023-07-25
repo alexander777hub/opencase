@@ -12,6 +12,7 @@
 namespace app\models;
 
 use alexander777hub\crop\models\PhotoEntity;
+use app\modules\mng\models\Opening;
 use Yii;
 use dektrium\user\models\Profile as BaseProfile;
 use dektrium\user\models\User;
@@ -343,15 +344,43 @@ class Profile extends BaseProfile
 
         return $arr;
     }
+    public  function getFullListSelect2($case_id) {
+        $models =  self::find()->all();
+
+        $arr = ArrayHelper::map($models,'user_id','name');
+        $case = Opening::findOne($case_id);
+       /* if($case){
+            foreach($arr as $k => $val){
+                foreach($case->users as $user){
+                    if($k == $user->getId()){
+                        unset($arr[$k]);
+                    }
+
+                }
+            }
+        } */
+        return $arr;
+    }
+
+
 
     public function getItems() : ActiveDataProvider
     {
         $query = new \yii\db\Query();
-        $query->from(['i' => 'item'])
+
+      /*  $query->from(['i' => 'item'])
             ->leftJoin(['oi' => 'opening_item'],'`i`.`id` = `item_id`')
             ->select(['`i`.`id` as item_id,`i`.`internal_name` as internal_name ,`i`.`icon` as icon , `oi`.`case_id`, `oi`.`price`'])
             ->where(['user_id' => $this->user_id])
-        ;
+        ; */
+
+        $query->from(['oi' => 'opening_item'])
+            ->leftJoin(['o' => 'opening'],'`oi`.`case_id` = `o`.`id`')
+            ->select(['`o`.`id` as case_id,`o`.`price` as price'])
+            ->where(['`o`.`user_id`' => $this->user_id]);
+        $q = $query->createCommand()->getRawSql();
+        var_dump($q);
+        exit;
 
         $dataProvider = new ActiveDataProvider([
 

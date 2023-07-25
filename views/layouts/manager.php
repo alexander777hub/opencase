@@ -155,6 +155,11 @@ if(!Yii::$app->user->isGuest){
                 'visible' => \Yii::$app->user->can('administrator'),
                 //                        'template' => '<a href="{url}" data-method="post" data-params="'.Yii::$app->request->csrfParam.'='.Yii::$app->request->getCsrfToken().'"><i class="ti-lock"></i> {label}</a>',
                 'template' => '<a href="{url}" data-method="get"><i class="ti-lock"></i> {label}</a>',
+            ],
+            ['label' => Yii::t('app', 'Категории кейсов'), 'url' => ['/mng/opening-category/index'],
+                'visible' => \Yii::$app->user->can('administrator'),
+                //                        'template' => '<a href="{url}" data-method="post" data-params="'.Yii::$app->request->csrfParam.'='.Yii::$app->request->getCsrfToken().'"><i class="ti-lock"></i> {label}</a>',
+                'template' => '<a href="{url}" data-method="get"><i class="ti-lock"></i> {label}</a>',
             ]
         ],
     ]);

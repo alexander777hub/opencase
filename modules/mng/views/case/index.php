@@ -10,7 +10,7 @@ use yii\grid\GridView;
 /** @var app\modules\mng\models\OpeningSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Openings';
+$this->title = 'Кейсы';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="opening-index">
@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Opening', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Создать кейс', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -31,7 +31,27 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'name',
-            'avatar_id',
+           // 'avatar_id',
+            [
+                'class' => yii\grid\DataColumn::className(),
+                'label' =>'Ссылка на фото',
+                'attribute' => 'avatar_id',
+                'format'=>'html',
+                'value' => function ($model) {
+                    return $model->avatar_id ? Html::a(Opening::getOriginal($model->avatar_id), [Url::to(Opening::getOriginal($model->avatar_id))]) : 'Не задано';
+                },
+                //  'filter' => yii\helpers\ArrayHelper::map(app\models\Customobj::find()->all(), 'Id', 'Key')
+            ],
+            [
+                'class' => yii\grid\DataColumn::className(),
+                'label' =>'Цена',
+                'attribute' => 'price',
+                'format'=>'html',
+                'value' => function ($model) {
+                    return $model->price ? $model->price : 'Не задано';
+                },
+                //  'filter' => yii\helpers\ArrayHelper::map(app\models\Customobj::find()->all(), 'Id', 'Key')
+            ],
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Opening $model, $key, $index, $column) {

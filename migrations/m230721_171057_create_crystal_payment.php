@@ -25,7 +25,7 @@ class m230721_171057_create_crystal_payment extends Migration
             'lifetime' => $this->string(255)->notNull()->defaultValue('4320'),
             'redirect_url' => $this->string(255)->null(),
             'callback_url' => $this->string(255)->null(),
-            'amount'  =>  $this->decimal(5, 2)->notNull(),
+            'amount'  =>  $this->decimal(13, 4)->notNull(),
             'link' => $this->string(255)->null(),
         ]);
     }

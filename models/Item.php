@@ -39,6 +39,11 @@ class Item extends \yii\db\ActiveRecord
         ksort($arr);
         return $arr;
     }
+    public static function getFullListSelect2()
+    {
+        $arr = \yii\helpers\ArrayHelper::map(\app\models\Item::find()->all(), 'id', 'internal_name');
+        return $arr;
+    }
 
     public $photo;
     /**

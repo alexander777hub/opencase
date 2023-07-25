@@ -15,8 +15,8 @@ class m230717_213529_opening_scin_table extends Migration
             'id'                => $this->primaryKey(),
             'case_id'        => $this->integer(11)->notNull(),
             'item_id'         => $this->integer(11)->notNull(),
-            'user_id'         => $this->integer(11)->notNull(),
-            'price'  =>  $this->decimal(5, 2)->notNull()->defaultValue(0.00)
+            'user_id'         => $this->integer(11)->null(),
+            'price'  =>  $this->decimal(13, 4)->notNull()
         ]);
     }
 

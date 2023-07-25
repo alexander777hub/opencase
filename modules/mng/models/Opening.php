@@ -6,6 +6,7 @@ use alexander777hub\crop\models\PhotoEntity;
 use app\models\Item;
 use app\models\User;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "opening".
@@ -17,13 +18,12 @@ use Yii;
  * @property User[]   $users
  * @property float    $price
  * @property Item[]   $items
+ * @property int|null $category_id
+ * @property OpeningCategory|null $openingCategory
  */
 class Opening extends \yii\db\ActiveRecord
 
 {
-
-
-
     public function beforeDelete()
     {
         $q = 'DELETE FROM `opening_user` WHERE
@@ -46,7 +46,11 @@ class Opening extends \yii\db\ActiveRecord
 
     public $photo;
 
-    public $item_id;
+    public  $item_ids;
+
+    public $user_ids;
+
+    public $category = null;
     /**
      * {@inheritdoc}
      */
@@ -61,30 +65,41 @@ class Opening extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
-            [['avatar_id', 'user_id', 'item_id'], 'integer'],
+            [['name', 'price', 'item_ids'], 'required'],
+
+            [['avatar_id', 'user_id', 'category_id'], 'integer'],
             [['name'], 'string', 'max' => 20],
-            [['item_id'], 'validateCase'],
-            [['price'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',],
+          //  [['price'], 'validatePrice'],
+            [['item_ids'], 'validateCase'],
+            [['user_ids'], 'safe'],
+          //  [['price'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',  'min' => 25.00, 'max' => 999999999.9999],
+           [['price'], 'number', 'numberPattern' => '/^[1-9][-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',  'min' => 25.00, 'max' => 999999999.9999],
         ];
     }
 
+
     public function validateCase()
     {
-        if($this->item_id === 'Не выбран'){
-            return;
+        if(count($this->item_ids) < 10 || count($this->item_ids) > 500){
+            $error = "Количество предметов при открытии должно быть от 10 до 500";
+            $this->addError('item_ids', $error);
         }
-        $rows = (new \yii\db\Query())
-            ->select('case_id', 'item_id', 'user_id')
-            ->from('opening_item')
-            ->where(['case_id' => $this->id])
-            ->andWhere(['item_id' => $this->item_id])
-            ->all();
-        if($rows){
-            $this->addError('id', 'Такой кейс уже существует');
-            \Yii::$app->getSession()->setFlash('danger', 'Такой кейс уже существует' );
-            return;
-        }
+        /*foreach($this->item_ids as $k=>$val){
+            $rows = (new \yii\db\Query())
+                ->select(['case_id', 'item_id', 'user_id'])
+                ->from('opening_item')
+                ->where(['user_id' => $this->user_id])
+                ->andWhere(['item_id' => intval($val)])
+                ->all();
+            if($rows){
+                $name = Item::findOne(intval($val))->getAttribute('internal_name');
+                $error = $name . ':  такой кейс уже существует';
+                $this->addError('item_ids', $error );
+                \Yii::$app->getSession()->setFlash('danger', $error);
+                return;
+            }
+        } */
+
 
     }
 
@@ -97,7 +112,8 @@ class Opening extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'avatar_id' => 'Avatar ID',
-            'user_id' => 'User ID',
+            'user_id' => 'Пользователь',
+            'item_ids' => 'Предметы'
         ];
     }
 
@@ -122,6 +138,18 @@ class Opening extends \yii\db\ActiveRecord
         return $photo && $photo->url ? $photo->url : "/uploads/profile/default.png";
     }
 
+    public static function getOriginal($id)
+    {
+        if(!$id){
+            return 'Не задано';
+        }
+        $photo = self::getAvatarUrl($id);
+
+        $photo = str_replace('public', 'original', $photo);
+        return $photo;
+
+    }
+
     /**
      * Gets query for [[Photos]].
      *
@@ -132,17 +160,6 @@ class Opening extends \yii\db\ActiveRecord
         return $this->hasMany(PhotoEntity::className(), ['bind_obj_id' => 'id']);
     }
 
-    public function addUser()
-    {
-        if(!$this->user_id){
-            return false;
-        }
-        $user = User::findOne($this->user_id);
-        $this->link('users', $user);
-        return true;
-
-    }
-
     public static function getCaseName ($id)
     {
        $name = self::find()->where(['id' => $id]) ? self::find()->where(['id' => $id])->one()->name : null;
@@ -150,21 +167,128 @@ class Opening extends \yii\db\ActiveRecord
 
     }
 
-    public function addItem()
+    public function setItems()
     {
-        if(!$this->item_id || !$this->user_id){
+        if(!empty($this->items)){
+            foreach($this->items as $k => $val){
+                $this->item_ids[] = $val['id'];
+            }
+        }
+    }
+
+    public function setUsers()
+    {
+        if(!empty($this->users)){
+            foreach($this->users as $k => $val){
+                $this->user_ids[] = intval($val['id']);
+            }
+        }
+    }
+
+    public function addItem($id)
+    {
+        if (!$id) {
             return false;
         }
 
-        $item = Item::findOne($this->item_id);
-      //  $this->link('items', $item);
-        $q = 'INSERT IGNORE INTO opening_item SET case_id = ' .(int) $this->id . ',
-                    item_id=' .(int) $this->item_id . ', user_id=' .(int) $this->user_id . ', price=' .(int) $this->price . ' ';
 
 
-        Yii::$app->db->createCommand($q)->execute();
-        return true;
+        $row = (new \yii\db\Query())
+            ->select(['case_id', 'item_id'])
+            ->from('opening_item')
+            ->where(['item_id' =>(int)$id ])
+            ->andWhere(['case_id' =>(int)$this->id ])
+            ->one();
+        if(!$row){
+            $q = 'INSERT IGNORE INTO opening_item SET case_id = ' . (int)$this->id . ',
+                    item_id=' . (int)$id . ', price=' . (int)$this->price . ', user_id=' . $this->user_id . ' ';
+
+
+            Yii::$app->db->createCommand($q)->execute();
+            return true;
+        }
+        return false;
 
     }
 
+    public function getOpeningCategory()
+    {
+        return $this->hasOne(OpeningCategory::class, ['id' => 'category_id']);
+    }
+
+    public function save($runValidation = true, $attributeNames = null)
+    {
+
+        if (empty($this->item_ids)) {
+            if(!empty($this->items)){
+                foreach($this->items as $k => $item){
+                    $q = 'DELETE FROM `opening_item` WHERE
+                    `opening_item`.`case_id` = ' .intval($this->id ). ' AND   `opening_item`.`item_id` = ' . intval($item['id'] ). '
+                     ';
+                    \Yii::$app->db->createCommand($q)->execute();
+                }
+
+            }
+
+        }
+        if (empty($this->user_ids)) {
+            if(!empty($this->users)){
+                foreach($this->users as $k => $user){
+                    $q = 'DELETE FROM `opening_user` WHERE
+                    `opening_user`.`case_id` = ' .intval($this->id ). ' AND   `opening_user`.`user_id` = ' . intval($user['id'] ). '
+                     ';
+                    \Yii::$app->db->createCommand($q)->execute();
+                }
+
+            }
+
+        }
+
+        return parent::save($runValidation, $attributeNames); // TODO: Change the autogenerated stub
+    }
+
+    public function addUser($id)
+    {
+        if (!$id) {
+            return false;
+        }
+
+        $row = (new \yii\db\Query())
+            ->select(['case_id', 'user_id'])
+            ->from('opening_user')
+            ->where(['user_id' =>(int)$id ])
+            ->andWhere(['case_id' =>(int)$this->id ])
+            ->one();
+        if(!$row){
+            $q = 'INSERT IGNORE INTO opening_user SET case_id = ' . intval($this->id) . ',
+                     user_id=' . intval($id) . ' ';
+
+
+            Yii::$app->db->createCommand($q)->execute();
+            return true;
+        }
+        return false;
+
+    }
+
+
+
+    public function afterSave($insert, $changedAttributes)
+    {
+
+        if (!empty($this->item_ids)) {
+            foreach ($this->item_ids as $k => $val) {
+                $this->addItem(intval($val));
+            }
+        }
+
+        if (!empty($this->user_ids)) {
+                foreach ($this->user_ids as $k => $val) {
+                    $this->addUser(intval($val));
+                }
+
+
+        }
+        parent::afterSave($insert, $changedAttributes); // TODO: Change the autogenerated stub
+    }
 }

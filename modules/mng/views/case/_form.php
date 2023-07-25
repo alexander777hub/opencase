@@ -7,6 +7,10 @@ use yii\widgets\ActiveForm;
 /** @var app\modules\mng\models\Opening $model */
 /** @var yii\widgets\ActiveForm $form */
 \app\assets\JQAsset::register($this);
+
+\kartik\select2\Select2Asset::register($this);
+$i = $model->users;
+
 ?>
 <script type="text/javascript">
     $(document).ready(function(){
@@ -63,9 +67,43 @@ use yii\widgets\ActiveForm;
 
 
     <?php  endif; ?>
-    <?= $form->field($model, 'user_id')->dropdownList(\app\models\Profile::getFullList()) ?>
-    <?= $form->field($model, 'item_id')->dropdownList(\app\models\Item::getFullList()) ?>
+
+  
     <?= $form->field($model, 'price')->input('numerical')->label(Yii::t('app', 'Price')) ?>
+    <?php if(!empty($categories = \app\modules\mng\models\OpeningCategory::getFullList())): ?>
+    <?= $form->field($model, 'category_id')->dropdownList(!$model->category_id ?$categories : \app\modules\mng\models\OpeningCategory::getFilteredCategoryList($model->category_id) )->label(Yii::t('app', 'Изменить категорию')) ?>
+    <?php endif; ?>
+    <?php if($model->category_id): ?>
+        <?= $form->field($model, 'category')->textInput(['readOnly'=> true])->label(Yii::t('app', 'Категория')) ?>
+    <?php endif; ?>
+    <?=
+    $form->field($model, 'item_ids')->widget(\kartik\select2\Select2::classname(), [
+        'model' => $model,
+        'name' => 'item_ids',
+        'attribute' => 'item_ids',
+        'data' => \app\models\Item::getFullListSelect2(),
+        'language' => 'en',
+        'options' => ['multiple' => true, 'placeholder' => 'Предметы'],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]);
+
+    ?>
+    <?=
+    $form->field($model, 'user_ids')->widget(\kartik\select2\Select2::classname(), [
+        'model' => $model,
+        'name' => 'user_ids',
+        'attribute' => 'user_ids',
+        'data' => \app\models\Profile::getFullListSelect2($model->id),
+        'language' => 'en',
+        'options' => ['multiple' => false, 'placeholder' => 'Юзеры'],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]);
+
+    ?>
 
 
     <div class="form-group">

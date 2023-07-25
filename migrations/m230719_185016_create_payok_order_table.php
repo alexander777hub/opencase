@@ -21,7 +21,7 @@ class m230719_185016_create_payok_order_table extends Migration
             'currency' => $this->string(4)->notNull()->defaultValue('RUB'),
             'email' => $this->string(255)->notNull(),
             'desc' => $this->string(255)->notNull(),
-            'amount'  =>  $this->decimal(5, 2)->notNull()
+            'amount'  =>  $this->decimal(13, 4)->notNull()
         ]);
     }
 
