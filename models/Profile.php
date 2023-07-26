@@ -349,7 +349,7 @@ class Profile extends BaseProfile
 
         $arr = ArrayHelper::map($models,'user_id','name');
         $case = Opening::findOne($case_id);
-       /* if($case){
+        /*if($case){
             foreach($arr as $k => $val){
                 foreach($case->users as $user){
                     if($k == $user->getId()){
@@ -358,7 +358,7 @@ class Profile extends BaseProfile
 
                 }
             }
-        } */
+        }  */
         return $arr;
     }
 

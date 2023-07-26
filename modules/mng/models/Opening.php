@@ -192,16 +192,57 @@ class Opening extends \yii\db\ActiveRecord
         }
 
 
-
         $row = (new \yii\db\Query())
-            ->select(['case_id', 'item_id'])
+            ->select(['case_id', 'item_id', 'user_id', 'id'])
             ->from('opening_item')
             ->where(['item_id' =>(int)$id ])
             ->andWhere(['case_id' =>(int)$this->id ])
+            ->andWhere(['price' => $this->price ])
             ->one();
+        if($this->user_ids){
+            if($row) {
+                foreach($this->user_ids as $user_id){
+                    \Yii::$app->db->createCommand("UPDATE opening_item SET user_id=:user_id WHERE case_id=:case_id AND item_id=:item_id AND id=:row_id IS NULL AND price=:price",
+                        [
+                            ':user_id' => $user_id,
+                            ':case_id' => $this->id,
+                            ':item_id' => $id,
+                            ':row_id' => intval($row['id']) ,
+                            ':price' => $this->price,
+                        ])
+                        ->execute();
+                }
+                return true;
+
+            } else {
+                foreach($this->user_ids as $user_id){
+                    $q = 'INSERT IGNORE INTO opening_item SET case_id = ' . (int)$this->id . ',
+                    item_id=' . (int)$id . ', price=' . (int)$this->price . ', user_id=' . $user_id . '';
+
+                    Yii::$app->db->createCommand($q)->execute();
+
+                }
+                return true;
+
+
+
+            }
+
+        }
+        if($row) {
+            \Yii::$app->db->createCommand("UPDATE opening_item SET item_id=:item_id, price=:price WHERE id=:row_id", [
+                ':item_id' => $id,
+                ':price' => $this->price,
+                ':row_id' => intval($row['id']),
+            ])
+                ->execute();
+            return true;
+        }
+
+
         if(!$row){
             $q = 'INSERT IGNORE INTO opening_item SET case_id = ' . (int)$this->id . ',
-                    item_id=' . (int)$id . ', price=' . (int)$this->price . ', user_id=' . $this->user_id . ' ';
+                    item_id=' . (int)$id . ', price=' . (int)$this->price . '';
 
 
             Yii::$app->db->createCommand($q)->execute();
@@ -275,7 +316,33 @@ class Opening extends \yii\db\ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
+        $i = $this->items;
+        $arr = ArrayHelper::map($i, 'id', 'id');
+        foreach($this->item_ids as $k => $val){
+            foreach($arr as $key => $item){
+                $id = $item;
+                if($val == $item){
+                    unset($arr[$key]);
+                }
 
+            }
+        }
+        $p = $this->price;
+        foreach ($arr as $item) {
+            $q = 'SELECT  `opening_item`.`id` FROM `opening_item` INNER JOIN `opening_user` ON `opening_item`.`user_id`= `opening_user`.`user_id` WHERE
+                    `opening_item`.`item_id` = ' . (int)$item . ' AND `opening_item`.`case_id` = ' . (int)$this->id . ' AND `opening_item`.`price` = ' . (int)$this->price . '
+                     ';
+            $ids = \Yii::$app->db->createCommand($q)->queryAll();
+
+            if (!empty($ids)) {
+                foreach ($ids as $val) {
+                    $q = 'DELETE FROM `opening_item` WHERE
+                    `opening_item`.`id` = ' . intval($val['id']) . '
+                     ';
+                    \Yii::$app->db->createCommand($q)->execute();
+                }
+            }
+        }
         if (!empty($this->item_ids)) {
             foreach ($this->item_ids as $k => $val) {
                 $this->addItem(intval($val));

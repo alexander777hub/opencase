@@ -97,7 +97,7 @@ $i = $model->users;
         'attribute' => 'user_ids',
         'data' => \app\models\Profile::getFullListSelect2($model->id),
         'language' => 'en',
-        'options' => ['multiple' => false, 'placeholder' => 'Юзеры'],
+        'options' => ['multiple' => true, 'placeholder' => 'Юзеры'],
         'pluginOptions' => [
             'allowClear' => true
         ],
