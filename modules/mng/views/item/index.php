@@ -30,10 +30,19 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'app_id',
-            'class_id',
+            'appid',
+            'classid',
             'currency',
-            'icon',
+            [
+                'class' => yii\grid\DataColumn::className(),
+                'label' =>'icon_url',
+                'attribute' => 'icon_url',
+                'format'=>'html',
+                'value' => function ($model) {
+                    return  $model->icon_url ? "https://community.cloudflare.steamstatic.com/economy/image/".$model->icon_url ."/image.png " : 'Не задано';
+                },
+                //  'filter' => yii\helpers\ArrayHelper::map(app\models\Customobj::find()->all(), 'Id', 'Key')
+            ],
             //'icon_large',
             [
                 'class' => ActionColumn::className(),
