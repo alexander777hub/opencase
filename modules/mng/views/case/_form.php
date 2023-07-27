@@ -5,9 +5,14 @@ use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\modules\mng\models\Opening $model */
-/** @var yii\widgets\ActiveForm $form */
-\app\assets\JQAsset::register($this);
+/** @var yii\bootstrap4\ActiveForm $form */
 
+
+
+
+use kartik\select2\Select2;
+
+\app\assets\JQAsset::register($this);
 \kartik\select2\Select2Asset::register($this);
 $i = $model->users;
 
@@ -48,69 +53,115 @@ $i = $model->users;
 
 </script>
 
-<div class="opening-form">
+
+
 
     <?php $form = ActiveForm::begin(); ?>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group field-color_2 required">
+                <label class="control-label">Предметы</label>
+                <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group field-color_2 required">
+                <label class="control-label">Предметы</label>
+                <?= $form->field($model, 'price')->input('numerical')->label(Yii::t('app', 'Price')) ?>
+            </div>
+        </div>
+        <?php  if(!$model->isNewRecord): ?>
+        <div class="col-sm-6">
+            <div class="form-group field-color_2 required">
+                <label class="control-label">Предметы</label>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-    <?php  if(!$model->isNewRecord): ?>
-            <?= $form->field($model, 'photo')->widget(\alexander777hub\crop\Widget::className(), [
-                'uploadUrl' => \yii\helpers\Url::toRoute('/photo/upload'),
-                'parent_table' => 'Opening',
-                'photo_field' => 'photo',
-                'items' => $model->getPhotos(),
-                'obj_id_field' => 'photo_id',
-                'noPhotoImage' => '/uploads/photo/default.png',
-                'width' => 300,
-                'height' => 400,
-            ])->label("Фото") ?>
+                    <div class="row">
+                        <?= $form->field($model, 'photo')->widget(\alexander777hub\crop\Widget::className(), [
+                            'uploadUrl' => \yii\helpers\Url::toRoute('/photo/upload'),
+                            'parent_table' => 'Opening',
+                            'photo_field' => 'photo',
+                            'items' => $model->getPhotos(),
+                            'obj_id_field' => 'photo_id',
+                            'noPhotoImage' => '/uploads/photo/default.png',
+                            'width' => 300,
+                            'height' => 400,
+                        ])->label("Фото") ?>
 
-
-    <?php  endif; ?>
-
-  
-    <?= $form->field($model, 'price')->input('numerical')->label(Yii::t('app', 'Price')) ?>
-    <?php if(!empty($categories = \app\modules\mng\models\OpeningCategory::getFullList())): ?>
-    <?= $form->field($model, 'category_id')->dropdownList(!$model->category_id ?$categories : \app\modules\mng\models\OpeningCategory::getFilteredCategoryList($model->category_id) )->label(Yii::t('app', 'Изменить категорию')) ?>
-    <?php endif; ?>
-    <?php if($model->category_id): ?>
-        <?= $form->field($model, 'category')->textInput(['readOnly'=> true])->label(Yii::t('app', 'Категория')) ?>
-    <?php endif; ?>
-    <?=
-    $form->field($model, 'item_ids')->widget(\kartik\select2\Select2::classname(), [
-        'model' => $model,
-        'name' => 'item_ids',
-        'attribute' => 'item_ids',
-        'data' => \app\models\Item::getFullListSelect2(),
-        'language' => 'en',
-        'options' => ['multiple' => true, 'placeholder' => 'Предметы'],
-        'pluginOptions' => [
-            'allowClear' => true
-        ],
-    ]);
-
-    ?>
-    <?=
-    $form->field($model, 'user_ids')->widget(\kartik\select2\Select2::classname(), [
-        'model' => $model,
-        'name' => 'user_ids',
-        'attribute' => 'user_ids',
-        'data' => \app\models\Profile::getFullListSelect2($model->id),
-        'language' => 'en',
-        'options' => ['multiple' => true, 'placeholder' => 'Юзеры'],
-        'pluginOptions' => [
-            'allowClear' => true
-        ],
-    ]);
-
-    ?>
+                    </div>
 
 
+            </div>
+        </div>
+        <?php  endif; ?>
+        <?php if(!empty($categories = \app\modules\mng\models\OpeningCategory::getFullList())): ?>
+        <div class="col-sm-6">
+            <div class="form-group field-color_2 required">
+                <label class="control-label">Предметы</label>
+                        <?= $form->field($model, 'category_id')->dropdownList(!$model->category_id ?$categories : \app\modules\mng\models\OpeningCategory::getFilteredCategoryList($model->category_id) )->label(Yii::t('app', 'Изменить категорию')) ?>
+            </div>
+        </div>
+        <?php endif; ?>
+        <?php if($model->category_id): ?>
+            <div class="col-sm-6">
+                <div class="form-group field-color_2 required">
+                    <label class="control-label">Предметы</label>
+                    <?= $form->field($model, 'category')->textInput(['readOnly'=> true])->label(Yii::t('app', 'Категория')) ?>
+                </div>
+            </div>
+        <?php endif; ?>
+        <div class="col-sm-6">
+            <div class="form-group field-color_2 required">
+                <label class="control-label">Предметы</label>
+                <span class="select2-selection select2-selection--single">
+                                            <?=
+                                                $form->field($model, 'item_ids')->widget(Select2::classname(),[
+                                                    'model' => $model,
+                                                    'name' => 'item_ids',
+                                                    'attribute' => 'item_ids',
+                                                    'bsVersion' => '4.x',
+                                                    'theme' => Select2::THEME_BOOTSTRAP,
+                                                    'data' => \app\models\Item::getFullListSelect2(),
+                                                    'language' => 'en',
+                                                    'options' => [
+                                                        'multiple' => true,
+                                                        'placeholder' => 'Предметы',
+                                                      //  'class' => 'select2-selection__rendered',
+                                                    ],
+                                                ])->label(false);
+                                             ?>
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group field-color_2 required">
+                <label class="control-label">Юзеры</label>
+                <span class="select2-selection select2-selection--single">
+                     <?=
+                     $form->field($model, 'user_ids')->widget(Select2::classname(), [
+                         'model' => $model,
+                         'name' => 'user_ids',
+                         'attribute' => 'user_ids',
+                         'bsVersion' => '4.x',
+                         'theme' => Select2::THEME_BOOTSTRAP,
+                         'data' => \app\models\Profile::getFullListSelect2($model->id),
+                         'language' => 'en',
+                         'options' => ['multiple' => true, 'placeholder' => 'Юзеры'],
+                         'pluginOptions' => [
+                             'allowClear' => true
+                         ],
+                     ])->label(false);
+
+                     ?>
+
+                </span>
+            </div>
+        </div>
+    </div>
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 
-</div>
+
 

@@ -50,6 +50,7 @@ $config = [
 
         'assetManager' => [
             'appendTimestamp' => true,
+             'bundles' => [ 'kartik\form\ActiveFormAsset' => [ 'bsDependencyEnabled' => false],]
         ],
        /* 'redis' => [
             'class' => 'yii\redis\Connection',
