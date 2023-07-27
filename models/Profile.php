@@ -344,7 +344,7 @@ class Profile extends BaseProfile
 
         return $arr;
     }
-    public  function getFullListSelect2($case_id) {
+    public static  function getFullListSelect2($case_id) {
         $models =  self::find()->all();
 
         $arr = ArrayHelper::map($models,'user_id','name');
