@@ -40,13 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'view'   => false,
                 ],
             ],
-            //'icon_large',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Item $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
+
         ],
     ]); ?>
 
