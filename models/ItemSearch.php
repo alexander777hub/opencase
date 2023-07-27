@@ -59,13 +59,13 @@ class ItemSearch extends Item
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'app_id' => $this->app_id,
-            'class_id' => $this->class_id,
+            'appid' => $this->appid,
+            'classid' => $this->classid,
             'currency' => $this->currency,
         ]);
 
-        $query->andFilterWhere(['like', 'icon', $this->icon])
-            ->andFilterWhere(['like', 'icon_large', $this->icon_large]);
+        $query->andFilterWhere(['like', 'icon_url', $this->icon_url])
+            ->andFilterWhere(['like', 'icon_url_large', $this->icon_url_large]);
 
         return $dataProvider;
     }
