@@ -28,7 +28,11 @@ class CreateUserController extends Controller
 
 
         $r =  json_decode($request->getBody()->getContents(), true);
+        if(!$r){
+            var_dump($request);
+            exit;
 
+        }
         foreach ($r['descriptions'] as $k=> $val){
             $item = new Item();
             $item->appid = isset($val['appid']) ? $val['appid'] : null;

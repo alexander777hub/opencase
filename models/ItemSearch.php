@@ -17,8 +17,8 @@ class ItemSearch extends Item
     public function rules()
     {
         return [
-            [['id', 'app_id', 'class_id', 'currency'], 'integer'],
-            [['icon', 'icon_large'], 'safe'],
+            [['id', 'appid', 'classid', 'currency'], 'integer'],
+            [['icon_url', 'icon_url_large'], 'safe'],
         ];
     }
 
