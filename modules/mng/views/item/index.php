@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'appid',
             'classid',
-            'currency',
+            'instanceid',
             'market_hash_name',
             [
                 'class'          => ActionColumn::className(),
