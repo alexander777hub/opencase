@@ -38,14 +38,14 @@ class Item extends \yii\db\ActiveRecord
 
     public static function getFullList()
     {
-        $arr = \yii\helpers\ArrayHelper::map(\app\models\Item::find()->all(), 'id', 'internal_name');
+        $arr = \yii\helpers\ArrayHelper::map(\app\models\Item::find()->all(), 'id', 'market_hash_name');
         $arr[0] = 'Не выбран';
         ksort($arr);
         return $arr;
     }
     public static function getFullListSelect2()
     {
-        $arr = \yii\helpers\ArrayHelper::map(\app\models\Item::find()->all(), 'id', 'internal_name');
+        $arr = \yii\helpers\ArrayHelper::map(\app\models\Item::find()->all(), 'id', 'market_hash_name');
         return $arr;
     }
 
