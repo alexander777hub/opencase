@@ -253,6 +253,16 @@ class Opening extends \yii\db\ActiveRecord
     {
         $i = $this->users;
         if(!$i) {
+            if($this->user_ids){
+                foreach ($this->user_ids as $id){
+                    $q = 'INSERT IGNORE INTO opening_user SET case_id = ' . intval($this->id) . ',
+                     user_id=' . intval($id) . ' ';
+
+                    Yii::$app->db->createCommand($q)->execute();
+
+                }
+            }
+
             return;
         }
         if(!$this->user_ids){
@@ -264,55 +274,40 @@ class Opening extends \yii\db\ActiveRecord
                     ->andWhere(['case_id' => intval($this->id)])
                     ->all();
                 if($rows){
-                   foreach ($rows as $k => $val){
-                       $q = 'DELETE FROM `opening_user` WHERE
+                    foreach ($rows as $k => $val){
+                        $q = 'DELETE FROM `opening_user` WHERE
                             `opening_user`.`id` = ' . intval($val['id']) . '
                              ';
-                       \Yii::$app->db->createCommand($q)->execute();
-                   }
-                   
+                        \Yii::$app->db->createCommand($q)->execute();
+                    }
                 }
-               
+
             }
             return;
         }
         $arr = ArrayHelper::map($i, 'id', 'id');
         $values = array_values($arr);
-        foreach($this->user_ids as $k => $val){
-            $rows = (new \yii\db\Query())
-                ->select(['user_id'])
-                ->from('opening_user')
-                ->where(['user_id' => intval($val)])
-                ->andWhere(['case_id' => intval($this->id)])
-                ->all();
-
-            if(!$rows){
-                $q = 'INSERT IGNORE INTO opening_user SET case_id = ' . intval($this->id) . ',
-                    user_id=' . intval($val) . '';
-
-
-                Yii::$app->db->createCommand($q)->execute();
-                continue;
-            }
-
-            $r = $rows;
-
-            foreach($arr as $key => $item){
-                $id = $item;
-                if($val == $item){
-                    unset($arr[$key]);
-                }
-            }
-
-            if(!empty($arr)){
-                foreach($arr as $item){
-                    $q = 'DELETE FROM `opening_user` WHERE
+        foreach ($arr as $key => $item) {
+            if (!in_array(strval($item), $this->user_ids)) {
+                $q = 'DELETE FROM `opening_user` WHERE
                             `opening_user`.`user_id` = ' . intval($item) . ' AND  `opening_user`.`case_id` = ' . intval($this->id) . '
                              ';
-                    \Yii::$app->db->createCommand($q)->execute();
-                }
-
+                \Yii::$app->db->createCommand($q)->execute();
             }
+        }
+
+        foreach ($this->user_ids as $k => $val) {
+            if (in_array(intval($val), $values)) {
+                continue;
+            } else {
+                $q = 'INSERT IGNORE INTO opening_user SET case_id = ' . intval($this->id) . ',
+                     user_id=' . intval($val) . ' ';
+
+                Yii::$app->db->createCommand($q)->execute();
+            }
+
+            $v = $values;
+
         }
     }
 
