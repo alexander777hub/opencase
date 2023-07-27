@@ -71,7 +71,7 @@ class Opening extends \yii\db\ActiveRecord
             [['name'], 'string', 'max' => 20],
           //  [['price'], 'validatePrice'],
             [['item_ids'], 'validateCase'],
-            [['user_ids'], 'safe'],
+            [['user_ids', 'item_ids'], 'safe'],
           //  [['price'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',  'min' => 25.00, 'max' => 999999999.9999],
            [['price'], 'number', 'numberPattern' => '/^[1-9][-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',  'min' => 25.00, 'max' => 999999999.9999],
         ];
@@ -252,6 +252,148 @@ class Opening extends \yii\db\ActiveRecord
 
     }
 
+    public function updateUsers()
+    {
+        $i = $this->users;
+        if(!$i) {
+            return;
+        }
+        if(!$this->user_ids){
+            foreach ($i as $item){
+                $rows = (new \yii\db\Query())
+                    ->select(['id'])
+                    ->from('opening_user')
+                    ->where(['user_id' => intval($item['id'])])
+                    ->andWhere(['case_id' => intval($this->id)])
+                    ->all();
+                if($rows){
+                   foreach ($rows as $k => $val){
+                       $q = 'DELETE FROM `opening_user` WHERE
+                            `opening_user`.`id` = ' . intval($val['id']) . '
+                             ';
+                       \Yii::$app->db->createCommand($q)->execute();
+                   }
+                   
+                }
+               
+            }
+            return;
+        }
+
+
+        $arr = ArrayHelper::map($i, 'id', 'id');
+        foreach($this->user_ids as $k => $val){
+            $rows = (new \yii\db\Query())
+                ->select(['id'])
+                ->from('opening_user')
+                ->where(['user_id' => intval($val)])
+                ->andWhere(['case_id' => intval($this->id)])
+                ->all();
+            if(!$rows){
+                continue;
+            }
+            foreach($arr as $key => $item){
+                $id = $item;
+                if($val == $item){
+                    unset($arr[$key]);
+                }
+            }
+
+            if(!empty($arr)){
+                foreach($arr as $item){
+                    $q = 'DELETE FROM `opening_user` WHERE
+                            `opening_user`.`user_id` = ' . intval($item) . ' AND  `opening_user`.`case_id` = ' . intval($this->id) . '
+                             ';
+                    \Yii::$app->db->createCommand($q)->execute();
+                }
+
+            }
+
+        }
+
+
+
+
+    }
+
+   public function updateItems()
+   {
+       if(!$this->item_ids){
+           return;
+       }
+       if(!$this->items){
+           return;
+       }
+       $i = $this->items;
+
+       $arr = ArrayHelper::map($i, 'id', 'id');
+       foreach($this->item_ids as $k => $val){
+           foreach($arr as $key => $item){
+               $id = $item;
+               if($val == $item){
+                   unset($arr[$key]);
+               }
+
+           }
+       }
+
+
+       if($this->user_ids){
+           foreach ($this->user_ids as $user_id){
+               foreach ($this->item_ids as $itemId){
+                   $rows = (new \yii\db\Query())
+                       ->select(['id'])
+                       ->from('opening_item')
+                       ->where(['user_id' => $user_id])
+                       ->andWhere(['case_id' => intval($this->id)])
+                       ->andWhere(['item_id' => intval($itemId)])
+                       ->all();
+                   if($rows){
+                       if(!empty($arr)){
+                           foreach($arr as $item){
+                               $q = 'DELETE FROM `opening_item` WHERE
+                                `opening_item`.`id` = ' . intval($item) . '
+                                 ';
+                               \Yii::$app->db->createCommand($q)->execute();
+
+                           }
+
+                       }
+
+                   }
+               }
+           }
+
+       }
+
+
+    /*   $a = $arr;
+       $p = $this->price;
+       foreach ($arr as $item) {
+           $q = 'SELECT  `opening_item`.`id` FROM `opening_item` INNER JOIN `opening_user` ON `opening_item`.`user_id`= `opening_user`.`user_id` WHERE
+                    `opening_item`.`item_id` = ' . (int)$item . ' AND `opening_item`.`case_id` = ' . (int)$this->id . ' AND `opening_item`.`price` = ' . (int)$this->price . '
+                     ';
+           $ids = \Yii::$app->db->createCommand($q)->queryAll();
+
+           if (!empty($ids)) {
+               foreach ($ids as $val) {
+                   $q = 'DELETE FROM `opening_item` WHERE
+                    `opening_item`.`id` = ' . intval($val['id']) . '
+                     ';
+                   \Yii::$app->db->createCommand($q)->execute();
+               }
+           }
+       } */
+
+
+   }
+
+   protected function updateInternal($attributes = null)
+   {
+       $a = $attributes;
+       return parent::updateInternal($attributes); // TODO: Change the autogenerated stub
+   }
+
     public function getOpeningCategory()
     {
         return $this->hasOne(OpeningCategory::class, ['id' => 'category_id']);
@@ -260,7 +402,7 @@ class Opening extends \yii\db\ActiveRecord
     public function save($runValidation = true, $attributeNames = null)
     {
 
-        if (empty($this->item_ids)) {
+        /*if (empty($this->item_ids)) {
             if(!empty($this->items)){
                 foreach($this->items as $k => $item){
                     $q = 'DELETE FROM `opening_item` WHERE
@@ -283,7 +425,7 @@ class Opening extends \yii\db\ActiveRecord
 
             }
 
-        }
+        } */
 
         return parent::save($runValidation, $attributeNames); // TODO: Change the autogenerated stub
     }
@@ -314,7 +456,7 @@ class Opening extends \yii\db\ActiveRecord
 
 
 
-    public function afterSave($insert, $changedAttributes)
+ /*   public function afterSave($insert, $changedAttributes)
     {
         $i = $this->items;
         $arr = ArrayHelper::map($i, 'id', 'id');
@@ -357,5 +499,5 @@ class Opening extends \yii\db\ActiveRecord
 
         }
         parent::afterSave($insert, $changedAttributes); // TODO: Change the autogenerated stub
-    }
+    } */
 }

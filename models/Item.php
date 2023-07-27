@@ -11,15 +11,19 @@ use Yii;
  * This is the model class for table "item".
  *
  * @property int $id
- * @property int $app_id
- * @property int|null $class_id
+ * @property int $appid
+ * @property int|null $classid
+ * @property int|null $instanceid
  * @property int $currency
- * @property string|null $icon
- * @property string|null $icon_large
+ *  @property string|null  $background_color
+ *   @property string|null   $icon_url
+ * @property string|null $icon_url_large
+ * @property string|null $exterior
  * @property string|null $internal_name
- * @property  int|null $profile_id
- * @property  Profile $profile
- * @property  int $scin_type
+ * @property string|null $type
+ * @property string|null $name
+ * @property string|null $market_hash_name
+ * @property string|null $rarity
  * @property Opening[] $openings
  */
 class Item extends \yii\db\ActiveRecord
@@ -60,8 +64,8 @@ class Item extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['app_id', 'class_id', 'currency', 'profile_id', 'scin_type'], 'integer'],
-            [['icon', 'icon_large', 'photo', 'internal_name',], 'string', 'max' => 255],
+            [['appid', 'instanceid', 'currency', 'instanceid'], 'integer'],
+            [['background_color', 'icon_url_large', 'rarity', 'type', 'exterior', 'name', 'photo', 'internal_name',], 'string', 'max' => 255],
         ];
     }
 
@@ -102,7 +106,7 @@ class Item extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'app_id' => 'App ID',
+            'appid' => 'App ID',
             'class_id' => 'Class ID',
             'currency' => 'Currency',
             'icon' => 'Icon',

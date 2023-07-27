@@ -14,14 +14,19 @@ class m230717_102925_create_item_table extends Migration
     {
         $this->createTable('{{%item}}', [
             'id' => $this->primaryKey(),
-            'app_id' => $this->integer(11)->notNull()->defaultValue(730),
-            'class_id' => $this->integer(11)->null(),
+            'appid' => $this->integer(11)->null(),
+            'classid' => $this->integer(20)->null(),
+            'instanceid' =>  $this->integer(20)->null(),
+            "background_color"=> $this->string(255)->null(),
             'currency' => $this->integer(11)->notNull()->defaultValue(0),
-            'icon' => $this->string(255)->null(),
-            'icon_large' => $this->string(255)->null(),
+            'icon_url' => $this->string(255)->null(),
+            'icon_url_large' => $this->string(255)->null(),
+            'exterior' => $this->string(255)->null(),
             'internal_name' => $this->string(255)->null(),
-            'profile_id' => $this->integer(11)->null(),
-            'scin_type' => $this->integer(1)->notNull()->defaultValue(0),
+            'name' =>  $this->string(255)->null(),
+            'market_hash_name' =>  $this->string(255)->null(),
+            'type' => $this->string(255)->null(),
+            'rarity' => $this->string(255)->null(),
         ]);
     }
 

@@ -379,8 +379,7 @@ class Profile extends BaseProfile
             ->select(['`o`.`id` as case_id,`o`.`price` as price'])
             ->where(['`o`.`user_id`' => $this->user_id]);
         $q = $query->createCommand()->getRawSql();
-        var_dump($q);
-        exit;
+
 
         $dataProvider = new ActiveDataProvider([
 

@@ -5,6 +5,7 @@ namespace app\modules\mng\controllers;
 use alexander777hub\crop\models\PhotoEntity;
 use app\models\Userform;
 use app\modules\mng\models\Opening;
+use app\modules\mng\models\OpeningItemForm;
 use app\modules\mng\models\OpeningSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -71,11 +72,11 @@ class CaseController extends Controller
     {
         $model = new Opening();
 
-        $model->setItems();
-
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
 
+                $form = \Yii::createObject(OpeningItemForm::className(), [$model]);
+                $form->create();
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -103,6 +104,7 @@ class CaseController extends Controller
         $model->setItems();
         $model->setUsers();
         if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->updateUsers();
             $model->save();
             $file = \Yii::$app->request->getBodyParams()['Opening']['photo'];
 
