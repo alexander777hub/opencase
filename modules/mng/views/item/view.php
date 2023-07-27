@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'internal_name',
-            'icon',
+            'icon_url',
             'icon_large',
             [
                 'class' => yii\grid\DataColumn::className(),

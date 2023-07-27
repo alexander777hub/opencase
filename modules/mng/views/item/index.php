@@ -33,15 +33,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'appid',
             'classid',
             'currency',
+            'market_hash_name',
             [
-                'class' => yii\grid\DataColumn::className(),
-                'label' =>'icon_url',
-                'attribute' => 'icon_url',
-                'format'=>'html',
-                'value' => function ($model) {
-                    return  $model->icon_url ? "https://community.cloudflare.steamstatic.com/economy/image/".$model->icon_url ."/image.png " : 'Не задано';
-                },
-                //  'filter' => yii\helpers\ArrayHelper::map(app\models\Customobj::find()->all(), 'Id', 'Key')
+                'class'          => ActionColumn::className(),
+                'visibleButtons' => [
+                    'view'   => false,
+                ],
             ],
             //'icon_large',
             [

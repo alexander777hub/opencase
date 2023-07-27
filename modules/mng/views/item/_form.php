@@ -45,30 +45,15 @@ use yii\widgets\ActiveForm;
 
 </script>
 
-<div class="item-form">
+< class="item-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'internal_name')->textInput() ?>
-
-
-    <?= $form->field($model, 'icon')->textInput(['maxlength' => true, 'readonly' => 'readonly']) ?>
-    <?= $form->field($model, 'profile_id')->dropdownList(\app\models\Profile::getFullList()) ?>
-    <?= $form->field($model, 'icon_large')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'scin_type')->dropdownList(\app\models\Item::getScins()) ?>
-    <?php  if(!$model->isNewRecord): ?>
-    <?= $form->field($model, 'photo')->widget(\alexander777hub\crop\Widget::className(), [
-        'uploadUrl' => \yii\helpers\Url::toRoute('/photo/upload'),
-        'parent_table' => 'Item',
-        'photo_field' => 'photo',
-        'items' => $model->getPhotos(),
-        'obj_id_field' => 'photo_id',
-        'noPhotoImage' => '/uploads/photo/default.png',
-        'width' => 300,
-        'height' => 400,
-    ])->label("Фото") ?>
-
-    <?php  endif; ?>
+<?= $form->field($model, 'rarity')->textInput() ?>
+<?= $form->field($model, 'exterior')->textInput() ?>
+    <?= $form->field($model, 'icon_url')->textInput(['maxlength' => true]) ?>
+    <img src=<?php  $model->icon_url ? 'https://community.cloudflare.steamstatic.com/economy/image/'.$model->icon_url.'/image.png ' : '/uploads/profile/default.png' ?>>
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
