@@ -64,4 +64,77 @@ class CreateUserController extends Controller
         }
 
     }
+
+    public function actionInternal()
+    {
+       /* $row = (new \yii\db\Query())
+            ->select(['rarity', 'exterior', 'market_hash_name', 'id'])
+            ->from('item_init')
+            ->where(['item_id' =>(int)$id ])
+            ->andWhere(['case_id' =>(int)$this->id ])
+            ->andWhere(['price' => $this->price ])
+            ->one();
+
+
+        foreach($this->user_ids as $user_id){
+            \Yii::$app->db->createCommand("UPDATE opening_item SET user_id=:user_id WHERE case_id=:case_id AND item_id=:item_id AND id=:row_id IS NULL AND price=:price",
+                [
+                    ':user_id' => $user_id,
+                    ':case_id' => $this->id,
+                    ':item_id' => $id,
+                    ':row_id' => intval($row['id']) ,
+                    ':price' => $this->price,
+                ])
+                ->execute();
+        }
+        return true; */
+    }
+
+
+    public function actionPrice()
+    {
+        $items = Item::find()->all();
+
+        foreach ($items as $item){
+            $name = $item->market_hash_name;
+            $client = new \GuzzleHttp\Client([
+                'timeout' => 60,
+                'debug' => false,
+            ]);
+            $request = $client->request('GET', 'https://market.csgo.com/api/v2/search-item-by-hash-name?key=y2948BXYGGc165H388sGeq9bPUaeym7&hash_name=' . $name, [
+
+                'timeout' => 120,
+            ]);
+            //
+
+            $r =  json_decode($request->getBody()->getContents(), true);
+            if(isset($r['data']) && !empty($r['data'])) {
+                $arr = [];
+                foreach ($r['data'] as $k=>$val){
+                    if(isset($val['instance']) && $val['instance'] == $item->instanceid){
+                        $arr[] = $val['price'];
+                        /*  $item->currency = $r['currency'];
+                          $item->price = $val['price'];
+                          $item->internal_name = $item->name .'_'. '(' . $item->id.')' .'_' .strval($val['price']). '(' . $r['currency'].')' . '_' . $item->rarity;
+                          $item->save(false); */
+                    }
+                }
+                if(!empty($arr)){
+                    ksort($arr);
+                    $i = count($arr) -1;
+                    $item->currency = $r['currency'];
+                    $item->price = $arr[$i];
+                    $item->internal_name = $item->name .'_'. '(' . $item->id.')' .'_' .strval($arr[$i]). '(' . $r['currency'].')' . '_' . $item->rarity;
+                    $item->save(false);
+
+                } else {
+                    echo "NO data for item" . '' . $item->id . '<br>';
+                }
+            }
+
+
+        }
+
+    }
+
 }

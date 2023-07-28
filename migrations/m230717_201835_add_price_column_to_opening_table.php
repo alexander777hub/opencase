@@ -12,7 +12,7 @@ class m230717_201835_add_price_column_to_opening_table extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('{{%opening}}', 'price', $this->decimal(5, 2)->notNull()->defaultValue(0.00));
+        $this->addColumn('{{%opening}}', 'price', $this->decimal(13, 4)->notNull()->defaultValue(0.00));
     }
 
     /**

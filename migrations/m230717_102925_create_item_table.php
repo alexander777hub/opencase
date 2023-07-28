@@ -15,8 +15,8 @@ class m230717_102925_create_item_table extends Migration
         $this->createTable('{{%item}}', [
             'id' => $this->primaryKey(),
             'appid' => $this->integer(11)->null(),
-            'classid' => $this->integer(20)->null(),
-            'instanceid' =>  $this->integer(20)->null(),
+            'classid' => $this->string(255)->null(),
+            'instanceid' =>  $this->string(255)->null(),
             "background_color"=> $this->string(255)->null(),
             'currency' => $this->integer(11)->notNull()->defaultValue(0),
             'icon_url' => $this->string(255)->null(),

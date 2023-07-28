@@ -27,6 +27,7 @@ use Yii;
  * @property string|null $rarity
  * @property Opening[] $openings
  *  @property OpeningItemInit[] $initOpenings
+ * @property float|null $price
  */
 class Item extends \yii\db\ActiveRecord
 {
@@ -47,7 +48,13 @@ class Item extends \yii\db\ActiveRecord
     }
     public static function getFullListSelect2()
     {
-        $arr = \yii\helpers\ArrayHelper::map(\app\models\Item::find()->all(), 'id', 'market_hash_name');
+        $items = \app\models\Item::find()->all();
+        foreach($items as $k=>$val){
+            if(!$val->price){
+                unset($items[$k]);
+            }
+        }
+        $arr = \yii\helpers\ArrayHelper::map($items, 'id', 'internal_name');
         return $arr;
     }
 
@@ -68,6 +75,7 @@ class Item extends \yii\db\ActiveRecord
         return [
             [['appid', 'instanceid', 'currency', 'instanceid'], 'integer'],
             [['background_color', 'icon_url_large', 'rarity', 'type', 'exterior', 'name', 'photo', 'internal_name',], 'string', 'max' => 255],
+            [['price'], 'number', 'numberPattern' => '/^[1-9][-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',  'min' => 0.01, 'max' => 999999999.9999],
         ];
     }
 
@@ -118,6 +126,7 @@ class Item extends \yii\db\ActiveRecord
             'currency' => 'Currency',
             'icon' => 'Icon',
             'icon_large' => 'Icon Large',
+            'price' => 'Price'
         ];
     }
 
