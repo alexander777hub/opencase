@@ -101,39 +101,45 @@ class CreateUserController extends Controller
                 'timeout' => 60,
                 'debug' => false,
             ]);
-            $request = $client->request('GET', 'https://market.csgo.com/api/v2/search-item-by-hash-name?key=y2948BXYGGc165H388sGeq9bPUaeym7&hash_name=' . $name, [
+            $request = $client->request('GET', 'https://market.csgo.com/api/v2/prices/RUB.json', [
 
                 'timeout' => 120,
             ]);
             //
 
             $r =  json_decode($request->getBody()->getContents(), true);
-            if(isset($r['data']) && !empty($r['data'])) {
+            if(isset($r['items']) && !empty($r['items'])) {
                 $arr = [];
-                foreach ($r['data'] as $k=>$val){
-                    if(isset($val['instance']) && $val['instance'] == $item->instanceid){
+                foreach ($r['items'] as $k=>$val){
+                    if(isset($val['market_hash_name']) && $val['market_hash_name'] == $item->market_hash_name){
                         $arr[] = $val['price'];
-                        /*  $item->currency = $r['currency'];
-                          $item->price = $val['price'];
-                          $item->internal_name = $item->name .'_'. '(' . $item->id.')' .'_' .strval($val['price']). '(' . $r['currency'].')' . '_' . $item->rarity;
-                          $item->save(false); */
+
                     }
                 }
+
                 if(!empty($arr)){
                     ksort($arr);
                     $i = 0;
                     $item->currency = $r['currency'];
-                    $item->price = $arr[$i];
+                    $item->price = isset($arr[$i]) ? $arr[$i] : null;
+                    if(!isset($arr[$i])){
+                        echo "NO data IN item" . '' . $item->id . '<br>';
+                        var_dump($arr);
+                        exit;
+                    }
+
+
                     $item->internal_name = $item->name .'_'. '(' . $item->id.')' .'_' .strval($arr[$i]). '(' . $r['currency'].')' . '_' . $item->rarity;
                     $item->save(false);
 
                 } else {
-                    echo "NO data for item" . '' . $item->id . '<br>';
+                    echo "NO data for item" . '' . $item->market_hash_name . '<br>';
                 }
             }
 
-
         }
+        die("Success");
+        exit;
 
     }
 
