@@ -121,7 +121,7 @@ class CreateUserController extends Controller
                 }
                 if(!empty($arr)){
                     ksort($arr);
-                    $i = count($arr) -1;
+                    $i = $arr[0];
                     $item->currency = $r['currency'];
                     $item->price = $arr[$i];
                     $item->internal_name = $item->name .'_'. '(' . $item->id.')' .'_' .strval($arr[$i]). '(' . $r['currency'].')' . '_' . $item->rarity;
