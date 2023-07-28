@@ -61,13 +61,13 @@ $i = $model->users;
         <div class="col-sm-6">
             <div class="form-group field-color_2 required">
                 <label class="control-label">Название</label>
-                <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'name')->textInput(['maxlength' => true])->label(false); ?>
             </div>
         </div>
         <div class="col-sm-6">
             <div class="form-group field-color_2 required">
-                <label class="control-label">Цена</label>
-                <?= $form->field($model, 'price')->input('numerical', ['readOnly'=> !$model->isNewRecord])->label(Yii::t('app', 'Price')) ?>
+                <label class="control-label"> Цена</label>
+                <?= $form->field($model, 'price')->input('numerical', ['readOnly'=> !$model->isNewRecord])->label(false); ?>
             </div>
         </div>
         <?php  if(!$model->isNewRecord): ?>
@@ -85,7 +85,7 @@ $i = $model->users;
                             'noPhotoImage' => '/uploads/photo/default.png',
                             'width' => 300,
                             'height' => 400,
-                        ])->label("Фото") ?>
+                        ])->label(false) ?>
 
                     </div>
 
@@ -97,15 +97,15 @@ $i = $model->users;
         <div class="col-sm-6">
             <div class="form-group field-color_2 required">
                 <label class="control-label">Назначить категорию</label>
-                        <?= $form->field($model, 'category_id')->dropdownList(!$model->category_id ?$categories : \app\modules\mng\models\OpeningCategory::getFilteredCategoryList($model->category_id) )->label(Yii::t('app', 'Изменить категорию')) ?>
+                        <?= $form->field($model, 'category_id')->dropdownList(!$model->category_id ?$categories : \app\modules\mng\models\OpeningCategory::getFilteredCategoryList($model->category_id) )->label(false) ?>
             </div>
         </div>
         <?php endif; ?>
         <?php if($model->category_id): ?>
             <div class="col-sm-6">
                 <div class="form-group field-color_2 required">
-                    <label class="control-label">Список категорий</label>
-                    <?= $form->field($model, 'category')->textInput(['readOnly'=> true])->label(Yii::t('app', 'Категория')) ?>
+                    <label class="control-label">Категория</label>
+                    <?= $form->field($model, 'category')->textInput(['readOnly'=> true])->label(false) ?>
                 </div>
             </div>
         <?php endif; ?>
@@ -113,22 +113,22 @@ $i = $model->users;
             <div class="form-group field-color_2 required">
                 <label class="control-label">Предметы</label>
                 <span class="select2-selection select2-selection--single">
-                                            <?=
-                                                $form->field($model, 'item_ids')->widget(Select2::classname(),[
-                                                    'model' => $model,
-                                                    'name' => 'item_ids',
-                                                    'attribute' => 'item_ids',
-                                                    'bsVersion' => '4.x',
-                                                    'theme' => Select2::THEME_BOOTSTRAP,
-                                                    'data' => \app\models\Item::getFullListSelect2(),
-                                                    'language' => 'en',
-                                                    'options' => [
-                                                        'multiple' => true,
-                                                        'placeholder' => 'Предметы',
-                                                      //  'class' => 'select2-selection__rendered',
-                                                    ],
-                                                ])->label(false);
-                                             ?>
+                <?=
+                    $form->field($model, 'item_ids')->widget(Select2::classname(),[
+                        'model' => $model,
+                        'name' => 'item_ids',
+                        'attribute' => 'item_ids',
+                        'bsVersion' => '4.x',
+                        'theme' => Select2::THEME_BOOTSTRAP,
+                        'data' => \app\models\Item::getFullListSelect2(),
+                        'language' => 'en',
+                        'options' => [
+                            'multiple' => true,
+                            'placeholder' => 'Предметы',
+                          //  'class' => 'select2-selection__rendered',
+                        ],
+                    ])->label(false);
+                 ?>
                 </span>
             </div>
         </div>
