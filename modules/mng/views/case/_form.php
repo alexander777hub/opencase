@@ -132,6 +132,7 @@ $i = $model->users;
                 </span>
             </div>
         </div>
+        <?php if(!$model->isNewRecord): ?>
         <div class="col-sm-6">
             <div class="form-group field-color_2 required">
                 <label class="control-label">Юзеры</label>
@@ -156,6 +157,7 @@ $i = $model->users;
                 </span>
             </div>
         </div>
+        <?php endif; ?>
     </div>
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
