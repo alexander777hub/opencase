@@ -105,7 +105,14 @@ class CaseController extends Controller
         $model->setUsers();
         if ($this->request->isPost && $model->load($this->request->post())) {
             $model->updateUsers();
-            $model->save();
+            $model->updateItems();
+            if(!$model->save()){
+                foreach($model->getErrors() as $error){
+                    \Yii::$app->getSession()->setFlash('danger', $error);
+                }
+
+            }
+
             $file = \Yii::$app->request->getBodyParams()['Opening']['photo'];
 
             if($file != '/uploads/photo/default.png'){

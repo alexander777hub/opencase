@@ -5,6 +5,7 @@ namespace app\models;
 use alexander777hub\crop\models\PhotoEntity;
 use app\modules\mng\models\ItemPhotoEntity;
 use app\modules\mng\models\Opening;
+use app\modules\mng\models\OpeningItemInit;
 use Yii;
 
 /**
@@ -25,6 +26,7 @@ use Yii;
  * @property string|null $market_hash_name
  * @property string|null $rarity
  * @property Opening[] $openings
+ *  @property OpeningItemInit[] $initOpenings
  */
 class Item extends \yii\db\ActiveRecord
 {
@@ -97,6 +99,11 @@ class Item extends \yii\db\ActiveRecord
     public function getOpenings() {
         return $this->hasMany(Opening::className(), ['id' => 'case_id'])
             ->viaTable('opening_item', ['item_id' => 'id']);
+    }
+
+    public function getInitOpenings() {
+        return $this->hasMany(Opening::className(), ['id' => 'case_id'])
+            ->viaTable('opening_item_init', ['item_id' => 'id']);
     }
 
     /**

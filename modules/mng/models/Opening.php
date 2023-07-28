@@ -19,6 +19,7 @@ use yii\helpers\ArrayHelper;
  * @property float    $price
  * @property Item[]   $items
  * @property int|null $category_id
+ * @property Item[]   $initItems
  * @property OpeningCategory|null $openingCategory
  */
 class Opening extends \yii\db\ActiveRecord
@@ -32,6 +33,10 @@ class Opening extends \yii\db\ActiveRecord
         \Yii::$app->db->createCommand($q)->execute();
         $q = 'DELETE FROM `opening_item` WHERE
                     `opening_item`.`case_id` = ' .(int) $this->id . '
+                     ';
+        \Yii::$app->db->createCommand($q)->execute();
+        $q = 'DELETE FROM `opening_item_init` WHERE
+                    `opening_item_init`.`case_id` = ' .(int) $this->id . '
                      ';
         \Yii::$app->db->createCommand($q)->execute();
         /*$q = 'INSERT IGNORE INTO item SET profile_id = NULL WHERE
@@ -129,6 +134,14 @@ class Opening extends \yii\db\ActiveRecord
             ->viaTable('opening_item', ['case_id' => 'id']);
     }
 
+    public function getInitItems()
+    {
+        return $this->hasMany(Item::className(), ['id' => 'item_id'])
+            ->viaTable('opening_item_init', ['case_id' => 'id']);
+    }
+
+
+
 
 
     public static function getAvatarUrl($id)
@@ -169,8 +182,8 @@ class Opening extends \yii\db\ActiveRecord
 
     public function setItems()
     {
-        if(!empty($this->items)){
-            foreach($this->items as $k => $val){
+        if(!empty($this->initItems)){
+            foreach($this->initItems as $k => $val){
                 $this->item_ids[] = $val['id'];
             }
         }
@@ -313,72 +326,85 @@ class Opening extends \yii\db\ActiveRecord
 
    public function updateItems()
    {
-       if(!$this->item_ids){
-           return;
-       }
-       if(!$this->items){
-           return;
-       }
-       $i = $this->items;
 
-       $arr = ArrayHelper::map($i, 'id', 'id');
-       foreach($this->item_ids as $k => $val){
-           foreach($arr as $key => $item){
-               $id = $item;
-               if($val == $item){
-                   unset($arr[$key]);
+       $i = $this->initItems;
+       if(!$i) {
+           if($this->item_ids){
+               foreach ($this->item_ids as $id){
+                   $copy = OpeningItemInit::find()->where(['item_id'=> intval($id), 'case_id' => $this->id])->one();
+                   $q = 'INSERT IGNORE INTO opening_item_init SET case_id = ' . intval($this->id) . ',
+                     item_id=' . intval($id) . ', price =' . $copy->price . '';
+
+
+                   Yii::$app->db->createCommand($q)->execute();
+
+
                }
+           }
+
+           return;
+       }
+
+       if(!$this->item_ids){
+
+           foreach ($i as $item){
+               $q = 'DELETE FROM `opening_item_init` WHERE
+                    `opening_item_init`.`item_id` = ' . intval($item->id) . ' AND `opening_item_init`.`case_id` = ' . intval($this->id) . '
+                     ';
+               \Yii::$app->db->createCommand($q)->execute();
+               $q = 'DELETE FROM `opening_item` WHERE
+                    `opening_item`.`item_id` = ' . intval($item->id) . ' AND `opening_item`.`case_id` = ' . intval($this->id) . '
+                     ';
+               \Yii::$app->db->createCommand($q)->execute();
+
+
 
            }
+           return;
        }
+       $arr = ArrayHelper::map($i, 'id', 'id');
+       $values = array_values($arr);
+       foreach ($arr as $key => $item) {
+           if (!in_array(strval($item), $this->item_ids)) {
+               $q = 'DELETE FROM `opening_item_init` WHERE
+                            `opening_item_init`.`item_id` = ' . intval($item) . ' AND  `opening_item_init`.`case_id` = ' . intval($this->id) . '
+                             ';
+               \Yii::$app->db->createCommand($q)->execute();
+               $q = 'DELETE FROM `opening_item` WHERE
+                            `opening_item`.`item_id` = ' . intval($item) . ' AND  `opening_item`.`case_id` = ' . intval($this->id) . '
+                             ';
+               \Yii::$app->db->createCommand($q)->execute();
+           }
+       }
+       $values_users = array_values(ArrayHelper::map($this->users, 'id', 'id'));
+       foreach ($this->item_ids as $k => $val) {
+           if(!in_array(intval($val), $values)){
+               $q = 'INSERT IGNORE INTO opening_item_init SET case_id = ' . intval($this->id) . ',
+                     item_id=' . intval($val) . ' ';
+               Yii::$app->db->createCommand($q)->execute();
+           }
+           if($this->user_ids){
+               foreach($this->user_ids as $k=>$user_id){
 
+                   if(!in_array(intval($user_id), $values_users)){
+                       $q = 'INSERT IGNORE INTO opening_item SET case_id = ' . intval($this->id) . ',
+                    item_id=' . intval($val) . ', user_id = ' . intval($user_id) . ', price = ' . $this->price .  '';
 
-       if($this->user_ids){
-           foreach ($this->user_ids as $user_id){
-               foreach ($this->item_ids as $itemId){
-                   $rows = (new \yii\db\Query())
-                       ->select(['id'])
-                       ->from('opening_item')
-                       ->where(['user_id' => $user_id])
-                       ->andWhere(['case_id' => intval($this->id)])
-                       ->andWhere(['item_id' => intval($itemId)])
-                       ->all();
-                   if($rows){
-                       if(!empty($arr)){
-                           foreach($arr as $item){
-                               $q = 'DELETE FROM `opening_item` WHERE
-                                `opening_item`.`id` = ' . intval($item) . '
-                                 ';
-                               \Yii::$app->db->createCommand($q)->execute();
-
-                           }
-
-                       }
-
+                       Yii::$app->db->createCommand($q)->execute();
                    }
                }
+
            }
+          /* if (in_array(intval($val), $values)) {
+               continue;
+           } else {
+
+
+           }
+
+           $v = $values; */
 
        }
-
-
-    /*   $a = $arr;
-       $p = $this->price;
-       foreach ($arr as $item) {
-           $q = 'SELECT  `opening_item`.`id` FROM `opening_item` INNER JOIN `opening_user` ON `opening_item`.`user_id`= `opening_user`.`user_id` WHERE
-                    `opening_item`.`item_id` = ' . (int)$item . ' AND `opening_item`.`case_id` = ' . (int)$this->id . ' AND `opening_item`.`price` = ' . (int)$this->price . '
-                     ';
-           $ids = \Yii::$app->db->createCommand($q)->queryAll();
-
-           if (!empty($ids)) {
-               foreach ($ids as $val) {
-                   $q = 'DELETE FROM `opening_item` WHERE
-                    `opening_item`.`id` = ' . intval($val['id']) . '
-                     ';
-                   \Yii::$app->db->createCommand($q)->execute();
-               }
-           }
-       } */
 
 
    }

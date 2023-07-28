@@ -60,20 +60,20 @@ $i = $model->users;
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group field-color_2 required">
-                <label class="control-label">Предметы</label>
+                <label class="control-label">Название</label>
                 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
             </div>
         </div>
         <div class="col-sm-6">
             <div class="form-group field-color_2 required">
-                <label class="control-label">Предметы</label>
-                <?= $form->field($model, 'price')->input('numerical')->label(Yii::t('app', 'Price')) ?>
+                <label class="control-label">Цена</label>
+                <?= $form->field($model, 'price')->input('numerical', ['readOnly'=> !$model->isNewRecord])->label(Yii::t('app', 'Price')) ?>
             </div>
         </div>
         <?php  if(!$model->isNewRecord): ?>
         <div class="col-sm-6">
             <div class="form-group field-color_2 required">
-                <label class="control-label">Предметы</label>
+                <label class="control-label">Фото</label>
 
                     <div class="row">
                         <?= $form->field($model, 'photo')->widget(\alexander777hub\crop\Widget::className(), [
@@ -96,7 +96,7 @@ $i = $model->users;
         <?php if(!empty($categories = \app\modules\mng\models\OpeningCategory::getFullList())): ?>
         <div class="col-sm-6">
             <div class="form-group field-color_2 required">
-                <label class="control-label">Предметы</label>
+                <label class="control-label">Назначить категорию</label>
                         <?= $form->field($model, 'category_id')->dropdownList(!$model->category_id ?$categories : \app\modules\mng\models\OpeningCategory::getFilteredCategoryList($model->category_id) )->label(Yii::t('app', 'Изменить категорию')) ?>
             </div>
         </div>
@@ -104,7 +104,7 @@ $i = $model->users;
         <?php if($model->category_id): ?>
             <div class="col-sm-6">
                 <div class="form-group field-color_2 required">
-                    <label class="control-label">Предметы</label>
+                    <label class="control-label">Список категорий</label>
                     <?= $form->field($model, 'category')->textInput(['readOnly'=> true])->label(Yii::t('app', 'Категория')) ?>
                 </div>
             </div>
