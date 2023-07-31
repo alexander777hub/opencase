@@ -5,7 +5,6 @@ namespace app\modules\mng\controllers;
 use app\modules\mng\models\Task;
 use app\modules\mng\models\TaskSearch;
 use GuzzleHttp\Exception\ClientException;
-use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
