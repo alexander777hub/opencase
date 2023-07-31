@@ -138,8 +138,11 @@ class CreateUserController extends Controller
             }
 
         }
-        die("Success");
-        exit;
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        \Yii::$app->response->statusCode = 200;
+        return [
+            'success',
+        ];
 
     }
 
