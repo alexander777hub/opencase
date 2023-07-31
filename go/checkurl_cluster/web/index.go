@@ -7,7 +7,6 @@ import (
 	"github.com/joho/godotenv"
 	"gitlab.com/Pereselkov777/checkurl_cluster/githooks"
 	"gitlab.com/Pereselkov777/checkurl_cluster/internal/app/controllers"
-	"gitlab.com/Pereselkov777/checkurl_cluster/internal/app/database"
 	"log"
 	"net/http"
 	"os"
@@ -20,8 +19,8 @@ func handlerIndex(w http.ResponseWriter, r *http.Request) {
 
 var workerAccessToken string
 
-//https://stackoverflow.com/questions/58084494/golang-how-can-i-get-authorization-from-mux
-//https://stackoverflow.com/questions/21936332/idiomatic-way-of-requiring-http-basic-auth-in-go/39591234#39591234
+// https://stackoverflow.com/questions/58084494/golang-how-can-i-get-authorization-from-mux
+// https://stackoverflow.com/questions/21936332/idiomatic-way-of-requiring-http-basic-auth-in-go/39591234#39591234
 func JwtVerify(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var header = r.Header.Get("worker-access-token")
@@ -55,7 +54,7 @@ func main() {
 	/*http.HandleFunc("/", handlerIndex)
 	http.HandleFunc("/gitlab", githooks.HandlerGitlab)
 	http.ListenAndServe(":8085", nil)*/
-	config :=
+	/*config :=
 		database.Config{
 			ServerName: os.Getenv("DB_HOST") + ":3306",
 			User:       os.Getenv("DB_USERNAME"),
@@ -67,7 +66,7 @@ func main() {
 	err := database.Connect(connectionString)
 	if err != nil {
 		panic(err.Error())
-	}
+	} */
 	//database.Connector.Logger.LogMode(logger.Info)
 
 	log.Println("Starting the HTTP server on port 8085")
