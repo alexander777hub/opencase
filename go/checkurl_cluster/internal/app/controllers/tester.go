@@ -137,6 +137,7 @@ func TesterCron(w http.ResponseWriter, r *http.Request) {
 }
 func taskWithParams(params url.Values) {
 	url := os.Getenv("DOMAIN_URL") + "/create-user/price"
+	fmt.Printf("URL", url)
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Printf("ERR", err)
