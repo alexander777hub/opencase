@@ -85,7 +85,7 @@ class TaskController extends Controller
 
 
                 try {
-                    $response = $client->request('GET', 'tester/azaza' , [
+                    $response = $client->request('GET', 'tester/price' , [
                         'headers' => ['worker-access-token' => \Yii::$app->params['worker-access-token']],
                         'query' => $data
                     ]);
@@ -146,7 +146,7 @@ class TaskController extends Controller
 
 
         try {
-            $response = $client->request('GET', 'tester/azaza' , [
+            $response = $client->request('GET', 'tester/price' , [
                 'headers' => ['worker-access-token' => \Yii::$app->params['worker-access-token']],
                 'query' => $data
             ]);
