@@ -93,6 +93,8 @@ class TaskController extends Controller
                     $rows = json_decode((string)$response->getBody(), true);
 
                 } catch (ClientException $e) {
+                    var_dump($e);
+                    exit;
                     return $e->getCode();
                 }
                 return $this->redirect(['view', 'id' => $model->id]);
