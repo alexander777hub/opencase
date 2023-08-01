@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/go-co-op/gocron"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"gitlab.com/Pereselkov777/checkurl_cluster/githooks"
@@ -11,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 func handlerIndex(w http.ResponseWriter, r *http.Request) {
@@ -75,9 +77,9 @@ func main() {
 	secure.Use(JwtVerify)
 
 	router.HandleFunc("/gitlab", githooks.HandlerGitlab).Methods("POST")
-
+	scheduler := gocron.NewScheduler(time.UTC)
 	secure.HandleFunc("/tester/cron", controllers.TesterCron).Methods("GET")
-
+	secure.HandleFunc("/tester/price", controllers.TesterPrice(scheduler)).Methods("GET")
 	router.HandleFunc("/", handlerIndex).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8085", router))
 }

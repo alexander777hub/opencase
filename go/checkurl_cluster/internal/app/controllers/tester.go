@@ -6,6 +6,7 @@ import (
 	"github.com/go-co-op/gocron"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 	"sync"
 	"time"
@@ -17,11 +18,53 @@ type Response struct {
 }
 
 type Params struct {
-	frequency    string
-	repeat_count string
-	url          string
-	url_id       string
-	check_id     int
+	frequency string
+	check_id  int
+	remove_id int
+}
+
+func TesterPrice(s *gocron.Scheduler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		params, _ := url.ParseQuery(r.URL.RawQuery)
+		tag := params.Get("remove_id")
+		fmt.Printf("TAGS", tag)
+		if len(tag) > 0 {
+			//jobs, err := s.FindJobsByTag(tag)
+			jobs := s.Jobs()
+
+			s.Clear()
+			fmt.Printf("JOBS", jobs)
+			fmt.Printf("REMOVED", jobs)
+			return
+		}
+
+		var wg sync.WaitGroup
+
+		wg.Add(1)
+
+		go func() {
+			defer wg.Done()
+
+			w.Header().Set("Content-Type", "application/json")
+
+			intNum, _ := strconv.Atoi(params.Get("frequency"))
+
+			jobs := s.Jobs()
+
+			fmt.Printf("LIST OF JOBS", jobs)
+
+			job, _ := s.Every(intNum).Minute().Tag("foo").Do(taskWithParams, params)
+			fmt.Printf("TAGGED", job)
+
+			s.StartAsync()
+
+		}()
+		wg.Wait()
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"result": "ok",
+		})
+	}
+
 }
 
 func TesterCron(w http.ResponseWriter, r *http.Request) {
@@ -92,7 +135,18 @@ func TesterCron(w http.ResponseWriter, r *http.Request) {
 	})
 
 }
-func taskWithParams(params url.Values, resp_arr Response, repeat int) {
+func taskWithParams(params url.Values) {
+	url := os.Getenv("DOMAIN_URL") + "/create-user/price"
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Printf("ERR", err)
+		fmt.Printf("ERROR", err.Error())
+		return
+	}
+
+	fmt.Printf("OK", resp.StatusCode)
+
+	fmt.Print("UPDATED")
 
 	/*check_id := params.Get("check_id")
 
@@ -151,7 +205,7 @@ func taskWithParams(params url.Values, resp_arr Response, repeat int) {
 	}
 
 	fmt.Print("Gocron is finished") */
-	fmt.Print("Update DB HERE")
+
 }
 
 func ErrorHandler(params url.Values, repeat int, url string) {
@@ -169,7 +223,7 @@ func ErrorHandler(params url.Values, repeat int, url string) {
 
 		http := res.StatusCode
 		res_arr.StatusCode = strconv.Itoa(http)
-		taskWithParams(params, res_arr, i)
+		taskWithParams(params)
 	}
 }
 func ErrorHandlerTimeout(params url.Values, repeat int, url string) {
@@ -188,14 +242,14 @@ func asyncCall(params url.Values, repeat int, url string) {
 	if err != nil {
 		fmt.Printf("errors", err)
 		res_arr.StatusCode = "0"
-		taskWithParams(params, res_arr, repeat)
+		taskWithParams(params)
 		return
 	}
 	res, err := new(http.Transport).RoundTrip(req)
 	if err != nil {
 		fmt.Printf("errors", err)
 		res_arr.StatusCode = "0"
-		taskWithParams(params, res_arr, repeat)
+		taskWithParams(params)
 		return
 	}
 	defer res.Body.Close()
@@ -203,6 +257,6 @@ func asyncCall(params url.Values, repeat int, url string) {
 	http := res.StatusCode
 	res_arr.StatusCode = strconv.Itoa(http)
 	res_arr.Time = time.Now()
-	taskWithParams(params, res_arr, repeat)
+	taskWithParams(params)
 
 }
