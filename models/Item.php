@@ -73,7 +73,8 @@ class Item extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['appid', 'instanceid', 'currency', 'instanceid'], 'integer'],
+            [['appid'],  'integer'],
+            [['appid', 'instanceid', 'currency', 'instanceid'],  'string', 'max' => 255],
             [['background_color', 'icon_url_large', 'rarity', 'type', 'exterior', 'name', 'photo', 'internal_name',], 'string', 'max' => 255],
             [['price'], 'number', 'numberPattern' => '/^[1-9][-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',  'min' => 0.01, 'max' => 999999999.9999],
         ];

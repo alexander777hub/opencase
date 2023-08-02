@@ -32,16 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'internal_name',
             'icon_url',
             'icon_large',
-            [
-                'class' => yii\grid\DataColumn::className(),
-                'label' =>'Цвет',
-                'attribute' => 'scin_type',
-                'format'=>'html',
-                'value' => function ($model) {
-                    return \app\models\Item::getScins()[$model->scin_type] ? \app\models\Item::getScins()[$model->scin_type] : null;
-                },
-                //  'filter' => yii\helpers\ArrayHelper::map(app\models\Customobj::find()->all(), 'Id', 'Key')
-            ],
+
         ],
     ]) ?>
 
