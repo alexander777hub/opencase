@@ -36,4 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
+    <img src=<?php $model->icon_url ? 'https://community.cloudflare.steamstatic.com/economy/image/' . $model->icon_url . '/image.png ' : '/uploads/profile/default.png' ?>>
+
 </div>
