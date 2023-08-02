@@ -96,31 +96,34 @@ class ItemController extends Controller
         $model = $this->findModel($id);
         $r = \Yii::$app->request->getBodyParams();
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            $file = \Yii::$app->request->getBodyParams()['Item']['photo'];
-            if($file != '/uploads/photo/default.png'){
-                $photo = new ItemPhotoEntity();
-                $url = $photo->movePhoto($file);
-                if ($url){
-                    $photo_id =  \Yii::$app->request->getBodyParams()['Item']['photo_id'];
-                    $old_model = ItemPhotoEntity::findOne(intval($photo_id));
-                    if($old_model){
-                        $old_model->url = $url;
-                        $old_model->save(false);
-                    } else {
-                        $photo->bind_obj_id = $model->id;
-                        $photo->url = $url;
-                        $photo->type = 7;
-                        if(!$photo->save()){
-                            foreach($photo->getErrors() as $error){
-                                \Yii::$app->getSession()->setFlash('danger', $error);
+            if(isset(\Yii::$app->request->getBodyParams()['Item']['photo'])){
+                $file = \Yii::$app->request->getBodyParams()['Item']['photo'];
+                if($file != '/uploads/photo/default.png'){
+                    $photo = new ItemPhotoEntity();
+                    $url = $photo->movePhoto($file);
+                    if ($url){
+                        $photo_id =  \Yii::$app->request->getBodyParams()['Item']['photo_id'];
+                        $old_model = ItemPhotoEntity::findOne(intval($photo_id));
+                        if($old_model){
+                            $old_model->url = $url;
+                            $old_model->save(false);
+                        } else {
+                            $photo->bind_obj_id = $model->id;
+                            $photo->url = $url;
+                            $photo->type = 7;
+                            if(!$photo->save()){
+                                foreach($photo->getErrors() as $error){
+                                    \Yii::$app->getSession()->setFlash('danger', $error);
+                                }
                             }
-                        }
 
+                        }
                     }
+                    $model->icon = $photo->url;
+                    $model->save(false);
                 }
-                $model->icon = $photo->url;
-                $model->save(false);
             }
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

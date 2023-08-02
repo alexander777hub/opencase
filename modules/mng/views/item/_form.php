@@ -14,7 +14,8 @@ use yii\widgets\ActiveForm;
 <div class="item-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
+    <?= $form->field($model, 'classid')->textInput() ?>
+    <?= $form->field($model, 'instanceid')->textInput() ?>
     <?= $form->field($model, 'internal_name')->textInput() ?>
     <?= $form->field($model, 'rarity')->textInput() ?>
     <?= $form->field($model, 'exterior')->textInput() ?>
