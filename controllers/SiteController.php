@@ -8,8 +8,12 @@ use app\models\ContactForm;
 use app\models\LightOpenID;
 use app\models\Profile;
 use app\models\User;
+use app\modules\mng\models\Opening;
+use app\modules\mng\models\OpeningCategory;
+use app\modules\mng\models\OpeningSearch;
 use SteamWebApi\SteamWebApi;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
@@ -80,9 +84,23 @@ class SiteController extends Controller
     public function actionIndex()
     {
 
+        $searchModel = new OpeningSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+
+
 
         return $this->render('index', [
+          'dataProvider' =>  $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
+    }
 
+    public function actionView($id)
+    {
+        $model = Opening::findOne($id);
+
+        return $this->render('view', [
+            'model' => $model
         ]);
     }
     public function actionSteam()
@@ -145,30 +163,10 @@ class SiteController extends Controller
             header('Location: /');
         }
     }
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionCreate()
-    {
-        return $this->redirect( [
-            'ad/create'
-        ]);
-    }
 
 
-    public function actionView($id)
-    {
-        $model = Ad::findOne($id);
-        $userform = \app\models\Userform::find()->where(["user_id" => $model->user_id])->one();
-        $model->username = $userform && $userform->first_name ? $userform->first_name  : "Не задано";
-        $model->link = $model->getProfileAttribute('vk_link');
-        $model->sex_name =  $userform && isset(Profile::$sex_list[$userform->sex]) && $userform->sex != 0 ? Profile::$sex_list[$userform->sex] : 'Не задано';
-        return $this->render('view', [
-            'model' => $model,
-        ]);
-    }
+
+
 
     /**
      * Login action.
@@ -232,7 +230,7 @@ class SiteController extends Controller
 
         // Get Inventory
         $res =   $steamWebApi->getInventory('76561199524928583');
-      $res2 =   $steamWebApi->getInventoryWorth('76561199524928583');
+        $res2 =   $steamWebApi->getInventoryWorth('76561199524928583');
         $r = $res;
         // Get Inventory And Worth
 
@@ -247,29 +245,18 @@ class SiteController extends Controller
             'timeout' => 60,
             'debug' => false,
         ]);
-        $request = $client->request('GET', 'inventory', [
-            'query' => [
-                'steam_id' => '76561199524928583',
-                'game' => 'csgo',
-                'language' => 'english',
-                'parse' => true,
-                'key' => 'TSZI1ZF43Y1KA27E',
-            ],
-            'timeout' => 120,
-        ]);
-
-        $r =  json_decode($request->getBody()->getContents(), true);
-
         $request = $client->request('GET', 'items', [
             'query' => [
-                'steam_id' => '76561199524928583',
+            //    'steam_id' => '76561199524928583',
                 'game' => 'csgo',
                 'language' => 'english',
                 'parse' => true,
-                'key' => 'TSZI1ZF43Y1KA27E',
+                'key' => 'KDYDGJW766RCQ19H',
             ],
             'timeout' => 120,
         ]);
+
+
 
         $r =  json_decode($request->getBody()->getContents(), true);
         $a = $r;

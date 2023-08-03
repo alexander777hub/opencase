@@ -7,6 +7,7 @@ use app\models\Userform;
 use app\modules\mng\models\Opening;
 use app\modules\mng\models\OpeningItemForm;
 use app\modules\mng\models\OpeningSearch;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -16,6 +17,12 @@ use yii\filters\VerbFilter;
  */
 class CaseController extends Controller
 {
+
+    public function beforeAction($action)
+    {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    }
     /**
      * @inheritDoc
      */
@@ -189,17 +196,33 @@ class CaseController extends Controller
         \Yii::$app->getSession()->setFlash('success', "Аватар назначен");
         return $this->redirect(['index']);
     }
+
     public function actionRemovePhoto($photo_id)
     {
         $model = PhotoEntity::findOne(intval($photo_id));
-        $userform = Opening::find()->where(['id' =>$model->bind_obj_id])->one();
-        if($userform->avatar_id == intval($photo_id)){
+        $userform = Opening::find()->where(['id' => $model->bind_obj_id])->one();
+        if ($userform->avatar_id == intval($photo_id)) {
             $userform->avatar_id = null;
         }
         $userform->save(false);
         $model->delete();
         \Yii::$app->getSession()->setFlash('success', "Фото удалено");
         return $this->redirect(['index']);
+    }
+
+    public function actionOpen()
+    {
+       if(\Yii::$app->request->isAjax && \Yii::$app->request->isPost ){
+           $data = $_POST;
+
+           $id = $data['case_id'];
+           $case = Opening::findOne($id);
+          $result = $case->open();
+           \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+           \Yii::$app->response->statusCode = 200;
+           return $result;
+
+       }
     }
 
 }

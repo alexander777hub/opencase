@@ -87,7 +87,7 @@ class ProfileController extends Controller
        $dataProvider = $model->getItems();
         return $this->render('view', [
             'model' => $this->findModel($user_id),
-            'dataProvider' => $dataProvider,
+            'dataProvider' => null,
         ]);
     }
 

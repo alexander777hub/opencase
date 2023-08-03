@@ -31,13 +31,13 @@ $script = <<< JS
    
 JS;
 $this->registerJs($script);
-$best_drop = User::getUser(Yii::$app->user->getId())->getProfile()->getBestDrop($dataProvider);
+/*$best_drop = User::getUser(Yii::$app->user->getId())->getProfile()->getBestDrop($dataProvider);
 $best_drop_price = $best_drop && isset($best_drop['price']) ? $best_drop['price'] : '';
 $best_drop_case_name = $best_drop && isset($best_drop['case_id']) ? \app\modules\mng\models\Opening::getCaseName($best_drop['case_id']) : '';
 
 $best_photo = $best_drop ? User::getUser(Yii::$app->user->getId())->getProfile()->getBestDropPhoto($best_drop) : '';
 
-$best_drop_name =  $best_drop ? User::getUser(Yii::$app->user->getId())->getProfile()->getBestDropName($best_drop) : '';
+$best_drop_name =  $best_drop ? User::getUser(Yii::$app->user->getId())->getProfile()->getBestDropName($best_drop) : ''; */
 
 ?>
 <div id="trade" style="display: none">
@@ -402,7 +402,7 @@ $best_drop_name =  $best_drop ? User::getUser(Yii::$app->user->getId())->getProf
                               </div>
                           </div>
 
-                          <?php     if($dataProvider->getModels()): ?>
+                          <?php     if($dataProvider && $dataProvider->getModels()): ?>
                           <div class="items-block__grid">
                               <div class="grid">
                                   <div class="grid__items">

@@ -376,8 +376,8 @@ class Profile extends BaseProfile
 
         $query->from(['oi' => 'opening_item'])
             ->leftJoin(['o' => 'opening'],'`oi`.`case_id` = `o`.`id`')
-            ->select(['`o`.`id` as case_id,`o`.`price` as price'])
-            ->where(['`o`.`user_id`' => $this->user_id]);
+            ->select(['`o`.`id` as case_id,`o`.`price` as price']);
+
         $q = $query->createCommand()->getRawSql();
 
 

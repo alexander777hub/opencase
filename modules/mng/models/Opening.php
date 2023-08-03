@@ -14,7 +14,6 @@ use yii\helpers\ArrayHelper;
  * @property int      $id
  * @property string   $name
  * @property int|null $avatar_id
- * @property int|null $user_id
  * @property User[]   $users
  * @property float    $price
  * @property Item[]   $items
@@ -25,6 +24,64 @@ use yii\helpers\ArrayHelper;
 class Opening extends \yii\db\ActiveRecord
 
 {
+
+    public static function getRarityList()
+    {
+        return [
+            [
+                'name' => 'Rarity_Common_Weapon',
+                'chance' => 79.98,
+            ],
+            [
+                'name' => 'Rarity_Mythical',
+                'chance' => 14.27
+            ],
+            [
+                'name' => 'Rarity_Legendary',
+                'chance' =>  2.9
+            ],
+            [
+                'name' => 'Rarity_Ancient',
+                'chance' => 0.50
+            ],
+            [
+                'name' => 'Rarity_Ancient_Weapon',
+                'chance' => 0.23
+            ],
+            [
+                'name' => 'Rarity_Rare_Weapon',
+                'chance' => 0.023
+            ],
+        ];
+
+    }
+
+    public static function getExteriorList()
+    {
+        return [
+            [
+                'name' => 'Battle-Scarred',
+                'chance' => mt_rand(45, 100),
+            ],
+            [
+                'name' => 'Well-Worn',
+                'chance' => mt_rand(38, 45)
+            ],
+            [
+                'name' => 'Field-Tested',
+                'chance' =>  mt_rand(15,38)
+            ],
+            [
+                'name' => 'Minimal Wear',
+                'chance' => mt_rand(7,15)
+            ],
+            [
+                'name' => 'Factory New',
+                'chance' => mt_rand(0,7)
+            ],
+        ];
+
+    }
     public function beforeDelete()
     {
         $q = 'DELETE FROM `opening_user` WHERE
@@ -54,6 +111,7 @@ class Opening extends \yii\db\ActiveRecord
     public  $item_ids;
 
     public $user_ids;
+    public $test;
 
     public $category = null;
     /**
@@ -72,11 +130,11 @@ class Opening extends \yii\db\ActiveRecord
         return [
             [['name', 'price', 'item_ids'], 'required'],
 
-            [['avatar_id', 'user_id', 'category_id'], 'integer'],
+            [['avatar_id', 'category_id'], 'integer'],
             [['name'], 'string', 'max' => 20],
           //  [['price'], 'validatePrice'],
-            [['item_ids'], 'validateCase'],
-            [['user_ids', 'item_ids'], 'safe'],
+        //    [['item_ids'], 'validateCase'],
+            [['user_ids', 'item_ids', 'test'], 'safe'],
           //  [['price'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',  'min' => 25.00, 'max' => 999999999.9999],
            [['price'], 'number', 'numberPattern' => '/^[1-9][-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',  'min' => 25.00, 'max' => 999999999.9999],
         ];
@@ -85,9 +143,10 @@ class Opening extends \yii\db\ActiveRecord
 
     public function validateCase()
     {
-        if(count($this->item_ids) < 10 || count($this->item_ids) > 500){
+        if(count($this->item_ids) < 10 || count($this->item_ids) > 20){
             $error = "Количество предметов при открытии должно быть от 10 до 500";
-            $this->addError('item_ids', $error);
+
+        //    $this->addError('item_ids', $error);
         }
         /*foreach($this->item_ids as $k=>$val){
             $rows = (new \yii\db\Query())
@@ -118,7 +177,8 @@ class Opening extends \yii\db\ActiveRecord
             'name' => 'Name',
             'avatar_id' => 'Avatar ID',
             'user_id' => 'Пользователь',
-            'item_ids' => 'Предметы'
+            'item_ids' => 'Предметы',
+             'user_ids' => 'Юзеры'
         ];
     }
 
@@ -324,8 +384,11 @@ class Opening extends \yii\db\ActiveRecord
         }
     }
 
-   public function updateItems()
+   public function updateItems($price = null, $winner_id = null, $user_winner_id =null)
    {
+
+       $insertPrice = $price ? $price : $this->price;
+
 
        $i = $this->initItems;
        if(!$i) {
@@ -376,7 +439,17 @@ class Opening extends \yii\db\ActiveRecord
                \Yii::$app->db->createCommand($q)->execute();
            }
        }
-       $values_users = array_values(ArrayHelper::map($this->users, 'id', 'id'));
+       $query = (new \yii\db\Query())->select(['id'])->from('opening_user')->where(['case_id' => $this->id]);
+       $raw = $query->createCommand()->getRawSql();
+       $command = $query->createCommand();
+       $data = $command->queryAll();
+       $ids = [];
+       if(!empty($data)){
+           foreach ($data as $key => $item){
+               $ids[ intval($item['id'])] = intval($item['id']);
+           }
+       }
+       $values_users = !empty($ids) ? $ids : [];
        foreach ($this->item_ids as $k => $val) {
            if(!in_array(intval($val), $values)){
                $q = 'INSERT IGNORE INTO opening_item_init SET case_id = ' . intval($this->id) . ',
@@ -384,15 +457,30 @@ class Opening extends \yii\db\ActiveRecord
                Yii::$app->db->createCommand($q)->execute();
            }
            if($this->user_ids){
-               foreach($this->user_ids as $k=>$user_id){
+               if($val == $winner_id){
+                   foreach($this->user_ids as $k=>$user_id){
+                       if(!in_array(intval($user_id), $values_users)){
+                           $query = (new \yii\db\Query())->select(['id'])->from('opening_item')->where(['case_id' => $this->id, 'item_id' => intval($val), 'user_id' => intval($user_id), 'price'=> $insertPrice]);
 
-                   if(!in_array(intval($user_id), $values_users)){
-                       $q = 'INSERT IGNORE INTO opening_item SET case_id = ' . intval($this->id) . ',
-                    item_id=' . intval($val) . ', user_id = ' . intval($user_id) . ', price = ' . $this->price .  '';
+                           $command = $query->createCommand();
+                           $data = $command->queryAll();
+                           if(!empty($data)){
+                               continue;
+                           }
+                           if($user_winner_id && $user_id != $user_winner_id){
+                               continue;
+                           }
+                           $q = 'INSERT IGNORE INTO opening_item SET case_id = ' . intval($this->id) . ',
+                            item_id=' . intval($val) . ', user_id = ' . intval($user_id) . ', price = ' . $insertPrice .  '';
+                //           $q = 'REPLACE  INTO opening_item  (case_id, item_id, user_id, price) VALUES (' . intval($this->id) . ',
+                //        ' . intval($val) . ',  ' . intval($user_id) . ', ' . $insertPrice .  ')';
 
-                       Yii::$app->db->createCommand($q)->execute();
+                           Yii::$app->db->createCommand($q)->execute();
+                           break;
+                       }
                    }
                }
+
 
            }
           /* if (in_array(intval($val), $values)) {
@@ -476,6 +564,205 @@ class Opening extends \yii\db\ActiveRecord
         }
         return false;
 
+    }
+
+
+
+
+    public function winItemBy($list)
+    {
+        $items = [];
+        $i = 0;
+        $maxTickets = 0;
+
+        foreach ($list as $item) {
+            if ($item['chance'] === 0) continue;
+
+
+            if ($i == 0) {
+                $from = 1;
+            } else {
+                $from = $items[$i - 1]['to'] + 1;
+            }
+
+            $to = $from + $item['chance'];
+            $maxTickets = $to;
+
+            $items[$i] = [
+                'from' => $from,
+                'to' => $to,
+                'name' => $item['name']
+            ];
+
+            $i++;
+        }
+
+        try {
+            $winTicket = mt_rand(1, $maxTickets);
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        $winItem = null;
+
+        foreach ($items as $item) {
+            if ($item['from'] <= $winTicket && $item['to'] >= $winTicket) {
+                $winItem = $item;
+                break;
+            }
+        }
+        if(!$winItem){
+           $winItem = $list[1];
+        }
+
+        return $winItem;
+
+    }
+
+
+
+    public function open()
+    {
+        if(!$this->initItems){
+            return false;
+
+        }
+
+        $rarityList = self::getRarityList();
+        $winItemByRarity = $this->winItemBy($rarityList);
+        $winItemByExterior = $this->winItemBy(self::getExteriorList());
+        $query = (new \yii\db\Query())->select(['item_id'])->from('opening_item_init')->where(['case_id' => $this->id]);
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+        $arr_ids = [];
+        foreach($data as $val){
+            $arr_ids[] = intval($val['item_id']);
+        }
+        $a = $arr_ids;
+        $w = $winItemByRarity;
+        $e = $winItemByExterior;
+        try {
+            $query = (new \yii\db\Query())->select(['*'])->from('item')->where(['rarity' => $winItemByRarity['name']])->andWhere(['id'=> $arr_ids]);
+            $raw = $query->createCommand()->getRawSql();
+            $command = $query->createCommand();
+            $data = $command->queryAll();
+
+            $ids = [];
+
+        } catch(\Exception $exception) {
+            $err = $exception;
+            var_dump($err);
+            var_dump($e);
+            var_dump($w);
+            exit;
+        }
+
+        if(!empty($data)){
+            $byRar = [];
+            foreach ($data as $item) {
+                if ($item['rarity'] != "Rarity_Rare_Weapon") {
+                    $byRar[] = $item['id'];
+                }
+
+                if ($item['exterior'] == $winItemByExterior) {
+                    $ids[] = $item['id'];
+                }
+            }
+
+            if (empty($ids)) {
+                $id = $byRar[mt_rand(0, count($byRar) - 1)];
+                foreach ($data as $item) {
+                    if ($item['id'] == $id) {
+                        $ids[] = $item['id'];
+                    }
+                }
+            }
+            $winner_id = $ids[mt_rand(0, (count($ids)-1))];
+            $item = Item::findOne($winner_id);
+            $client = new \GuzzleHttp\Client([
+                'timeout' => 60,
+                'debug' => false,
+            ]);
+            $request = $client->request('GET', 'https://market.csgo.com/api/v2/prices/RUB.json', [
+
+                'timeout' => 120,
+            ]);
+            //
+
+            $r =  json_decode($request->getBody()->getContents(), true);
+            if(isset($r['items']) && !empty($r['items'])) {
+                $arr = [];
+                foreach ($r['items'] as $k=>$val){
+                    if(isset($val['market_hash_name']) && $val['market_hash_name'] == $item->market_hash_name){
+                        $arr[] = $val['price'];
+
+                    }
+                }
+
+                if(!empty($arr)){
+                    ksort($arr);
+                    $i = 0;
+                //    $item->currency = $r['currency'];
+                //    $item->price = isset($arr[$i]) ? $arr[$i] : null;
+                    if(!isset($arr[$i])){
+                        echo "NO data IN item" . '' . $item->id . '<br>';
+                        var_dump($arr);
+                        exit;
+                    }
+
+
+                    $price = strval($arr[$i]);
+
+                } else {
+                    echo "NO data for item" . '' . $item->market_hash_name . '<br>';
+                }
+            }
+            $price = $arr[0];
+            $this->setUsers();
+            $this->setItems();
+            $this->user_ids[] = intval(Yii::$app->user->id);
+
+            $this->updateUsers();
+            $th = $this->users;
+            $this->updateItems($price, $winner_id, Yii::$app->user->id);
+            return [
+                'item_id' => $winner_id,
+                'user_id' => intval(Yii::$app->user->id),
+                'icon_url' => $item->icon_url,
+                'price' => $price,
+                'market_hash_name' => $item->market_hash_name
+
+            ];
+
+        }
+
+
+
+
+    }
+
+
+
+    public  function getFullListSelect2Filtered()
+    {
+
+        $items = \app\models\Item::find()->asArray()->all();
+        $caseItems = $this->getItems()->asArray()->all();
+
+        foreach($items as $k=>$val){
+            if(!$val['price']){
+                unset($items[$k]);
+            }
+            foreach ($caseItems as $ci){
+                if($val['id'] == $ci['id']){
+                    unset($items[$k]);
+                }
+            }
+
+        }
+        $i = $items;
+        $arr = \yii\helpers\ArrayHelper::map($items, 'id', 'internal_name');
+        return $arr;
     }
 
 

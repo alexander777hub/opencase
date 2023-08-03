@@ -58,6 +58,7 @@ class Item extends \yii\db\ActiveRecord
         return $arr;
     }
 
+
     public $photo;
     /**
      * {@inheritdoc}
@@ -74,9 +75,10 @@ class Item extends \yii\db\ActiveRecord
     {
         return [
             [['appid'],  'integer'],
-            [['appid', 'instanceid', 'currency', 'classid'],  'string', 'max' => 255],
-            [['background_color', 'icon_url_large', 'rarity', 'type', 'exterior', 'name', 'photo', 'internal_name',], 'string', 'max' => 255],
-            [['price'], 'number', 'numberPattern' => '/^[1-9][-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',  'min' => 0.01, 'max' => 999999999.9999],
+            [[ 'instanceid', 'currency', 'classid'],  'string', 'max' => 255],
+            [['icon_url'],'string'],
+            [['background_color', 'icon_url_large', 'rarity', 'type', 'exterior', 'name', 'photo', 'internal_name','market_hash_name'], 'string', 'max' => 255],
+            [['price'], 'number', 'numberPattern' => '/^[0-9][-+]?[1-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',  'min' => 0.01, 'max' => 999999999.9999],
         ];
     }
 

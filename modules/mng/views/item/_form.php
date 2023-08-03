@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'exterior')->textInput() ?>
     <?= $form->field($model, 'icon_url')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'market_hash_name')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'price')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'price')->input('numerical',['maxlength' => true]) ?>
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">

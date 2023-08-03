@@ -22,6 +22,7 @@ class OpeningItemInit extends \yii\db\ActiveRecord
         return 'opening_item_init';
     }
 
+    
 
     /**
      * {@inheritdoc}

@@ -1,58 +1,45 @@
 <?php
 
-/* @var $model app\models\Ad */
-use app\models\Profile;
-use app\models\Ad;
-use app\models\Userform;
+/* @var $model \app\modules\mng\models\Opening */
 
 
-$userform = \app\models\Userform::find()->where(["user_id" => $model->user_id])->one();
-
-
-/*var_dump($model->user_id);
-if($userform){
-    var_dump($userform->user_id);
-} */
-if ($userform && !$userform->avatar_id ){
-    $src = "/uploads/profile/default.png";
-} else {
-    if(!$userform){
-        $src =  "/uploads/profile/default.png";
-
-    } else {
-        $src =  Userform::getAvatarUrl($userform->avatar_id);
-
-    }
-
-}
-
-//$age = $userform && $userform->was_born ? \app\models\Userform::getAge($userform->was_born) : "Не задано";
-
-$city = $userform && $userform->city_id && isset(\app\models\Profile::$city_list[$userform->city_id]) ? \app\models\Profile::$city_list[$userform->city_id] : "Не задано";
-
-$name = $userform && $userform->first_name ? $userform->first_name  : "Не задано";
-    $sex =$userform && \app\models\Profile::$sex_list[$userform->sex] && $userform->sex != 0 ? \app\models\Profile::$sex_list[$userform->sex] : 'Не задано';
-//$model->description = trim(htmlentities(strip_tags($model->description), ENT_QUOTES, 'UTF-8'));
-$type = $model->type && isset(Ad::getTypeList()[$model->type]) ? Ad::getTypeList()[$model->type] : "Не задано";
 
 ?>
 
 
-<div class="card flex-row flex-wrap" style="width: 18rem;">
-    <div class="card-header border-0">
-        <img width="100" height="111" src="<?= $src  ?>" alt="">
-    </div>
-    <div class="card-block px-2">
-        <h4  class="card-title mt-2"><?= $name  ?></h4>
-        <p class="card-text"><?= $sex  ?></p>
-        <p class="card-text"><?= $city  ?></p>
-        <p class="card-text"><?= $type  ?></p>
-    </div>
-    <div class="w-100"></div>
-    <div class="card-footer w-100 text-muted">
-        <a href=<?= \yii\helpers\Url::toRoute('/site/view?id=' . strval($model->id))   ?> class="btn btn-primary mb-2">Просмотр</a>
-    </div>
-</div>
+
+
+    <a href=<?= "/site/view?id=" . $model->id ?>  class="case item-limited">
+
+        <div class="case__limit">
+            <div class="case__limit-inner">
+                <div class="case__limit-left">31780</div>
+                <div class="case__limit-separator">/</div>
+                <div class="case__limit-reserve">35000</div>
+            </div>
+        </div>
+
+        <div class="case__wrapper-img">
+            <img src=<?= $model->avatar_id ? \app\modules\mng\models\Opening::getOriginal($model->avatar_id)  : "https://images.steamcdn.io/forcedrop/cases/summerrrrr.png"  ?> class="case__img">
+        </div>
+
+<!-- https://images.steamcdn.io/forcedrop/cases/summerrrrr.png !-->
+
+        <div class="case__name"><?= $model->name  ?></div>
+
+
+
+        <div class="case__price">
+            <div class="case__current-price">
+                <span class="price price-RUB"><?= $model->price  ?></span>
+            </div>
+        </div>
+
+
+
+    </a>
+
+
 
 
 

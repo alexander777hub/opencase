@@ -146,4 +146,152 @@ class CreateUserController extends Controller
 
     }
 
+    public function actionInternalName()
+    {
+        $items = Item::find()->all();
+        foreach ($items as $k=>$item){
+            $item->internal_name =  $item->market_hash_name .'_'. '(' . $item->id.')' .'_' .strval($item->price). '(RUB)' . '_' . $item->rarity;
+            $item->save(false);
+        }
+        die("OK");
+
+    }
+
+    public function actionAll()
+    {
+        ini_set('memory_limit', '-1');
+        $client = new \GuzzleHttp\Client([
+            // Base URI is used with relative requests
+            'base_uri' => 'https://www.steamwebapi.com/steam/api/',
+            // You can set any number of default request options.
+            'timeout' => 60,
+            'debug' => false,
+        ]);
+        $request = $client->request('GET', 'items', [
+            'query' => [
+                //    'steam_id' => '76561199524928583',
+                'game' => 'csgo',
+                'language' => 'english',
+                'parse' => true,
+                'key' => 'WMHKU9ZMCW55VURG',
+            ],
+            'timeout' => 120,
+        ]);
+
+
+
+        $r =  json_decode($request->getBody()->getContents(), true);
+        //[{
+        //	"id": "00014c0a-7b56-446d-b04f-43be5758f031",
+        //	"count": null,
+        //	"assetId": null,
+        //	"classId": null,
+        //	"instanceId": null,
+        //	"marketHashName": "Souvenir FAMAS | Teardown (Minimal Wear)",
+        //	"marketName": "Souvenir FAMAS | Teardown (Minimal Wear)",
+        //	"hashId": "a016bd34ec6c7dba786a52bd8e520f07",
+        //	"nameId": 2388371,
+        //	"color": null,
+        //	"borderColor": "#FFD700",
+        //	"type": "Souvenir FAMAS",
+        //	"rarity": null,
+        //	"quality": null,
+        //	"marketable": null,
+        //	"tradable": null,
+        //	"price": "32.13",
+        //	"priceLatest": "31.78",
+        //	"priceMedian": "32.42",
+        //	"priceSafe": "35.11",
+        //	"priceAvg": "35.11",
+        //	"priceMin": "31.78",
+        //	"priceMax": "40.49",
+        //	"priceSafeTs7D": "0.00",
+        //	"priceSafeTs24H": "0.00",
+        //	"priceSafeTs30D": "31.78",
+        //	"priceSafeTs90D": "35.11",
+        //	"buyOrderPrice": "32.13",
+        //	"sellOrderPrice": "205.80",
+        //	"buyOrderQuantity": 1,
+        //	"sellOrderQuantity": 1,
+        //	"sold7D": "0",
+        //	"sold24H": "0",
+        //	"sold30D": "1",
+        //	"sold90D": "3",
+        //	"slug": "souvenir-famas-teardown-minimal-wear",
+        //	"itemImages": ["https:\/\/community.cloudflare.steamstatic.com\/economy\/image\/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgposLuoKhRfwOP3fDhR5OO-m5S0lvnwDLjemm9u5Mx2gv2P9tWmiQPk-xE-YDqlINKUdgQ6YAzTqVm9xuvpjMS5u5zPwXcxunIg7GGdwUK4xWYQ4w"],
+        //	"wear": "mw",
+        //	"insertId": 2928,
+        //	"tag": [],
+        //	"steamPrice": 3178,
+        //	"createdAt": "2023-01-26T04:00:21+00:00",
+        //	"deletedAt": null,
+        //	"unstable": true,
+        //	"unstableReason": "LOW_SALES_3PLUS_MONTHS",
+        //	"statTrack": false,
+        //	"dailySoldVolume": null,
+        //	"firstSeenTime": "1385769603717",
+        //	"isCase": false,
+        //	"isKey": false,
+        //	"isGraffiti": false,
+        //	"isSticker": false,
+        //	"itemGroup": null,
+        //	"isStar": false,
+        //	"actions": null,
+        //	"marketActions": null,
+        //	"descriptions": null,
+        //	"marketTradableRestriction": null,
+        //	"tags": null,
+        //	"inspectLink": null,
+        //	"updatedAt": "2023-08-01T11:20:34+00:00"
+        //}]
+        foreach ($r as $k=> $val){
+
+            if($k < 10000){
+               continue;
+            }
+            
+            if(!$val['classId']){
+                continue;
+            }
+
+            $item = new Item();
+            $item->appid = '730';
+            $item->classid = isset($val['classId']) ? $val['classId'] : null;
+            $item->instanceid = isset($val['instanceId']) ? $val['instanceId'] : null;
+          //  $item->background_color = isset($val['background_color']) ? $val['background_color'] : null;
+        //    $item->currency = isset($val['currency']) ? $val['currency'] : null;
+           // $item->icon_url = isset($val['itemImages']) ? $val['itemImages'] : null;
+            if(isset($val['itemImages'])){
+                foreach($val['itemImages'] as $img){
+                    $item->icon_url = $img;
+                }
+            }
+
+        //    $item->icon_url_large = isset($val['icon_url_large']) ? $val['icon_url_large'] : null;
+            $item->name = isset($val['marketName']) ? $val['marketName'] : null;
+            $item->market_hash_name = isset($val['marketHashName']) ? $val['marketHashName'] : null;
+            $item->type = isset($val['type']) ? $val['type'] : null;
+            $item->exterior = isset($val['wear']) ? $val['wear'] : null;
+            $item->rarity = isset($val['rarity']) ? $val['rarity'] : null;
+            $item->price = isset($val['priceMin']) ? $val['priceMin'] : null;
+            if (isset($val['tags'])) {
+                if(!empty($val['tags'])){
+                    foreach ($val['tags'] as $tag){
+                        if(isset($tag['category']) && $tag['category'] == 'Rarity' ){
+                            $item->rarity = $tag['internal_name'];
+                        }
+                        if(isset($tag['category']) && $tag['category'] == 'Exterior' ){
+                            $item->exterior = $tag['localized_tag_name'];
+                        }
+                    }
+
+                }
+
+            }
+            $item->save(false);
+
+        }
+    }
+
 }
+
