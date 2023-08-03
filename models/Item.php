@@ -82,20 +82,6 @@ class Item extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function getScins()
-    {
-        return [
-            0 => 'Не выбрано',
-            1 => 'Blue',
-            2 => 'Violet',
-            3 => 'Pink',
-            4 => 'Red',
-            5 => 'Gold'
-
-        ];
-    }
-
-
 
     /**
      * Gets query for [[Photos]].

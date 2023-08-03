@@ -46,6 +46,7 @@ use app\models\Userform;
                                 '<div id="win">' +
                                     '<p>Имя предмета :' + response.market_hash_name +'</p>  <br>'+
                                     '<p>Цена предмета : ' + response.price +'</p>' +
+                                 /*   '<p>Rarity : ' + response.rarity +'</p>' + */
                                 '</div>' +
                             '</div>' +
                             '<div class="card" style="width: 18rem;">' +

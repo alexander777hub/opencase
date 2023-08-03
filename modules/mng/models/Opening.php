@@ -730,13 +730,14 @@ class Opening extends \yii\db\ActiveRecord
                 'user_id' => intval(Yii::$app->user->id),
                 'icon_url' => $item->icon_url,
                 'price' => $price,
-                'market_hash_name' => $item->market_hash_name
+                'market_hash_name' => $item->market_hash_name,
+                'rarity' =>  $item->rarity
 
             ];
 
         }
 
-
+        $this->open();
 
 
     }
