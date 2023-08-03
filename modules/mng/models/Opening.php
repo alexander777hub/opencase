@@ -737,6 +737,8 @@ class Opening extends \yii\db\ActiveRecord
 
         }
 
+        var_dump($winItemByRarity);
+        var_dump($winItemByExterior);
         $this->open();
 
 
