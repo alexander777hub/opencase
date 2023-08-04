@@ -191,7 +191,7 @@ if(!Yii::$app->user->isGuest){
 
     <div class="case-page__title">
         <div class="new-title new-title_bigger">
-            <div class="new-title__text">Летний</div>
+            <div class="new-title__text"><?= $model->name   ?></div>
         </div>
     </div>
 
@@ -309,13 +309,13 @@ if(!Yii::$app->user->isGuest){
         </div>
 
         <div class="case-page__info">
-            <div class="info-section info-section_light">
+            <!--<div class="info-section info-section_light">
                 <div class="info-section__top">
                     <div class="info-section__icon info-section__icon_limit"></div>
                     <div class="info-section__title">Ограниченная серия — 32150 / 35000!</div>
                     <div class="info-section__text">Кейс станет недоступен, как только закончится лимит!</div>
                 </div>
-            </div>
+            </div> !-->
         </div>
 
 
