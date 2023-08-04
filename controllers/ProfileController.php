@@ -78,16 +78,32 @@ class ProfileController extends Controller
     public function actionView($user_id)
     {
         $model = $this->findModel($user_id);
-       /* $q =  (new \yii\db\Query())
-            ->select('case_id, item_id')
-            ->from('item')
-            ->where(['user_id' => $profile->user_id])
-            ->andWhere(['item_id' => $model->id]); */
+        $query = (new \yii\db\Query())->select(['item_id'])->from('opening_item')->where(['user_id' => \Yii::$app->user->id]);
+        $raw = $query->createCommand()->getRawSql();
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+        $ids = [];
+        if(!empty($data)){
+            foreach ($data as $key => $item){
+                $ids[ intval($item['item_id'])] = intval($item['item_id']);
+            }
+        }
+        $query = (new \yii\db\Query())->select('*')->from('item')->where(['in', 'id',$ids]);
 
-       $dataProvider = $model->getItems();
+        $dataProvider = new ActiveDataProvider([
+
+            'query' => $query,
+
+            'pagination' => [
+                'pageSize' => 9,
+            ],
+        ]);
+
+
+
         return $this->render('view', [
             'model' => $this->findModel($user_id),
-            'dataProvider' => null,
+            'dataProvider' => $dataProvider,
         ]);
     }
 

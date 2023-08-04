@@ -26,6 +26,7 @@ if(!Yii::$app->user->isGuest){
 }
 
 ?>
+
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html>
@@ -42,6 +43,7 @@ if(!Yii::$app->user->isGuest){
         <meta property="og:description" content="UpDrop - Открывай честные кейсы CS:GO! Миллионы игроков, честное открытие, моментальный вывод скинов в Steam! Заходи!">
     </head>
     <?php $this->beginBody() ?>
+
     <body>
         <div class="layout">
             <div class="layout__header">

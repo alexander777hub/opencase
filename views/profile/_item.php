@@ -4,20 +4,13 @@ use app\models\Item;
 
 
 
-$icon = isset($model['icon']) && $model['icon'] ? $model['icon'] : '/uploads/photo/default.png';
-
-$original = Item::getOriginal($icon);
-
+$icon = isset($model['icon_url']) && $model['icon_url'] ? $model['icon_url'] : '/uploads/photo/default.png';
 
 ?>
-
-
-
     <div class="item uncommon">
-
         <div class="item__content">
             <div class="item__img">
-                <img src="<?= $original  ?>" class="case-image">
+                <img src="<?= $icon  ?>" class="case-image">
             </div>
 
             <div class="item__price"><span class="price price-RUB"><?= $model['price']   ?></span></div>

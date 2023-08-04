@@ -13,11 +13,15 @@ use app\models\Userform;
 
 
 ?>
+
+
 <script
         src="https://code.jquery.com/jquery-3.7.0.min.js"
         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
         crossorigin="anonymous"></script>
 <script type="text/javascript">
+
+
 
     $(document).ready(function(){
 
@@ -76,6 +80,39 @@ use app\models\Userform;
     })
 
 </script>
+<style>
+    .pagination {
+        display: -webkit-box;
+        padding-left: 0;
+        list-style: none;
+        border-radius: 0.25rem;
+    }
+    .bd-example {
+        position: relative;
+        padding: 1rem;
+        margin: 1rem -15px 0;
+        border: solid #f7f7f9;
+        border-width: 0.2rem 0 0;
+    }
+
+    .page-link:not(:disabled):not(.disabled) {
+        cursor: pointer;
+    }
+    a:-webkit-any-link {
+        text-decoration: none;
+    }
+    .page-link {
+        position: relative;
+        display: block;
+        padding: 0.5rem 0.75rem;
+        margin-left: -1px;
+        line-height: 1.25;
+        color: #007bff;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+    }
+
+</style>
 
 <style>
 
@@ -282,7 +319,6 @@ use app\models\Userform;
             </div>
             <div class="case-items__items">
 
-
                     <?php echo \yii\widgets\ListView::widget([
                         'dataProvider' => $dataProvider,
                         'itemView' => '_caseItem',
@@ -290,12 +326,27 @@ use app\models\Userform;
                             'class' => 'items-incase__item',
                         ],
                         //    'options' => ['class' => 'cases'],
-                        'layout' => "<div class='items-incase'>{items}</div>"
+                        'layout' => "<div><div class='items-incase'>{items}</div><br><div></div></div>"
+
 
                     ]); ?>
 
 
 
+            </div>
+
+
+            <div class="row mt-5">
+                <div class="col text-center ml-auto">
+                    <?php
+                    echo \yii\bootstrap4\LinkPager::widget([
+                        'pagination' => $dataProvider->getPagination(),
+                        'options' => [
+                            'class' => 'ml-auto',
+                        ],
+                    ]);
+                    ?>
+                </div>
             </div>
     <!--        <div class="case-items__items">
                 <div class="items-incase">
