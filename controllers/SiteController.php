@@ -106,7 +106,7 @@ class SiteController extends Controller
                 'defaultOrder'=>['id' => SORT_ASC],
             ),
             'pagination' => [
-                'pageSize' => 10,
+                'pageSize' => 100,
             ],
         ]);
 

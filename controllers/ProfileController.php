@@ -95,7 +95,7 @@ class ProfileController extends Controller
             'query' => $query,
 
             'pagination' => [
-                'pageSize' => 9,
+                'pageSize' => 100,
             ],
         ]);
 
