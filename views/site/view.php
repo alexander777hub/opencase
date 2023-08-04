@@ -270,11 +270,10 @@ if(!Yii::$app->user->isGuest){
                 <?php else: ?>
 
                     <div class="case-page__btns">
-                        Недостаточно средств
                         <div class="case-page__btn">
                             <button class="btn btn_size-big btn_word-wrap btn_color-success btn_uppercase btn_type-fullwidth refill">
                                 <div class="btn__content">
-                                    <div class="btn__label">Пополнение баланса</div>
+                                    <div class="btn__label"><a href="/payment/index">Пополнить баланс</a></div>
                                 </div>
                             </button>
                         </div>
