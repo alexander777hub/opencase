@@ -4,6 +4,7 @@ namespace app\modules\mng\models;
 
 use alexander777hub\crop\models\PhotoEntity;
 use app\models\Item;
+use app\models\Profile;
 use app\models\User;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -720,6 +721,10 @@ class Opening extends \yii\db\ActiveRecord
             $this->updateUsers();
             $th = $this->users;
             $this->updateItems($price, $winner_id, Yii::$app->user->id);
+            $profile = Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
+
+            $profile->credit = $profile->credit - ($price + $this->price);
+            
             return [
                 'item_id' => $winner_id,
                 'user_id' => intval(Yii::$app->user->id),

@@ -10,8 +10,10 @@ use app\models\Userform;
 /* @var $model \app\modules\mng\models\Opening */
 
 
-
-
+$user = null;
+if(!Yii::$app->user->isGuest){
+    $user = Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
+}
 ?>
 
 
@@ -256,10 +258,8 @@ use app\models\Userform;
             </div>
 
 
-
-
             <div class="case-page__btns">
-
+                <?php if($user && $user->credit > $model->price + 50): ?>
                 <div class="case-page__btn">
                     <button id="open" class="btn btn_size-big btn_word-wrap btn_color-success btn_uppercase btn_type-fullwidth refill">
                         <div class="btn__content">
@@ -267,6 +267,21 @@ use app\models\Userform;
                         </div>
                     </button>
                 </div>
+                <?php else: ?>
+
+                    <div class="case-page__btns">
+                        Недостаточно средств
+                        <div class="case-page__btn">
+                            <button class="btn btn_size-big btn_word-wrap btn_color-success btn_uppercase btn_type-fullwidth refill">
+                                <div class="btn__content">
+                                    <div class="btn__label">Пополнение баланса</div>
+                                </div>
+                            </button>
+                        </div>
+
+
+                    </div>
+                <?php endif; ?>
 
 
                 <!--  <div class="case-page__btn">
@@ -306,8 +321,6 @@ use app\models\Userform;
 
 
     </div>
-
-
 
 
     <div class="case-page__items">
