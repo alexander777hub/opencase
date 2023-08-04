@@ -724,7 +724,7 @@ class Opening extends \yii\db\ActiveRecord
             $profile = Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
 
             $profile->credit = $profile->credit - ($price + $this->price);
-            
+            $profile->save();
             return [
                 'item_id' => $winner_id,
                 'user_id' => intval(Yii::$app->user->id),
