@@ -638,7 +638,7 @@ class Opening extends \yii\db\ActiveRecord
         foreach($data as $val){
             $arr_ids[] = intval($val['item_id']);
         }
-        $a = $arr_ids;
+
         $w = $winItemByRarity;
         $e = $winItemByExterior;
         try {
@@ -702,16 +702,11 @@ class Opening extends \yii\db\ActiveRecord
                 if(!empty($arr)){
                     ksort($arr);
                     $i = 0;
-                //    $item->currency = $r['currency'];
-                //    $item->price = isset($arr[$i]) ? $arr[$i] : null;
                     if(!isset($arr[$i])){
                         echo "NO data IN item" . '' . $item->id . '<br>';
                         var_dump($arr);
                         exit;
                     }
-
-
-                    $price = strval($arr[$i]);
 
                 } else {
                     echo "NO data for item" . '' . $item->market_hash_name . '<br>';

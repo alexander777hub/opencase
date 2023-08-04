@@ -280,6 +280,23 @@ use app\models\Userform;
                     <div class="new-title__text">Содержимое кейса</div>
                 </div>
             </div>
+            <div class="case-items__items">
+
+
+                    <?php echo \yii\widgets\ListView::widget([
+                        'dataProvider' => $dataProvider,
+                        'itemView' => '_caseItem',
+                        'itemOptions' => [
+                            'class' => 'items-incase__item',
+                        ],
+                        //    'options' => ['class' => 'cases'],
+                        'layout' => "<div class='items-incase'>{items}</div>"
+
+                    ]); ?>
+
+
+
+            </div>
     <!--        <div class="case-items__items">
                 <div class="items-incase">
 
