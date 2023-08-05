@@ -100,22 +100,20 @@ class SiteController extends Controller
         $model = Opening::findOne($id);
 
         $dataProvider = new ActiveDataProvider([
-
             'query' => $query = $model->getInitItems(),
-            'sort'=>array(
-                'defaultOrder'=>['id' => SORT_ASC],
-            ),
+            'sort' => [
+                'defaultOrder' => ['id' => SORT_ASC],
+            ],
             'pagination' => [
-                'pageSize' => 100,
+                'pageSize' => 150,
             ],
         ]);
 
-
-
+        $m = $dataProvider->getModels();
 
         return $this->render('view', [
             'model' => $model,
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
         ]);
     }
     public function actionSteam()
