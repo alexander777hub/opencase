@@ -63,6 +63,8 @@ $script = <<< JS
                                      parent.remove();
                                      $("#append-credit").empty();
                                      $("#append-credit").text(response.profile_credit);
+                                     $(".price-RUB").empty();
+                                     $(".price-RUB").text(response.profile_credit);
                                     
                             },
                             error: function(jqXHR, textStatus, errorThrown) {
