@@ -6,6 +6,7 @@ use app\models\Item;
 
 $icon = isset($model['icon_url']) && $model['icon_url'] ? $model['icon_url'] : '/uploads/photo/default.png';
 
+
 ?>
 <script
         src="https://code.jquery.com/jquery-3.7.0.min.js"
@@ -26,7 +27,7 @@ $icon = isset($model['icon_url']) && $model['icon_url'] ? $model['icon_url'] : '
                 <img src="<?= $icon  ?>" class="case-image">
             </div>
 
-            <div class="item__price"><span class="price price-RUB"><?= $model['price']   ?></span></div>
+            <div class="item__price"><span class="price price-RUB"><?=  number_format((float)$model['price'], 2, '.', '');   ?></span></div>
             <div class="item__icons">
                 <a href="/case/hole" class="item__icon status linkcase" title="Кейс"></a>
                 <div class="item__icon status selled">
@@ -39,7 +40,7 @@ $icon = isset($model['icon_url']) && $model['icon_url'] ? $model['icon_url'] : '
                     <div class="btn btn_color-success btn_size-small btn_uppercase btn_with-icon tosell">
                         <div class="btn__content">
                             <i  style="margin-right: 5px;" class="fa fa-shopping-cart" aria-hidden="true"></i>
-                            <div data-id="<?= $model ? $model['id'] :  null ?>"  data-name="<?= $model ? $model['market_hash_name'] :  null ?>" data-price="<?= $model ? $model['price'] :  null ?>" class="btn__label data-price"><span class="price price-RUB"><?= $model ? $model['price'] :  null ?></span></div>
+                            <div data-id="<?= $model ? $model['id'] :  null ?>"  data-name="<?= $model ? $model['market_hash_name'] :  null ?>" data-price="<?= $model ? $model['price'] :  null ?>" class="btn__label data-price"><span class="price price-RUB"><?= $model ? number_format((float)$model['price'], 2, '.', '')  :  null ?></span></div>
                         </div>
                     </div>
                 </div>
