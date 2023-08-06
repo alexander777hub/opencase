@@ -34,6 +34,7 @@ if(!Yii::$app->user->isGuest){
     <!-- Mirrored from forcedrop.app/ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 08 Jul 2023 15:31:40 GMT -->
     <!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
     <head>
+
         <link rel="stylesheet" type="text/css" href="/css/drop.css">
         <link rel="stylesheet" href="/css/fonts.googleapis.com/css19c1.css?family=Exo+2:400,400i,500,500i,700,700i,800&amp;subset=cyrillic">
         <link rel="stylesheet" href="/css/widget.css" class="jv-css">
@@ -41,6 +42,8 @@ if(!Yii::$app->user->isGuest){
         <meta property="vk:description" content="UpDrop - Открывай честные кейсы CS:GO! Миллионы игроков, честное открытие, моментальный вывод скинов в Steam! Заходи!">
         <meta property="og:title" content="UpDrop - кейсы CS:GO, новые кейсы CS:GO!">
         <meta property="og:description" content="UpDrop - Открывай честные кейсы CS:GO! Миллионы игроков, честное открытие, моментальный вывод скинов в Steam! Заходи!">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     </head>
     <?php $this->beginBody() ?>
 
@@ -1445,7 +1448,7 @@ if(!Yii::$app->user->isGuest){
                                         <div class="user-stat">
                                             <div class="user-stat__balance refill">
                                                 <div class="user-stat__nums">
-                                                    <span class="price"><?= $credit ?></span>
+                                                    <span class="price"><div id="append-credit"><?= $credit ?></div></span>
                                                 </div>
                                                 <div class="user-stat__refill"></div>
                                             </div>
@@ -1609,6 +1612,31 @@ if(!Yii::$app->user->isGuest){
                         </div>
                     </div>
                 </footer>
+            </div>
+            <div id="sell" class="new-popup new-popup_default js-modal-swtalert" style="display: none;">
+                <div class="new-popup__box js-modal-swtalert-inside">
+                    <div class="new-popup__close">
+                        <button class="btn btn_transparent btn_type-square" action="closeSwtalert">
+                            <div class="btn__content">
+                                <div class="btn__icon icon icon_close"></div>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="new-popup__content">
+                        <div class="default-popup">
+                            <div class="default-popup__title js-modal-swtalert-title">Продать предмет?</div>
+                            <div id="append-sell-text" class="default-popup__text js-modal-swtalert-text"></div>
+                            <div class="default-popup__btns">
+                                <div class="default-popup__btn">
+                                    <button id="confirm-sell" class="btn btn_color-success btn_uppercase" action="confirmSwtalert" style="display: block;">Продать</button>
+                                </div>
+                                <div class="default-popup__btn">
+                                    <button id="close-sell" class="btn btn_color-primary btn_style-outline btn_uppercase" action="cancelSwtalert" style="display: block;">Отмена</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="new-popup new-popup_default js-modal-swtalert" style="display: none">
                 <div class="new-popup__box js-modal-swtalert-inside">

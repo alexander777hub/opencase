@@ -12,8 +12,72 @@ $this->params['breadcrumbs'][] = ['label' => 'Profiles', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 \app\assets\JQAsset::register($this);
+
+$user_js_id = !(Yii::$app->user->isGuest) ? (Yii::$app->user->id) : null;
 $script = <<< JS
    $(document).ready(function(){
+         
+       $("#close-sell").on("click", function(){
+            $("#sell").css("display", "none");
+       });
+       
+       $(".tosell").on("click", function (e) {
+          
+          let item_id = $(this).find(".data-price").data('id');
+             console.log($(this).closest(".items-incase__item"), "PARENT");
+             let parent = $(this).closest(".items-incase__item");
+            $.ajax({
+                    url: "/rest-api/get-price",
+                    type: "post",
+                    data:  {
+                        market_hash_name : $(this).find(".data-price").data('name'),
+                    },
+                    success: function (response) {
+                        console.log(response, "RESPONSE");
+                        console.log($(this).find(".data-price"), "TARG");
+                        let price = response && response.price ? response.price :  $(this).find(".data-price").data('price');
+                        $("#sell").css("display", "block");
+                        $("#append-sell-text").text("Вы действительно хотите продать этот предмет за " +  price);
+                        console.log($(this), "THIS");
+                        data = {
+                                    item_id: item_id,
+                                    user_id: $user_js_id,
+                                    price: price
+                                    
+                                };
+                       
+                        $("#confirm-sell").on("click", function(){
+                         
+                             $.ajax({
+                                url: "/rest-api/sell",
+                
+                                type: "post",
+                                
+                                data: data,
+                                
+                    
+                                success: function (response) {
+                                    console.log(response, "RESPONSE");
+                                    
+                                     $("#sell").css("display", "none");
+                                     parent.remove();
+                                     $("#append-credit").empty();
+                                     $("#append-credit").text(response.profile_credit);
+                                    
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.log(textStatus, errorThrown);
+                            }
+                            });
+                        });
+         
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
+           
+        });
        $('#trade-save').on('click', function(){
            
            $('#trade-form').submit();
@@ -74,6 +138,7 @@ $best_drop_name =  $best_drop ? User::getUser(Yii::$app->user->getId())->getProf
 
 </style>
 <div id="trade" style="display: none">
+
     <div  class="profile__tradelink-popup">
         <div class="new-popup" action="popupOutsideTradeUrl">
             <div class="new-popup__box" id="popupTradeUrl">
