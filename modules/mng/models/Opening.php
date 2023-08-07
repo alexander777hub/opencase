@@ -616,7 +616,7 @@ class Opening extends \yii\db\ActiveRecord
            $winItem = $list[1];
         }
 
-        return $winItem;
+        return $winItem['name'];
 
     }
 
@@ -632,6 +632,12 @@ class Opening extends \yii\db\ActiveRecord
         $rarityList = self::getRarityList();
         $winItemByRarity = $this->winItemBy($rarityList);
         $winItemByExterior = $this->winItemBy(self::getExteriorList());
+        if(!$winItemByRarity) {
+            $winItemByRarity = self::getRarityList()[0]['name'];
+        }
+        if(!$winItemByExterior) {
+            $winItemByExterior = self::getExteriorList()[0]['name'];
+        }
         $query = (new \yii\db\Query())->select(['item_id'])->from('opening_item_init')->where(['case_id' => $this->id]);
         $command = $query->createCommand();
         $data = $command->queryAll();
@@ -643,7 +649,7 @@ class Opening extends \yii\db\ActiveRecord
         $w = $winItemByRarity;
         $e = $winItemByExterior;
         try {
-            $query = (new \yii\db\Query())->select(['*'])->from('item')->where(['rarity' => $winItemByRarity['name']])->andWhere(['id'=> $arr_ids]);
+            $query = (new \yii\db\Query())->select(['*'])->from('item')->where(['rarity' => $winItemByRarity])->andWhere(['id'=> $arr_ids]);
             $raw = $query->createCommand()->getRawSql();
             $command = $query->createCommand();
             $data = $command->queryAll();
