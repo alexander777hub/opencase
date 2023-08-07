@@ -53,6 +53,52 @@ class RestApiController extends Controller
 
     }
 
+    public function actionMarket()
+    {
+        if (\Yii::$app->request->isAjax && \Yii::$app->request->isPost) {
+            $post = $_POST;
+            if (!isset($post['item_id']) || !isset($post['user_id'])) {
+                return;
+            }
+
+
+            $market_hash_name =$post['market_hash_name'];
+
+            $price = $this->actionUpdatePrice($market_hash_name) * 100;
+
+            $client = new \GuzzleHttp\Client([
+                'timeout' => 60,
+                'debug' => false,
+            ]);
+            $key = \Yii::$app->params['market-key'];
+            $profile = Profile::find()->where(['user_id' => intval($post['user_id'])])->one();
+            if(!$profile->trade_link){
+                return;
+            }
+            $partnerToken = explode('?', $profile->trade_link)[1];
+            $url = "https://market.csgo.com/api/v2/buy-for?key=$key&hash_name=$market_hash_name&price=$price&$partnerToken";
+            $request = $client->request('GET', 'https://market.csgo.com/api/v2/buy-for?key='.$key.'&hash_name='.$market_hash_name.'&price='.$price.'&'.$partnerToken, [
+
+                'timeout' => 120,
+            ]);
+            //
+
+            $r =  json_decode($request->getBody()->getContents(), true);
+            $success = $r['success'];
+            $error = isset($r['error']) ? $r['error'] : null;
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            \Yii::$app->response->statusCode = 200;
+            return [
+                'success' => $success,
+                'item_id' => $post['item_id'],
+                'error' => $error
+
+            ];
+        }
+
+    }
+
+
 
 
 
@@ -66,6 +112,20 @@ class RestApiController extends Controller
             }
 
             $market_hash_name =$post['market_hash_name'];
+            $price = $this->actionUpdatePrice($market_hash_name);
+
+
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            \Yii::$app->response->statusCode = 200;
+            return [
+                'price' => $price
+            ];
+        }
+
+        }
+
+
+        public function actionUpdatePrice($market_hash_name){
             $client = new \GuzzleHttp\Client([
                 'timeout' => 60,
                 'debug' => false,
@@ -100,13 +160,7 @@ class RestApiController extends Controller
                 }
             }
             $price = $arr[0];
-            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-            \Yii::$app->response->statusCode = 200;
-            return [
-                'price' => $price
-            ];
-        }
-
+            return $price;
         }
 
 

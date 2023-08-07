@@ -26,8 +26,6 @@ if(!Yii::$app->user->isGuest){
 
 
     $(document).ready(function(){
-
-
             $("#open").on("click", function(){
                 var case_id = "<?= $model ?  $model->id : null ?>";
                 console.log("OPEN", case_id);
@@ -79,6 +77,8 @@ if(!Yii::$app->user->isGuest){
                     }
                 });
             })
+
+
     })
 
 </script>

@@ -25,6 +25,7 @@ use Yii;
  * @property string|null $name
  * @property string|null $market_hash_name
  * @property string|null $rarity
+ * @property string|null $steam_id
  * @property Opening[] $openings
  *  @property OpeningItemInit[] $initOpenings
  * @property float|null $price
@@ -75,7 +76,7 @@ class Item extends \yii\db\ActiveRecord
     {
         return [
             [['appid'],  'integer'],
-            [[ 'instanceid', 'currency', 'classid'],  'string', 'max' => 255],
+            [[ 'instanceid', 'currency', 'classid', 'steam_id'],  'string', 'max' => 255],
             [['icon_url'],'string'],
             [['background_color', 'icon_url_large', 'rarity', 'type', 'exterior', 'name', 'photo', 'internal_name','market_hash_name'], 'string', 'max' => 255],
             [['price'], 'number', 'numberPattern' => '/^[0-9][-+]?[1-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',  'min' => 0.01, 'max' => 999999999.9999],

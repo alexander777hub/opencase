@@ -20,10 +20,48 @@ $script = <<< JS
        $("#close-sell").on("click", function(){
             $("#sell").css("display", "none");
        });
+       $(".tomarket").on("click", function (e) {
+          
+            let item_id = $(this).find(".data-price").data('id');
+             console.log($(this).closest(".items-incase__item"), "PARENT");
+             let parent = $(this).closest(".items-incase__item");
+             
+            $.ajax({
+                    url: "/rest-api/market",
+                    type: "post",
+                    data:  {
+                         item_id: item_id,
+                         user_id: $user_js_id,
+                    
+                        market_hash_name : $(this).find(".data-price").data('name'),
+                    },
+                    success: function (response) {
+                        console.log(response, "RESPONSE");
+                        console.log($(this).find(".data-price"), "TARG");
+                        let price = response && response.price ? response.price :  $(this).find(".data-price").data('price');
+                        $(".default-popup__title").empty();
+                        $("#sell").css("display", "block");
+                        if(response.error){
+                           $("#append-sell-text").text(response.error); 
+                           return;
+                        }
+                        $("#append-sell-text").text("Заказ на вывод скина сформирован");
+                        console.log($(this), "THIS");
+                        
+                        
+                        
+         
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
+           
+       });
        
        $(".tosell").on("click", function (e) {
           
-          let item_id = $(this).find(".data-price").data('id');
+            let item_id = $(this).find(".data-price").data('id');
              console.log($(this).closest(".items-incase__item"), "PARENT");
              let parent = $(this).closest(".items-incase__item");
             $.ajax({
@@ -79,7 +117,7 @@ $script = <<< JS
                     }
                 });
            
-        });
+       });
        $('#trade-save').on('click', function(){
            
            $('#trade-form').submit();

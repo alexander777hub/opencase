@@ -11,6 +11,7 @@ return [
     'crystal_secret' => getenv('CRYSTAL_SECRET'),
     'crystal_sault' => getenv('CRYSTAL_SAULT'),
     'worker-access-token' => getenv('WORKER_ACCESS_TOKEN'),
+    'market-key' => getenv('MARKET_KEY'),
 
     'bsDependencyEnabled' => false, // this will not load Bootstrap CSS and JS for all Krajee extensions
     // you need to ensure you load the Bootstrap CSS/JS manually in your view layout before Krajee CSS/JS assets

@@ -46,9 +46,10 @@ $icon = isset($model['icon_url']) && $model['icon_url'] ? $model['icon_url'] : '
                 </div>
 
                 <div class="item__btn">
-                    <div class="btn btn_type-square btn_with-icon btn_style-outline btn_color-primary btn_size-small btn_uppercase" action="resendItem">
+                    <div class="btn btn_type-square btn_with-icon btn_style-outline btn_color-primary btn_size-small btn_uppercase tomarket">
                         <div class="btn__content">
                             <i style="margin-right: 5px;" class="fa fa-arrow-down" aria-hidden="true"></i>
+                            <div data-id="<?= $model ? $model['id'] :  null ?>"  data-name="<?= $model ? $model['market_hash_name'] :  null ?>" data-price="<?= $model ? $model['price'] :  null ?>" class="btn__label data-price"></div>
                             <!-- <div class="btn__label">{{_ "withdraw_items_1"}}</div> -->
                         </div>
                     </div>

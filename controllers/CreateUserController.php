@@ -173,9 +173,9 @@ class CreateUserController extends Controller
                 'game' => 'csgo',
                 'language' => 'english',
                 'parse' => true,
-                'key' => 'WMHKU9ZMCW55VURG',
+                'key' => 'WLGV4TNW0ETBU5SN',
             ],
-            'timeout' => 120,
+            'timeout' => 300,
         ]);
 
 
@@ -247,15 +247,16 @@ class CreateUserController extends Controller
         foreach ($r as $k=> $val){
 
             if($k < 10000){
-               continue;
+                continue;
             }
-            
+
             if(!$val['classId']){
                 continue;
             }
 
             $item = new Item();
             $item->appid = '730';
+            $item->steam_id = isset($val['id']) ? $val['id'] : null;
             $item->classid = isset($val['classId']) ? $val['classId'] : null;
             $item->instanceid = isset($val['instanceId']) ? $val['instanceId'] : null;
           //  $item->background_color = isset($val['background_color']) ? $val['background_color'] : null;
@@ -291,6 +292,47 @@ class CreateUserController extends Controller
             $item->save(false);
 
         }
+        die("all");
+    }
+
+
+    public function actionGetPrice($name)
+    {
+        $client = new \GuzzleHttp\Client([
+            'timeout' => 60,
+            'debug' => false,
+        ]);
+        $request = $client->request('GET', 'https://market.csgo.com/api/v2/prices/RUB.json', [
+
+            'timeout' => 120,
+        ]);
+        //
+
+        $r =  json_decode($request->getBody()->getContents(), true);
+        if(isset($r['items']) && !empty($r['items'])) {
+            $arr = [];
+            foreach ($r['items'] as $k=>$val){
+                if(isset($val['market_hash_name']) && $val['market_hash_name'] == $name){
+                    $arr[] = $val['price'];
+
+                }
+            }
+
+            if(!empty($arr)){
+                ksort($arr);
+                $i = 0;
+                if(!isset($arr[$i])){
+                    echo "NO data IN item" . '' . $name . '<br>';
+                    var_dump($arr);
+                    exit;
+                }
+
+            } else {
+                echo "NO data for item" . '' . $name . '<br>';
+            }
+        }
+        var_dump($arr);
+        exit;
     }
 
 }
