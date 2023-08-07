@@ -40,6 +40,7 @@ $script = <<< JS
                         console.log($(this).find(".data-price"), "TARG");
                         let price = response && response.price ? response.price :  $(this).find(".data-price").data('price');
                         $(".default-popup__title").empty();
+                        $("#confirm-sell").remove();
                         $("#sell").css("display", "block");
                         if(response.error){
                            $("#append-sell-text").text(response.error); 
@@ -47,6 +48,10 @@ $script = <<< JS
                         }
                         $("#append-sell-text").text("Заказ на вывод скина сформирован");
                         console.log($(this), "THIS");
+                        
+                        $(this).remove();
+                        var sell = parent.find(".tosell");
+                        sell.remove();
                         
                         
                         

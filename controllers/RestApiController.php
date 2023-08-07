@@ -4,6 +4,9 @@
 namespace app\controllers;
 
 use app\models\Profile;
+use app\modules\mng\models\MarketOrder;
+use app\modules\mng\models\Task;
+use GuzzleHttp\Exception\ClientException;
 use yii\web\Controller;
 
 /**
@@ -64,7 +67,9 @@ class RestApiController extends Controller
 
             $market_hash_name =$post['market_hash_name'];
 
-            $price = $this->actionUpdatePrice($market_hash_name) * 100;
+            $price = $this->actionUpdatePrice($market_hash_name);
+            $price = (round($price) * 100);
+
 
             $client = new \GuzzleHttp\Client([
                 'timeout' => 60,
@@ -76,15 +81,28 @@ class RestApiController extends Controller
                 return;
             }
             $partnerToken = explode('?', $profile->trade_link)[1];
-            $url = "https://market.csgo.com/api/v2/buy-for?key=$key&hash_name=$market_hash_name&price=$price&$partnerToken";
+            $custom_id = strtotime("now") . '_' . \Yii::$app->user->getId();
+            $url = "https://market.csgo.com/api/v2/buy-for?key=$key&hash_name=$market_hash_name&price=$price&$partnerToken&custom_id=$custom_id";
             $request = $client->request('GET', 'https://market.csgo.com/api/v2/buy-for?key='.$key.'&hash_name='.$market_hash_name.'&price='.$price.'&'.$partnerToken, [
 
                 'timeout' => 120,
             ]);
             //
 
+
             $r =  json_decode($request->getBody()->getContents(), true);
             $success = $r['success'];
+            if($success){
+                $order = new MarketOrder();
+                $order->custom_id = $custom_id;
+                $order->price = $r['price'];
+                $order->item_id = $post['item_id'];
+                $order->user_id = $post['user_id'];
+                $order->status = 1;
+                $order->save(false);
+
+            }
+
             $error = isset($r['error']) ? $r['error'] : null;
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             \Yii::$app->response->statusCode = 200;
@@ -95,6 +113,52 @@ class RestApiController extends Controller
 
             ];
         }
+
+    }
+
+
+    public function actionCheckStatus($custom_id)
+    {
+        if(!$custom_id){
+            return;
+        }
+
+        $order = MarketOrder::find()->where(['custom_id'=> $custom_id])->one();
+        if(!$order){
+            return;
+        }
+        $client = new \GuzzleHttp\Client([
+            'timeout' => 60,
+            'debug' => false,
+        ]);
+        $key = \Yii::$app->params['market-key'];
+        $request = $client->request('GET', "https://market.csgo.com/api/v2/get-buy-info-by-custom-id?key=$key&custom_id=$custom_id", [
+
+            'timeout' => 120,
+        ]);
+        //
+
+        $r =  json_decode($request->getBody()->getContents(), true);
+        if(!$r['success']){
+            return;
+        }
+        if($r['data']){
+            if(isset($r['data']['stage'])){
+
+                switch ($r['data']['stage']) {
+                    case 5:
+                        $order->status = 5;
+                         break;
+                    case 2:
+                        $order->status = 2;
+                        break;
+                    default:
+                       break;
+                }
+                $order->save(false);
+            }
+        }
+
 
     }
 
