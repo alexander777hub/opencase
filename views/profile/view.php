@@ -24,7 +24,7 @@ $script = <<< JS
           
             let item_id = $(this).find(".data-price").data('id');
              console.log($(this).closest(".items-incase__item"), "PARENT");
-             let parent = $(this).closest(".items-incase__item");
+             let parent = $(this).closest(".item__btns");
              
             $.ajax({
                     url: "/rest-api/market",
@@ -48,10 +48,9 @@ $script = <<< JS
                         }
                         $("#append-sell-text").text("Заказ на вывод скина сформирован");
                         console.log($(this), "THIS");
+                        parent.empty();
                         
-                        $(this).remove();
-                        var sell = parent.find(".tosell");
-                        sell.remove();
+                        
                         
                         
                         
