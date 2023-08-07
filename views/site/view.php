@@ -271,13 +271,17 @@ if(!Yii::$app->user->isGuest){
 
                     <div class="case-page__btns">
                         <div class="case-page__btn">
+                            <?php  if(!Yii::$app->user->isGuest): ?>
                             <button class="btn btn_size-big btn_word-wrap btn_color-success btn_uppercase btn_type-fullwidth refill">
-                                <div class="btn__content">
-                                     <?php  if(!Yii::$app->user->isGuest): ?>
-                                    <div class="btn__label"><a href="/payment/index">Пополнить баланс</a></div>
-                                    <?php  endif; ?>
-                                </div>
+
+                                    <div class="btn__content">
+
+                                        <div class="btn__label"><a href="/payment/index">Пополнить баланс</a></div>
+
+                                    </div>
+
                             </button>
+                            <?php  endif; ?>
                         </div>
 
 
