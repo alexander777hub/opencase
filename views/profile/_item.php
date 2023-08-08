@@ -48,7 +48,7 @@ $show_sell_btns = false;
             </div>
             <div class="item__btns">
 
-                <?php if(!$is_steam_sold): ?>
+                <?php if($show_sell_btns): ?>
 
                 <div class="item__btn">
                     <div class="btn btn_color-success btn_size-small btn_uppercase btn_with-icon tosell">
