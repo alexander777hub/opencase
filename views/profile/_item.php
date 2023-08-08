@@ -5,7 +5,7 @@ use app\models\Item;
 
 
 $icon = isset($model['icon_url']) && $model['icon_url'] ? $model['icon_url'] : '/uploads/photo/default.png';
-$is_steam_sold = \app\modules\mng\models\MarketOrder::find()->where(['user_id' => Yii::$app->user->id, 'item_id'=> $model['id']])->one();
+$is_steam_sold = \app\modules\mng\models\MarketOrder::find()->where(['user_id' => Yii::$app->user->id, 'item_id'=> $model['id']])->andWhere(['not in','status',[1,5]])->one();
 
 
 

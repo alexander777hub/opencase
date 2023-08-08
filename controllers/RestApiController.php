@@ -67,8 +67,8 @@ class RestApiController extends Controller
 
             $market_hash_name =$post['market_hash_name'];
 
-            $price = $this->actionUpdatePrice($market_hash_name);
-            $price = (round($price) * 100);
+            $price1 = $this->actionUpdatePrice($market_hash_name);
+            $price2 = (round($price1 + 1) * 100);
 
 
             $client = new \GuzzleHttp\Client([
@@ -82,8 +82,8 @@ class RestApiController extends Controller
             }
             $partnerToken = explode('?', $profile->trade_link)[1];
             $custom_id = strtotime("now") . '_' . \Yii::$app->user->getId();
-            $url = "https://market.csgo.com/api/v2/buy-for?key=$key&hash_name=$market_hash_name&price=$price&$partnerToken&custom_id=$custom_id";
-            $request = $client->request('GET', 'https://market.csgo.com/api/v2/buy-for?key='.$key.'&hash_name='.$market_hash_name.'&price='.$price.'&'.$partnerToken, [
+            $url = 'https://market.csgo.com/api/v2/buy-for?key='.$key.'&hash_name='.$market_hash_name.'&price='.$price2.'&'.$partnerToken.'&custom_id='.$custom_id;
+            $request = $client->request('GET', 'https://market.csgo.com/api/v2/buy-for?key='.$key.'&hash_name='.$market_hash_name.'&price='.$price2.'&'.$partnerToken.'&custom_id='.$custom_id, [
 
                 'timeout' => 120,
             ]);
@@ -101,6 +101,33 @@ class RestApiController extends Controller
                 $order->status = 1;
                 $order->save(false);
 
+            }
+            $model = new Task();
+            $model->frequency = 1;
+            $model->save(false);
+
+            $data =[
+                'frequency'    => $model->frequency,
+
+
+                'check_id'     => $custom_id];
+
+            $client = new \GuzzleHttp\Client([
+                'base_uri' =>  'http://127.0.0.1:8085/api/',
+            ]);
+
+
+            try {
+                $response = $client->request('GET', 'tester/market' , [
+                    'headers' => ['worker-access-token' => \Yii::$app->params['worker-access-token']],
+                    'query' => $data
+                ]);
+
+                $rows = json_decode((string)$response->getBody(), true);
+
+            } catch (ClientException $e) {
+                \Yii::info('ERROR TASK MARKET');
+               \Yii::info($e->getMessage());
             }
 
             $error = isset($r['error']) ? $r['error'] : null;
@@ -131,7 +158,9 @@ class RestApiController extends Controller
             'timeout' => 60,
             'debug' => false,
         ]);
+
         $key = \Yii::$app->params['market-key'];
+        $url = "https://market.csgo.com/api/v2/get-buy-info-by-custom-id?key=$key&custom_id=$custom_id";
         $request = $client->request('GET', "https://market.csgo.com/api/v2/get-buy-info-by-custom-id?key=$key&custom_id=$custom_id", [
 
             'timeout' => 120,
@@ -143,13 +172,44 @@ class RestApiController extends Controller
             return;
         }
         if($r['data']){
+            $data =[
+                'remove_id' => $custom_id,
+
+            ];
+            $client = new \GuzzleHttp\Client([
+                'base_uri' =>  'http://127.0.0.1:8085/api/',
+            ]);
             if(isset($r['data']['stage'])){
 
                 switch ($r['data']['stage']) {
                     case 5:
+                        try {
+                            $response = $client->request('GET', 'tester/market' , [
+                                'headers' => ['worker-access-token' => \Yii::$app->params['worker-access-token']],
+                                'query' => $data
+                            ]);
+
+                            $rows = json_decode((string)$response->getBody(), true);
+
+                        } catch (ClientException $e) {
+                            \Yii::info('ERROR TASK MARKET');
+                            \Yii::info($e->getMessage());
+                        }
                         $order->status = 5;
                          break;
                     case 2:
+                        try {
+                            $response = $client->request('GET', 'tester/market' , [
+                                'headers' => ['worker-access-token' => \Yii::$app->params['worker-access-token']],
+                                'query' => $data
+                            ]);
+
+                            $rows = json_decode((string)$response->getBody(), true);
+
+                        } catch (ClientException $e) {
+                            \Yii::info('ERROR TASK MARKET');
+                            \Yii::info($e->getMessage());
+                        }
                         $order->status = 2;
                         break;
                     default:
@@ -196,7 +256,7 @@ class RestApiController extends Controller
             ]);
             $request = $client->request('GET', 'https://market.csgo.com/api/v2/prices/RUB.json', [
 
-                'timeout' => 120,
+                'timeout' => 300,
             ]);
             //
 

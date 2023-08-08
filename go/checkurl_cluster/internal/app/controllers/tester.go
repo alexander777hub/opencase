@@ -23,17 +23,76 @@ type Params struct {
 	remove_id int
 }
 
+func TesterMarket(s *gocron.Scheduler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		params, _ := url.ParseQuery(r.URL.RawQuery)
+		tag := params.Get("remove_id")
+		check_id := params.Get("check_id")
+		fmt.Printf("TAGS", tag)
+		if len(tag) > 0 {
+			jobs, err := s.FindJobsByTag(tag)
+			if err != nil {
+				fmt.Errorf("%s: %s", err.Error(), tag)
+			}
+			s.RemoveByTag(tag)
+			j := s.Jobs()
+			//jobs := s.Jobs()
+
+			//s.Clear()
+			fmt.Printf("JOBS", j)
+			fmt.Printf("REMOVED", jobs)
+			return
+		}
+
+		if len(check_id) > 0 {
+			var wg sync.WaitGroup
+
+			wg.Add(1)
+
+			go func() {
+				defer wg.Done()
+
+				w.Header().Set("Content-Type", "application/json")
+
+				intNum, _ := strconv.Atoi(params.Get("frequency"))
+
+				jobs := s.Jobs()
+
+				fmt.Printf("LIST OF JOBS", jobs)
+
+				job, _ := s.Every(intNum).Minute().Tag(check_id).Do(taskMarket, params)
+				fmt.Printf("TAGGED", job)
+
+				s.StartAsync()
+
+			}()
+			wg.Wait()
+
+		}
+
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"result": "ok",
+		})
+	}
+
+}
+
 func TesterPrice(s *gocron.Scheduler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		params, _ := url.ParseQuery(r.URL.RawQuery)
 		tag := params.Get("remove_id")
 		fmt.Printf("TAGS", tag)
 		if len(tag) > 0 {
-			//jobs, err := s.FindJobsByTag(tag)
-			jobs := s.Jobs()
+			jobs, err := s.FindJobsByTag("foo")
+			if err != nil {
+				fmt.Errorf("%s: %s", err.Error(), tag)
+			}
+			s.RemoveByTag("foo")
+			j := s.Jobs()
+			//jobs := s.Jobs()
 
-			s.Clear()
-			fmt.Printf("JOBS", jobs)
+			//s.Clear()
+			fmt.Printf("JOBS", j)
 			fmt.Printf("REMOVED", jobs)
 			return
 		}
@@ -206,6 +265,22 @@ func taskWithParams(params url.Values) {
 	}
 
 	fmt.Print("Gocron is finished") */
+
+}
+
+func taskMarket(params url.Values) {
+	url := os.Getenv("DOMAIN_URL") + "/rest-api/check-status?custom_id=" + params.Get("check_id")
+	fmt.Printf("URL_MARKET", url)
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Printf("ERR", err)
+		fmt.Printf("ERROR", err.Error())
+		return
+	}
+
+	fmt.Printf("OK", resp.StatusCode)
+
+	fmt.Print("STATUS UPDATED")
 
 }
 

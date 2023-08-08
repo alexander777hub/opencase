@@ -80,6 +80,7 @@ func main() {
 	scheduler := gocron.NewScheduler(time.UTC)
 	secure.HandleFunc("/tester/cron", controllers.TesterCron).Methods("GET")
 	secure.HandleFunc("/tester/price", controllers.TesterPrice(scheduler)).Methods("GET")
+	secure.HandleFunc("/tester/market", controllers.TesterMarket(scheduler)).Methods("GET")
 	router.HandleFunc("/", handlerIndex).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8085", router))
 }

@@ -94,27 +94,29 @@ class CreateUserController extends Controller
     public function actionPrice()
     {
         $items = Item::find()->all();
+        $client = new \GuzzleHttp\Client([
+            'timeout' => 60,
+            'debug' => false,
+        ]);
+        $request = $client->request('GET', 'https://market.csgo.com/api/v2/prices/RUB.json', [
+
+            'timeout' => 120,
+        ]);
+        //
+
+        $r =  json_decode($request->getBody()->getContents(), true);
 
         foreach ($items as $item){
             $name = $item->market_hash_name;
-            $client = new \GuzzleHttp\Client([
-                'timeout' => 60,
-                'debug' => false,
-            ]);
-            $request = $client->request('GET', 'https://market.csgo.com/api/v2/prices/RUB.json', [
 
-                'timeout' => 120,
-            ]);
-            //
 
-            $r =  json_decode($request->getBody()->getContents(), true);
             if(isset($r['items']) && !empty($r['items'])) {
                 $arr = [];
                 foreach ($r['items'] as $k=>$val){
                     if(isset($val['market_hash_name']) && $val['market_hash_name'] == $item->market_hash_name){
                         $arr[] = $val['price'];
-
                     }
+
                 }
 
                 if(!empty($arr)){
@@ -122,18 +124,14 @@ class CreateUserController extends Controller
                     $i = 0;
                     $item->currency = $r['currency'];
                     $item->price = isset($arr[$i]) ? $arr[$i] : null;
-                    if(!isset($arr[$i])){
-                        echo "NO data IN item" . '' . $item->id . '<br>';
-                        var_dump($arr);
-                        exit;
-                    }
-
 
                     $item->internal_name = $item->name .'_'. '(' . $item->id.')' .'_' .strval($arr[$i]). '(' . $r['currency'].')' . '_' . $item->rarity;
+                   // echo $item->internal_name  . '<br>';
                     $item->save(false);
 
+
                 } else {
-                    echo "NO data for item" . '' . $item->market_hash_name . '<br>';
+                   // echo "NO data for item" . '' . $item->market_hash_name . '<br>';
                 }
             }
 
