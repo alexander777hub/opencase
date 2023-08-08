@@ -8,6 +8,7 @@ use app\models\Userform;
 use app\modules\mng\models\Opening;
 use app\modules\mng\models\OpeningItemForm;
 use app\modules\mng\models\OpeningSearch;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -16,7 +17,7 @@ use yii\filters\VerbFilter;
 /**
  * CaseController implements the CRUD actions for Opening model.
  */
-class CaseController extends ManagerController
+class CaseController extends Controller
 {
 
     public function beforeAction($action)
@@ -32,6 +33,25 @@ class CaseController extends ManagerController
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['open',
+                               ], // these action are accessible
+                            //only the yourRole1 and yourRole2
+                            'allow' => true,
+                            'roles' => ['@'],
+                        ],
+                        [
+                            'actions' => ['index','view', 'create', 'update',
+                                'delete', 'remove-comment', 'assign-avatar', 'remove-photo'], // these action are accessible
+                            //only the yourRole1 and yourRole2
+                            'allow' => true,
+                            'roles' => [ 'administrator'],
+                        ],
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
