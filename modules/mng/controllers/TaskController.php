@@ -2,6 +2,7 @@
 
 namespace app\modules\mng\controllers;
 
+use app\controllers\ManagerController;
 use app\modules\mng\models\Task;
 use app\modules\mng\models\TaskSearch;
 use GuzzleHttp\Exception\ClientException;
@@ -12,7 +13,7 @@ use yii\filters\VerbFilter;
 /**
  * TaskController implements the CRUD actions for Task model.
  */
-class TaskController extends Controller
+class TaskController extends ManagerController
 {
     /**
      * @inheritDoc

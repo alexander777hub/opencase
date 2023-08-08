@@ -3,6 +3,7 @@
 namespace app\modules\mng\controllers;
 
 use alexander777hub\crop\models\PhotoEntity;
+use app\controllers\ManagerController;
 use app\models\Item;
 use app\models\ItemSearch;
 use app\modules\mng\models\ItemPhotoEntity;
@@ -13,7 +14,7 @@ use yii\filters\VerbFilter;
 /**
  * ItemController implements the CRUD actions for Item model.
  */
-class ItemController extends Controller
+class ItemController extends ManagerController
 {
     /**
      * @inheritDoc

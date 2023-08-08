@@ -32,7 +32,7 @@ class ManagerController extends \yii\web\Controller
                                           'delete', 'remove-comment', 'assign-avatar', 'remove-photo'], // these action are accessible
                             //only the yourRole1 and yourRole2
                             'allow' => true,
-                            'roles' => ['manager', 'main_manager', 'administrator'],
+                            'roles' => [ 'administrator'],
                         ],
                     ],
                 ],

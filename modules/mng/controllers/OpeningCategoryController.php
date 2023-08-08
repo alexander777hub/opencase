@@ -2,6 +2,7 @@
 
 namespace app\modules\mng\controllers;
 
+use app\controllers\ManagerController;
 use app\modules\mng\models\OpeningCategory;
 use app\modules\mng\models\OpeningCategorySearch;
 use yii\web\Controller;
@@ -11,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * OpeningCategoryController implements the CRUD actions for OpeningCategory model.
  */
-class OpeningCategoryController extends Controller
+class OpeningCategoryController extends ManagerController
 {
     /**
      * @inheritDoc

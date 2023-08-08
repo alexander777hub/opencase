@@ -3,6 +3,7 @@
 namespace app\modules\mng\controllers;
 
 use alexander777hub\crop\models\PhotoEntity;
+use app\controllers\ManagerController;
 use app\models\Userform;
 use app\modules\mng\models\Opening;
 use app\modules\mng\models\OpeningItemForm;
@@ -15,7 +16,7 @@ use yii\filters\VerbFilter;
 /**
  * CaseController implements the CRUD actions for Opening model.
  */
-class CaseController extends Controller
+class CaseController extends ManagerController
 {
 
     public function beforeAction($action)
