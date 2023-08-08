@@ -49,7 +49,7 @@ class RestApiController extends Controller
             \Yii::$app->response->statusCode = 200;
             return [
                 'success',
-                'profile_credit' => $profile->credit,
+                'profile_credit' => round($profile->credit, 2),
                 'item_id' => $post['item_id'],
             ];
         }
