@@ -68,6 +68,7 @@ $script = <<< JS
             let item_id = $(this).find(".data-price").data('id');
              console.log($(this).closest(".items-incase__item"), "PARENT");
              let parent = $(this).closest(".items-incase__item");
+             let price_div = parent.find(".price-RUB");
             $.ajax({
                     url: "/rest-api/get-price",
                     type: "post",
@@ -105,8 +106,8 @@ $script = <<< JS
                                      parent.remove();
                                      $("#append-credit").empty();
                                      $("#append-credit").text(response.profile_credit);
-                                     $(".price-RUB").empty();
-                                     $(".price-RUB").text(response.profile_credit);
+                                     $("#balance-left").empty();
+                                     $("#balance-left").text(response.profile_credit);
                                     
                             },
                             error: function(jqXHR, textStatus, errorThrown) {
@@ -308,9 +309,9 @@ $best_drop_name =  $best_drop ? User::getUser(Yii::$app->user->getId())->getProf
 
                     <div class="profile__balance">
                         <div class="user-balance-block">
-                            <div class="user-balance-block__title">Баланс</div>
+                            <div class="user-balance-block__title">Баланс </div>
                             <div class="user-balance-block__numbers">
-                                <div class="user-balance-block__fiat"><span class="price price-RUB"><?= User::getUser(Yii::$app->user->getId())->getProfile()->credit ? User::getUser(Yii::$app->user->getId())->getProfile()->credit : '0.00' ?></span></div>
+                                <div class="user-balance-block__fiat"><span id="balance-left" class="price price-RUB"><?= User::getUser(Yii::$app->user->getId())->getProfile()->credit ? User::getUser(Yii::$app->user->getId())->getProfile()->credit : '0.00' ?></span></div>
                                 <div class="user-balance-block__coins">
 
                                     <span class="price price-bonus">0.00</span>
