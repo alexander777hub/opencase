@@ -5,7 +5,17 @@ use app\models\Item;
 
 
 $icon = isset($model['icon_url']) && $model['icon_url'] ? $model['icon_url'] : '/uploads/photo/default.png';
-$is_steam_sold = \app\modules\mng\models\MarketOrder::find()->where(['user_id' => Yii::$app->user->id, 'item_id'=> $model['id']])->andWhere(['not in','status',[1,5]])->one();
+$show_sell_btns = false;
+  $row =  \app\modules\mng\models\MarketOrder::find()->where(['user_id' => Yii::$app->user->id, 'item_id'=> $model['id']])->one();
+  if(!$row) {
+      $show_sell_btns = true;
+  } else {
+      if($row->status == 5){
+          $show_sell_btns = true;
+      }
+
+  }
+
 
 
 
