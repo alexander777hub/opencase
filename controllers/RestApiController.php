@@ -32,10 +32,7 @@ class RestApiController extends Controller
                 return;
             }
 
-            $q = 'DELETE FROM `opening_item` WHERE
-                    `opening_item`.`user_id` = ' . intval($post['user_id']) . ' AND   `opening_item`.`item_id` = ' . intval($post['item_id']) . '
-                     ';
-            \Yii::$app->db->createCommand($q)->execute();
+
 
 
             $profile = Profile::find()->where(['user_id' => intval($post['user_id'])])->one();
@@ -46,6 +43,10 @@ class RestApiController extends Controller
             $profile->credit = $profile->credit + floatval($post['price']);
 
             $profile->save(false);
+            $q = 'DELETE FROM `opening_item` WHERE
+                    `opening_item`.`user_id` = ' . intval($post['user_id']) . ' AND   `opening_item`.`item_id` = ' . intval($post['item_id']) . '
+                     ';
+            \Yii::$app->db->createCommand($q)->execute();
 
 
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
