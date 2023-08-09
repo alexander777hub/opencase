@@ -16,14 +16,14 @@ $this->params['breadcrumbs'][] = $this->title;
 $user_js_id = !(Yii::$app->user->isGuest) ? (Yii::$app->user->id) : null;
 $script = <<< JS
    $(document).ready(function(){
-         
+       console.log( $(".tomarket"), 'EL');
        $("#close-sell").on("click", function(){
             $("#sell").css("display", "none");
        });
        $(".tomarket").on("click", function (e) {
-          
+           
             let item_id = $(this).find(".data-price").data('id');
-             let oi_id = $(this).find(".data-price").data('oi');
+            let oi_id = $(this).find(".data-price").data('oi');
             console.log($(this).closest(".items-incase__item"), "PARENT");
             let parent = $(this).closest(".item__btns");
              
@@ -33,8 +33,7 @@ $script = <<< JS
                     data:  {
                          item_id: item_id,
                          user_id: $user_js_id,
-                         oi_id: oi_id
-                    
+                         oi_id: oi_id,
                         market_hash_name : $(this).find(".data-price").data('name'),
                     },
                     success: function (response) {
