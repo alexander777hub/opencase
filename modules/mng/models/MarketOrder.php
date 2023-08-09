@@ -13,6 +13,8 @@ use Yii;
  * @property int|null $price
  * @property int $user_id
  * @property int|null $status
+ * @property int|null $count
+ * @property int|null $oi_id
  */
 class MarketOrder extends \yii\db\ActiveRecord
 {

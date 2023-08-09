@@ -5,6 +5,7 @@ namespace app\controllers;
 
 use app\models\Profile;
 use app\modules\mng\models\MarketOrder;
+use app\modules\mng\models\OpeningItem;
 use app\modules\mng\models\Task;
 use GuzzleHttp\Exception\ClientException;
 use yii\web\Controller;
@@ -36,10 +37,10 @@ class RestApiController extends Controller
 
 
             $profile = Profile::find()->where(['user_id' => intval($post['user_id'])])->one();
-            var_dump($profile->credit);
+           /* var_dump($profile->credit);
             var_dump(floatval($post['price']));
             var_dump(($profile->credit + floatval($post['price'])));
-            exit;
+            exit; */
             $profile->credit = $profile->credit + floatval($post['price']);
 
             $profile->save(false);
@@ -64,7 +65,7 @@ class RestApiController extends Controller
     {
         if (\Yii::$app->request->isAjax && \Yii::$app->request->isPost) {
             $post = $_POST;
-            if (!isset($post['item_id']) || !isset($post['user_id'])) {
+            if (!isset($post['item_id']) || !isset($post['user_id']) || !isset($post['oi_id'])) {
                 return;
             }
 
@@ -97,13 +98,20 @@ class RestApiController extends Controller
             $r =  json_decode($request->getBody()->getContents(), true);
             $success = $r['success'];
             if($success){
+
                 $order = new MarketOrder();
                 $order->custom_id = $custom_id;
                 $order->price = $r['price'];
                 $order->item_id = $post['item_id'];
                 $order->user_id = $post['user_id'];
                 $order->status = 1;
+                $order->oi_id = intval($post['oi_id']);
                 $order->save(false);
+
+                $opening_item = OpeningItem::find()->where(['id' => intval($post['oi_id'])])->one();
+                $opening_item->status = 1;
+
+
 
             }
             $model = new Task();
@@ -155,6 +163,7 @@ class RestApiController extends Controller
         }
 
         $order = MarketOrder::find()->where(['custom_id'=> $custom_id])->one();
+        $oi = OpeningItem::findOne($order->oi_id);
         if(!$order){
             return;
         }
@@ -199,6 +208,9 @@ class RestApiController extends Controller
                             \Yii::info('ERROR TASK MARKET');
                             \Yii::info($e->getMessage());
                         }
+                        if($oi){
+                            $oi->status = 5;
+                        }
                         $order->status = 5;
                          break;
                     case 2:
@@ -214,12 +226,16 @@ class RestApiController extends Controller
                             \Yii::info('ERROR TASK MARKET');
                             \Yii::info($e->getMessage());
                         }
+                        if($oi){
+                            $oi->status = 2;
+                        }
                         $order->status = 2;
                         break;
                     default:
                        break;
                 }
                 $order->save(false);
+                $oi->save(false);
             }
         }
 

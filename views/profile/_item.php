@@ -6,11 +6,11 @@ use app\models\Item;
 
 $icon = isset($model['icon_url']) && $model['icon_url'] ? $model['icon_url'] : '/uploads/photo/default.png';
 $show_sell_btns = false;
-  $row =  \app\modules\mng\models\MarketOrder::find()->where(['user_id' => Yii::$app->user->id, 'item_id'=> $model['id']])->one();
-  if(!$row) {
+ $status = $model ? $model['status'] : null;
+  if(!$status) {
       $show_sell_btns = true;
   } else {
-      if($row->status == 5){
+      if($status == 5){
           $show_sell_btns = true;
       }
 
@@ -63,7 +63,7 @@ $show_sell_btns = false;
                     <div class="btn btn_type-square btn_with-icon btn_style-outline btn_color-primary btn_size-small btn_uppercase tomarket">
                         <div class="btn__content">
                             <i style="margin-right: 5px;" class="fa fa-arrow-down" aria-hidden="true"></i>
-                            <div data-id="<?= $model ? $model['id'] :  null ?>"  data-name="<?= $model ? $model['market_hash_name'] :  null ?>" data-price="<?= $model ? round($model['price'], 2) :  null ?>" class="btn__label data-price"></div>
+                            <div data-id="<?= $model ? $model['id'] :  null ?>"  data-name="<?= $model ? $model['market_hash_name'] :  null ?>" data-price="<?= $model ? round($model['price'], 2) :  null ?>"  data-oi="<?= $model ? $model['oi_id'] :  null ?>" class="btn__label data-price"></div>
                             <!-- <div class="btn__label">{{_ "withdraw_items_1"}}</div> -->
                         </div>
                     </div>

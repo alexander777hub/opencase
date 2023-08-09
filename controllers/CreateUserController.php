@@ -4,6 +4,10 @@
 namespace app\controllers;
 
 use app\models\Item;
+use app\models\Profile;
+use app\models\User;
+use app\modules\mng\models\MarketOrder;
+use app\modules\mng\models\OpeningItem;
 use yii\web\Controller;
 
 /**
@@ -292,6 +296,63 @@ class CreateUserController extends Controller
         }
         die("all");
     }
+
+    public function actionCountMarket()
+    {
+        $users = Profile::find()->asArray()->all();
+        foreach ($users as $user){
+            $user_id = $user['user_id'];
+            $q = 'SELECT COUNT(*), id, user_id, item_id FROM market_order WHERE user_id=' . intval($user_id) . ' GROUP BY item_id;';
+            $counts = \Yii::$app->db->createCommand($q)->queryAll();
+            if(!empty($counts)){
+                foreach($counts as $count){
+                    $ops =   MarketOrder::find()->where(['item_id' => $count['item_id'], 'user_id'=> $count['user_id']])->all();
+                    if($ops){
+                        foreach($ops as $op){
+                            $op->count = intval($count['COUNT(*)']);
+                            $op->save();
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+        die('HEHE');
+
+
+    }
+
+
+    public function actionCount()
+    {
+        $users = Profile::find()->asArray()->all();
+        foreach ($users as $user){
+           $user_id = $user['user_id'];
+            $q = 'SELECT COUNT(*), id, user_id, item_id FROM opening_item WHERE user_id=' . intval($user_id) . ' GROUP BY item_id;';
+            $counts = \Yii::$app->db->createCommand($q)->queryAll();
+            if(!empty($counts)){
+               foreach($counts as $count){
+                 $ops =   OpeningItem::find()->where(['item_id' => $count['item_id'], 'user_id'=> $count['user_id']])->all();
+                 if($ops){
+                     foreach($ops as $op){
+                         $op->count = intval($count['COUNT(*)']);
+                         $op->save();
+                     }
+
+                 }
+
+               }
+
+
+            }
+        }
+        die('HEHE');
+
+
+    }
+
 
 
     public function actionGetPrice($name)

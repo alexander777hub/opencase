@@ -12,6 +12,8 @@ use Yii;
  * @property int $item_id
  * @property int|null $user_id
  * @property float $price
+ * @property int|null $status
+ * @property int|null $count
  */
 class OpeningItem extends \yii\db\ActiveRecord
 {

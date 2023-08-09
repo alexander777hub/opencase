@@ -23,8 +23,9 @@ $script = <<< JS
        $(".tomarket").on("click", function (e) {
           
             let item_id = $(this).find(".data-price").data('id');
-             console.log($(this).closest(".items-incase__item"), "PARENT");
-             let parent = $(this).closest(".item__btns");
+             let oi_id = $(this).find(".data-price").data('oi');
+            console.log($(this).closest(".items-incase__item"), "PARENT");
+            let parent = $(this).closest(".item__btns");
              
             $.ajax({
                     url: "/rest-api/market",
@@ -32,6 +33,7 @@ $script = <<< JS
                     data:  {
                          item_id: item_id,
                          user_id: $user_js_id,
+                         oi_id: oi_id
                     
                         market_hash_name : $(this).find(".data-price").data('name'),
                     },
@@ -49,12 +51,6 @@ $script = <<< JS
                         $("#append-sell-text").text("Заказ на вывод скина сформирован");
                         console.log($(this), "THIS");
                         parent.empty();
-                        
-                        
-                        
-                        
-                        
-         
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         console.log(textStatus, errorThrown);
