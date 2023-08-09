@@ -78,7 +78,7 @@ class ProfileController extends Controller
     public function actionView($user_id)
     {
         $model = $this->findModel($user_id);
-        $query = (new \yii\db\Query())->select(['item_id'])->from('opening_item')->where(['user_id' => \Yii::$app->user->id]);
+        /*$query = (new \yii\db\Query())->select(['item_id'])->from('opening_item')->where(['user_id' => \Yii::$app->user->id]);
         $raw = $query->createCommand()->getRawSql();
         $command = $query->createCommand();
         $data = $command->queryAll();
@@ -87,9 +87,9 @@ class ProfileController extends Controller
             foreach ($data as $key => $item){
                 $ids[ intval($item['item_id'])] = intval($item['item_id']);
             }
-        }
-        $query = (new \yii\db\Query())->select('*')->from('item')->where(['in', 'id',$ids]);
-
+        } */
+        $query = (new \yii\db\Query())->select(['item.id', 'item.market_hash_name', 'item.type', 'item.icon_url', 'opening_item.price',  'item.rarity', 'item.exterior'])->from('item')->innerJoin('opening_item', 'item.id = opening_item.item_id')->where(['opening_item.user_id'=> \Yii::$app->user->id]);
+        $raw = $query->createCommand()->getRawSql();
         $dataProvider = new ActiveDataProvider([
 
             'query' => $query,

@@ -54,7 +54,7 @@ $show_sell_btns = false;
                     <div class="btn btn_color-success btn_size-small btn_uppercase btn_with-icon tosell">
                         <div class="btn__content">
                             <i  style="margin-right: 5px;" class="fa fa-shopping-cart" aria-hidden="true"></i>
-                            <div data-id="<?= $model ? $model['id'] :  null ?>"  data-name="<?= $model ? $model['market_hash_name'] :  null ?>" data-price="<?= $model ? $model['price'] :  null ?>" class="btn__label data-price"><span class="price price-RUB"><?= $model ? number_format((float)$model['price'], 2, '.', '')  :  null ?></span></div>
+                            <div data-id="<?= $model ? $model['id'] :  null ?>"  data-name="<?= $model ? $model['market_hash_name'] :  null ?>" data-price="<?= $model ? round($model['price'],2) :  null ?>" class="btn__label data-price"><span class="price price-RUB"><?= $model ? round($model['price'],2)  :  null ?></span></div>
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@ $show_sell_btns = false;
                     <div class="btn btn_type-square btn_with-icon btn_style-outline btn_color-primary btn_size-small btn_uppercase tomarket">
                         <div class="btn__content">
                             <i style="margin-right: 5px;" class="fa fa-arrow-down" aria-hidden="true"></i>
-                            <div data-id="<?= $model ? $model['id'] :  null ?>"  data-name="<?= $model ? $model['market_hash_name'] :  null ?>" data-price="<?= $model ? $model['price'] :  null ?>" class="btn__label data-price"></div>
+                            <div data-id="<?= $model ? $model['id'] :  null ?>"  data-name="<?= $model ? $model['market_hash_name'] :  null ?>" data-price="<?= $model ? round($model['price'], 2) :  null ?>" class="btn__label data-price"></div>
                             <!-- <div class="btn__label">{{_ "withdraw_items_1"}}</div> -->
                         </div>
                     </div>
