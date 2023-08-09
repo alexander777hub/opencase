@@ -37,10 +37,10 @@ class RestApiController extends Controller
 
 
             $profile = Profile::find()->where(['user_id' => intval($post['user_id'])])->one();
-            var_dump($profile->credit);
+           /* var_dump($profile->credit);
             var_dump(floatval($post['price']));
             var_dump(($profile->credit + floatval($post['price'])));
-            exit;
+            exit; */
             $profile->credit = $profile->credit + floatval($post['price']);
 
             $profile->save(false);
