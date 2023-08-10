@@ -14,7 +14,9 @@
     background-color: #bf161c;
 }
 
-
+.rarity_special_gold {
+    background-color: #f4c600;
+}
 
 .rarity_ancient_weapon {
     background-color: #f4c600;

@@ -50,6 +50,9 @@ if(!Yii::$app->user->isGuest){
                 case 'Rarity_Rare_Weapon':
                     jsClass = 'rarity_rare_weapon';
                     break;
+                case 'Special_Gold':
+                    jsClass = 'rarity_special_gold';
+                    break;
                 default:
                     break;
 

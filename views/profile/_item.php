@@ -32,7 +32,7 @@ $show_sell_btns = false;
 
 </script>
 
-    <div data-rarity=<?= $model['rarity']     ?> data-id=<?= intval($model['oi_id'])     ?> class="item uncommon js_class">
+    <div data-rarity=<?= !$model->is_gold ?  $model->rarity : "Special_Gold"      ?> data-id=<?= intval($model['oi_id'])     ?> class="item uncommon js_class">
         <div class="item__content">
             <div class="item__img">
                 <img src="<?= $icon  ?>" class="case-image">
