@@ -34,9 +34,6 @@
                 <span class="price price-RUB"><?= round($model->price, 0)  ?></span>
             </div>
         </div>
-
-
-
     </a>
 
 

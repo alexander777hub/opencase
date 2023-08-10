@@ -26,6 +26,37 @@ if(!Yii::$app->user->isGuest){
 
 
     $(document).ready(function(){
+        var items = $('.js_class');
+
+        items.each(function() {
+            var rarity = $(this).data('rarity');
+            var jsClass = '';
+            switch (rarity){
+                case 'Rarity_Common_Weapon':
+                    jsClass = 'rarity_common_weapon';
+                    break;
+                case 'Rarity_Mythical':
+                    jsClass = 'rarity_mythical';
+                    break;
+                case 'Rarity_Legendary':
+                    jsClass = 'rarity_legendary';
+                    break;
+                case 'Rarity_Ancient':
+                    jsClass = 'rarity_ancient';
+                    break;
+                case 'Rarity_Ancient_Weapon':
+                    jsClass = 'rarity_ancient_weapon';
+                    break;
+                case 'Rarity_Rare_Weapon':
+                    jsClass = 'rarity_rare_weapon';
+                    break;
+                default:
+                    break;
+
+            }
+            var parent = $( this ).closest(".items-incase__item");
+            parent.addClass(jsClass);
+        });
 
         $(document).on({
             ajaxStart: function(){
