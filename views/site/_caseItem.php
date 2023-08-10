@@ -1,5 +1,5 @@
 <?php
-var_dump($model->is_gold);
+
 ?>
 
 
