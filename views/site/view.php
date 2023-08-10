@@ -60,11 +60,9 @@ if(!Yii::$app->user->isGuest){
 
         $(document).on({
             ajaxStart: function(){
-               alert("START");
                 $("body").addClass("loading");
             },
             ajaxStop: function(){
-                alert("STOP");
                 $("body").removeClass("loading");
             }
         });
