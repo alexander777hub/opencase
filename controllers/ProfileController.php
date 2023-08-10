@@ -159,8 +159,6 @@ class ProfileController extends Controller
         $this->render('view', [
             'model' => $model,
         ]);
-
-
     }
 
     /**

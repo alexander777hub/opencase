@@ -97,7 +97,9 @@ class Profile extends BaseProfile
         $rules[] =  [['city_id','sex',], 'integer'];
         $rules[] = [['visibility'],  'in', 'range' => [1, 2, 3]];
         $rules[] = [['status'],   'in', 'range' => [0, 1, 2, 3, 4,5]];
-        $rules[] =  [['trade_link'], 'url', 'defaultScheme' => 'https'];
+       // $rules[] =  [['trade_link'], 'url', 'defaultScheme' => 'https'];
+        $rules[] =  [['trade_link'], 'match', 'pattern'=>'~^https://steamcommunity.com/tradeoffer/new/[?]partner=([^/]+)[&]token=([^/]+)$~'];
+         
         //$rules[] =  [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'];
         $rules[] = [['_avatar'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg'];
        // $rules[] =  [['city_id','sex'], 'required'];
@@ -412,8 +414,8 @@ class Profile extends BaseProfile
         if(empty($array)){
             return  '/uploads/photo/default.png';
         }
-        $icon =  $array['icon'] ? $array['icon'] : '/uploads/photo/default.png';
-        $icon = str_replace('public', 'original', $icon);
+        $icon =  isset($array['icon_url']) ? $array['icon_url'] : '/uploads/photo/default.png';
+      //  $icon = str_replace('public', 'original', $icon);
         return $icon;
 
     }
@@ -423,7 +425,7 @@ class Profile extends BaseProfile
             return 'Не задано';
         }
 
-        return $array['internal_name'] ? $array['internal_name'] : 'Не задано';
+        return isset($array['market_hash_name']) ? $array['market_hash_name'] : 'Не задано';
 
     }
 
