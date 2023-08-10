@@ -181,7 +181,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="cases-section cases-section_limited">
                     <div class="cases-section__title" id="limited-cases">
                         <div class="new-title new-title_with-icon new-title_icon-limited">
-                            <div class="new-title__text"> Списое кейсов</div>
+                            <div class="new-title__text"> Список кейсов</div>
                         </div>
                     </div>
                     <div class="cases-section__cases">
