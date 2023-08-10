@@ -88,7 +88,7 @@ class ProfileController extends Controller
                 $ids[ intval($item['item_id'])] = intval($item['item_id']);
             }
         } */
-        $query = (new \yii\db\Query())->select(['item.id', 'item.market_hash_name', 'item.type', 'item.icon_url', 'opening_item.price', 'opening_item.id as oi_id', 'opening_item.status as status',  'item.rarity', 'item.exterior'])->from('item')->innerJoin('opening_item', 'item.id = opening_item.item_id')->where(['opening_item.user_id'=> \Yii::$app->user->id]);
+        $query = (new \yii\db\Query())->select(['item.id', 'item.market_hash_name', 'item.type', 'item.icon_url', 'opening_item.price', 'opening_item.id as oi_id', 'opening_item.status as status',  'item.rarity', 'item.exterior'])->from('item')->innerJoin('opening_item', 'item.id = opening_item.item_id')->where(['opening_item.user_id'=> \Yii::$app->user->id])->orderBy(["opening_item.id" => SORT_DESC]);
 
         $raw = $query->createCommand()->getRawSql();
 
@@ -99,8 +99,6 @@ class ProfileController extends Controller
                 'pageSize' => 150,
             ],
         ]);
-
-
 
         return $this->render('view', [
             'model' => $this->findModel($user_id),
