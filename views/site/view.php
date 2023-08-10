@@ -26,6 +26,17 @@ if(!Yii::$app->user->isGuest){
 
 
     $(document).ready(function(){
+
+        $(document).on({
+            ajaxStart: function(){
+               alert("START");
+                $("body").addClass("loading");
+            },
+            ajaxStop: function(){
+                alert("STOP");
+                $("body").removeClass("loading");
+            }
+        });
             $("#open").on("click", function(){
                 var case_id = "<?= $model ?  $model->id : null ?>";
                 console.log("OPEN", case_id);
@@ -180,6 +191,28 @@ if(!Yii::$app->user->isGuest){
         flex: 1 1 auto;
         padding: 1rem;
     }
+
+    .overlay{
+        display: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        background: rgba(255,255,255,0.8) url("/uploads/img/loader.gif") center no-repeat;
+    }
+    body{
+        text-align: center;
+    }
+    /* Turn off scrollbar when body element has the loading class */
+    body.loading{
+        overflow: hidden;
+    }
+    /* Make spinner image visible when body element has the loading class */
+    body.loading .overlay{
+        display: block;
+    }
 </style>
 <div id="append">
 
@@ -224,10 +257,6 @@ if(!Yii::$app->user->isGuest){
             </div>
         </div>
     </div>
-
-
-
-
 
 
     <div class="case-page__actions">
@@ -306,12 +335,6 @@ if(!Yii::$app->user->isGuest){
 
 
             </div>
-
-
-
-
-
-
         </div>
 
         <div class="case-page__info">

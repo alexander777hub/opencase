@@ -1663,15 +1663,12 @@ if(!Yii::$app->user->isGuest){
                     </div>
                 </div>
             </div>
-
-
-
-
             <div class="take-messages">
 
             </div>
 
         </div>
+        <div class="overlay"></div>
         <?php $this->endBody() ?>
     </body>
 </html>
