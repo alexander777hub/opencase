@@ -231,9 +231,7 @@ if(!Yii::$app->user->isGuest){
         z-index: 999;
         background: rgba(255,255,255,0.8) url("/uploads/img/loader.gif") center no-repeat;
     }
-    body{
-        text-align: center;
-    }
+
     /* Turn off scrollbar when body element has the loading class */
     body.loading{
         overflow: hidden;
