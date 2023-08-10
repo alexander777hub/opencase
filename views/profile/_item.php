@@ -18,7 +18,7 @@ $show_sell_btns = false;
 
   $oi_id = $model ? isset($model['oi_id']) : $model['oi_id'];
 
-$js_class = \app\modules\mng\models\Opening::getColorClass($model);
+
 
 
 ?>
