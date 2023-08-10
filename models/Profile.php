@@ -232,9 +232,12 @@ class Profile extends BaseProfile
         if (!$user = \app\models\User::findOne($this->user_id)) {
             throw new NotFoundHttpException("Not found");
         }
-        $cases = $user->getOpenings();
-        if ($cases && isset($cases->all()[0])) {
-            return $cases->all()[0]['name'];
+        $q = 'SELECT COUNT(case_id), case_id FROM opening_item WHERE user_id='.intval($this->user_id).' GROUP BY case_id ORDER BY COUNT(case_id) DESC LIMIT 1';
+        $row = Yii::$app->db->createCommand($q)->queryOne();
+        if ($row) {
+            $case_id = $row['case_id'];
+
+            return Opening::findOne($case_id)->name;
         }
         return null;
     }
