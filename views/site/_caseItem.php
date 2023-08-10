@@ -1,7 +1,6 @@
 <?php
-var_dump($model->is_gold);
-?>
 
+?>
 
 <a href=<?= "https://market.csgo.com/?search=" . $model->market_hash_name ?> target="_blank" rel="noreferrer noopener" class="skin skin_in-case milspec">
     <div  data-rarity=<?= !$model->is_gold ?  $model->rarity : "Special_Gold"    ?>  class="skin__content js_class">
