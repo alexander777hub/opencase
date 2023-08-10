@@ -195,23 +195,16 @@ class Profile extends BaseProfile
         } 
     }
 
-    public function getFavoritCasePhoto()
+    public function getFavoritCasePhoto($row)
     {
 
-        /**
-         *  @var $user \app\models\User.
-         */
-        if(!$user = \app\models\User::findOne($this->user_id)){
-            throw new NotFoundHttpException("Not found");
-        }
 
-        $cases = $user->getOpenings();
-        $c = $cases->asArray()->all();
-        if($cases){
-            if(!isset($cases->all()[0])){
+        if($row){
+            if(!isset($row['case_id'])){
                 return null;
             }
-            $avatarId =  $cases->all()[0]['avatar_id'];
+            $case = Opening::findOne(intval($row['case_id']));
+            $avatarId =  $case->avatar_id;
             if(!$avatarId){
                 return '/uploads/photo/default.png';
             }
@@ -234,12 +227,23 @@ class Profile extends BaseProfile
         }
         $q = 'SELECT COUNT(case_id), case_id FROM opening_item WHERE user_id='.intval($this->user_id).' GROUP BY case_id ORDER BY COUNT(case_id) DESC LIMIT 1';
         $row = Yii::$app->db->createCommand($q)->queryOne();
-        if ($row) {
-            $case_id = $row['case_id'];
+        return $row ? $row : null;
+    }
 
-            return Opening::findOne($case_id)->name;
+    public function getFavoritCaseName($row)
+    {
+       if(!$row || empty($row)){
+           return null;
+       }
+       return isset($row['case_id']) ? Opening::getCaseName($row['case_id']) : null;
+    }
+
+    public function getFavoritCaseCountOpen($row)
+    {
+        if(!$row || empty($row)){
+            return null;
         }
-        return null;
+        return isset($row['COUNT(case_id)']) ? $row['COUNT(case_id)'] : null;
     }
 
     public function getReferrer()

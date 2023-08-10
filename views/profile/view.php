@@ -121,13 +121,29 @@ $script = <<< JS
    
 JS;
 $this->registerJs($script);
-$best_drop = User::getUser(Yii::$app->user->getId())->getProfile()->getBestDrop($dataProvider);
-$best_drop_price = $best_drop && isset($best_drop['price']) ? $best_drop['price'] : '';
-$best_drop_case_name = $best_drop && isset($best_drop['case_id']) ? \app\modules\mng\models\Opening::getCaseName($best_drop['case_id']) : '';
+$best_drop = null;
+$best_drop_price = null;
+$best_drop_case_name = null;
+$best_photo = null;
+$best_drop_name = null;
+$favorite_case = null;
+if(!Yii::$app->user->isGuest){
+    $best_drop = User::getUser(Yii::$app->user->getId())->getProfile()->getBestDrop($dataProvider);
+    $best_drop_price = $best_drop && isset($best_drop['price']) ? $best_drop['price'] : '';
+    $best_drop_case_name = $best_drop && isset($best_drop['case_id']) ? \app\modules\mng\models\Opening::getCaseName($best_drop['case_id']) : '';
 
-$best_photo = $best_drop ? User::getUser(Yii::$app->user->getId())->getProfile()->getBestDropPhoto($best_drop) : '';
+    $best_photo = $best_drop ? User::getUser(Yii::$app->user->getId())->getProfile()->getBestDropPhoto($best_drop) : '';
 
-$best_drop_name =  $best_drop ? User::getUser(Yii::$app->user->getId())->getProfile()->getBestDropName($best_drop) : '';
+    $best_drop_name =  $best_drop ? User::getUser(Yii::$app->user->getId())->getProfile()->getBestDropName($best_drop) : '';
+
+
+    $favorite_case = User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCase();
+
+    $favorite_case_name = User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCaseName($favorite_case);
+
+    $favorite_case_count = User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCaseCountOpen($favorite_case);
+
+}   $favorite_case_photo =  User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCasePhoto($favorite_case);
 
 ?>
 <style>
@@ -383,16 +399,16 @@ $best_drop_name =  $best_drop ? User::getUser(Yii::$app->user->getId())->getProf
 
                     <?php endif; ?>
                 </div>
-                <?php if(\app\models\User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCase()):   ?>
+                <?php if($favorite_case):   ?>
                 <div class="profile__favorite-case">
                     <div class="profile__sub-title profile__favorite-case-title">Любимый кейс</div>
 
                     <a style="margin-top: 0px;" href="#" class="profile__favorite-case-item">
-                        <img src=<?= \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCasePhoto()   ?> class="case-image">
+                        <img src=<?= $favorite_case_photo   ?> class="case-image">
                     </a>
                     <div class="profile__favorite-case-label-value">
-                        <div class="profile__favorite-case-value"> <?= \app\models\User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCase()   ?></div>
-                        <div class="profile__favorite-case-label">Количество открытий: 1</div>
+                        <div class="profile__favorite-case-value"> <?= $favorite_case_name   ?></div>
+                        <div class="profile__favorite-case-label">Количество открытий: <?= $favorite_case_count   ?></div>
                     </div>
                 </div>
 
