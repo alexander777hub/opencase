@@ -25,6 +25,22 @@ use yii\helpers\ArrayHelper;
 class Opening extends \yii\db\ActiveRecord
 
 {
+     const RARITY_COMMON_WEAPON = 'Rarity_Common_Weapon';
+
+    const RARITY_MYTHICAL = 'Rarity_Mythical';
+
+
+    const RARITY_LEGENDARY = 'Rarity_Legendary';
+
+
+    const RARITY_ANCIENT = 'Rarity_Ancient';
+
+
+    const RARITY_ANCIENT_WEAPON = 'Rarity_Ancient_Weapon';
+
+
+    const RARITY_RARE_WEAPON = 'Rarity_Rare_Weapon';
+
 
     public static function getRarityList()
     {

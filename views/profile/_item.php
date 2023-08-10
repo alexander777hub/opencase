@@ -16,14 +16,12 @@ $show_sell_btns = false;
 
   }
 
+  $oi_id = $model ? isset($model['oi_id']) : $model['oi_id'];
 
 
 
 ?>
-<script
-        src="https://code.jquery.com/jquery-3.7.0.min.js"
-        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-        crossorigin="anonymous"></script>
+
 
 <script type="text/javascript">
 
@@ -33,7 +31,7 @@ $show_sell_btns = false;
 
 </script>
 
-    <div class="item uncommon">
+    <div data-rarity=<?= $model['rarity']     ?> data-id=<?= intval($model['oi_id'])     ?> class="item uncommon js_class">
         <div class="item__content">
             <div class="item__img">
                 <img src="<?= $icon  ?>" class="case-image">

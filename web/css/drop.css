@@ -1,3 +1,32 @@
+.rarity_common_weapon {
+    background-color: #1c0d4a;
+}
+
+.rarity_mythical {
+    background-color: #7045c7;
+}
+
+.rarity_legendary {
+    background-color: #dc02f9;
+}
+
+.rarity_ancient {
+    background-color: #bf161c;
+}
+
+
+
+.rarity_ancient_weapon {
+    background-color: #f4c600;
+}
+.rarity_rare_weapon {
+
+}
+
+
+
+
+
 #login-buttons-image-steam {
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAflJREFUeNqMU82roWEU/3Ffw0YjIpGVhY/srMmSnT9AdyHFQlMWY8msJMNi2EiisGOlyIJJkWwsWEhiI6F8NAtK+Zr3fS63meZiTp06Pc/5/P3OYen1+k8AvtP6SqsA/ye/aM3Q+pW6Bn95FiGTyUBRFKbTKc7ns+AWQ10r3xW1Wg2/3w+lUonT6YT1eo1AIIBWq8V8v7LoES73gkUiEfL5PAqFAqrVKulAo9HA4/HA4XBgMBiA/ai61WolTqPRCLlcDplMBkKhEMViETabjfg8TKDT6dDtdmE2m8Fmv7laLBb0ej0oFIrHCUwmEwwGA1QqFZrN5vt7o9Egb7PZDDcQP0Tc5/MR22g0otPpwG63g8vlQiAQEFDdbjf5Z5VKpQtTod1uE8S9Xi/kcjk4HM5fSXe7HQ6HAxklFAqhUqm8JbjQwhgMRTS/pFo0GiXVIpEIAY2RcrlM2BgOh9jv9++JWfP5/CKVSv8ZI5vNYrVawel0IhgMkgQfyUu9Xv9Wq9UgFotJNYZrps3JZEKA2m63SCaTd5kiII7HY6RSKWi1WrhcLvD5fCwWC8RiMYTD4YcrTl0PQ9Dv95FIJBCPx7FcLiGRSJBOp28re/eomFX+8ecx8Xg8siRM+wzyTyT6QnP+kzY+06pi4o/HIzabDaHsyTknmHP+LcAASVHHFg/IoHAAAAAASUVORK5CYII=)
 }
@@ -1055,6 +1084,15 @@ strong {
     transform: translateX(-50%);
     transition: .3s ease
 }
+
+
+
+
+
+
+
+
+
 
 @media (min-width: 900px) {
     .drophistory-tooltip {

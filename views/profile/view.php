@@ -11,116 +11,10 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Profiles', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
-\app\assets\JQAsset::register($this);
+
 
 $user_js_id = !(Yii::$app->user->isGuest) ? (Yii::$app->user->id) : null;
-$script = <<< JS
-   $(document).ready(function(){
-       console.log( $(".tomarket"), 'EL');
-       $("#close-sell").on("click", function(){
-            $("#sell").css("display", "none");
-       });
-       $(".tomarket").on("click", function (e) {
-           
-            let item_id = $(this).find(".data-price").data('id');
-            let oi_id = $(this).find(".data-price").data('oi');
-            console.log($(this).closest(".items-incase__item"), "PARENT");
-            let parent = $(this).closest(".item__btns");
-             
-            $.ajax({
-                    url: "/rest-api/market",
-                    type: "post",
-                    data:  {
-                         item_id: item_id,
-                         user_id: $user_js_id,
-                         oi_id: oi_id,
-                        market_hash_name : $(this).find(".data-price").data('name'),
-                    },
-                    success: function (response) {
-                        console.log(response, "RESPONSE");
-                        console.log($(this).find(".data-price"), "TARG");
-                        let price = response && response.price ? response.price :  $(this).find(".data-price").data('price');
-                        $(".default-popup__title").empty();
-                        $("#confirm-sell").remove();
-                        $("#sell").css("display", "block");
-                        if(response.error){
-                           $("#append-sell-text").text(response.error); 
-                           return;
-                        }
-                        $("#append-sell-text").text("Заказ на вывод скина сформирован");
-                        console.log($(this), "THIS");
-                        parent.empty();
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log(textStatus, errorThrown);
-                    }
-                });
-           
-       });
-       
-       $(".tosell").on("click", function (e) {
-          
-                let item_id = $(this).find(".data-price").data('id');
-                console.log($(this).closest(".items-incase__item"), "PARENT");
-                let parent = $(this).closest(".items-incase__item");
-                let price_div = parent.find(".price-RUB");
-                console.log($(this).find(".data-price"), "TARG");
-                let price = $(this).find(".data-price").data('price');
-                $("#sell").css("display", "block");
-                $("#append-sell-text").text("Вы действительно хотите продать этот предмет за " +  price);
-                console.log($(this), "THIS");
-                data = {
-                    item_id: item_id,
-                    user_id: $user_js_id,
-                    price: price
-                
-                };
-                       
-            $("#confirm-sell").on("click", function(){
-             
-                 $.ajax({
-                    url: "/rest-api/sell",
-    
-                    type: "post",
-                    
-                    data: data,
-                    
-        
-                    success: function (response) {
-                        console.log(response, "RESPONSE");
-                        
-                         $("#sell").css("display", "none");
-                         parent.remove();
-                         $("#append-credit").empty();
-                         $("#append-credit").text(response.profile_credit);
-                         $("#balance-left").empty();
-                         $("#balance-left").text(response.profile_credit);
-                        
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus, errorThrown);
-                }
-                });
-            });
-           
-       });
-       $('#trade-save').on('click', function(){
-           
-           $('#trade-form').submit();
-       });
-       $(".profile__tradelink").on("click", function(){
-       $("#trade").show();
-   });
-       
 
-
-  $("#trade-close").on('click', function(){
-      $("#trade").hide();
-  })
-   });
-   
-JS;
-$this->registerJs($script);
 $best_drop = null;
 $best_drop_price = null;
 $best_drop_case_name = null;
@@ -146,6 +40,151 @@ if(!Yii::$app->user->isGuest){
 }   $favorite_case_photo =  User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCasePhoto($favorite_case);
 
 ?>
+<script
+        src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var items = $('.js_class');
+
+        items.each(function() {
+            var rarity = $(this).data('rarity');
+            var jsClass = '';
+            switch (rarity){
+                case 'Rarity_Common_Weapon':
+                    jsClass = 'rarity_common_weapon';
+                    break;
+                case 'Rarity_Mythical':
+                    jsClass = 'rarity_mythical';
+                    break;
+                case 'Rarity_Legendary':
+                    jsClass = 'rarity_legendary';
+                    break;
+                case 'Rarity_Ancient':
+                    jsClass = 'rarity_ancient';
+                    break;
+                case 'Rarity_Ancient_Weapon':
+                    jsClass = 'rarity_ancient_weapon';
+                    break;
+                case 'Rarity_Rare_Weapon':
+                    jsClass = 'rarity_rare_weapon';
+                    break;
+                default:
+                    break;
+
+            }
+
+            var parent = $( this ).closest(".items-incase__item");
+            parent.addClass(jsClass);
+
+        });
+        console.log(items, "ITEMS");
+        console.log( $(".tomarket"), 'EL');
+        $("#close-sell").on("click", function(){
+            $("#sell").css("display", "none");
+        });
+        $(".tomarket").on("click", function (e) {
+
+            let item_id = $(this).find(".data-price").data('id');
+            let oi_id = $(this).find(".data-price").data('oi');
+            console.log($(this).closest(".items-incase__item"), "PARENT");
+            let parent = $(this).closest(".item__btns");
+
+            $.ajax({
+                url: "/rest-api/market",
+                type: "post",
+                data:  {
+                    item_id: item_id,
+                    user_id: $user_js_id,
+                    oi_id: oi_id,
+                    market_hash_name : $(this).find(".data-price").data('name'),
+                },
+                success: function (response) {
+                    console.log(response, "RESPONSE");
+                    console.log($(this).find(".data-price"), "TARG");
+                    let price = response && response.price ? response.price :  $(this).find(".data-price").data('price');
+                    $(".default-popup__title").empty();
+                    $("#confirm-sell").remove();
+                    $("#sell").css("display", "block");
+                    if(response.error){
+                        $("#append-sell-text").text(response.error);
+                        return;
+                    }
+                    $("#append-sell-text").text("Заказ на вывод скина сформирован");
+                    console.log($(this), "THIS");
+                    parent.empty();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+
+        });
+
+        $(".tosell").on("click", function (e) {
+
+            let item_id = $(this).find(".data-price").data('id');
+            console.log($(this).closest(".items-incase__item"), "PARENT");
+            let parent = $(this).closest(".items-incase__item");
+            let price_div = parent.find(".price-RUB");
+            console.log($(this).find(".data-price"), "TARG");
+            let price = $(this).find(".data-price").data('price');
+            $("#sell").css("display", "block");
+            $("#append-sell-text").text("Вы действительно хотите продать этот предмет за " +  price);
+            console.log($(this), "THIS");
+            data = {
+                item_id: item_id,
+                user_id: '<?= $user_js_id  ?>',
+                price: price
+
+            };
+
+            $("#confirm-sell").on("click", function(){
+
+                $.ajax({
+                    url: "/rest-api/sell",
+
+                    type: "post",
+
+                    data: data,
+
+
+                    success: function (response) {
+                        console.log(response, "RESPONSE");
+
+                        $("#sell").css("display", "none");
+                        parent.remove();
+                        $("#append-credit").empty();
+                        $("#append-credit").text(response.profile_credit);
+                        $("#balance-left").empty();
+                        $("#balance-left").text(response.profile_credit);
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
+            });
+
+        });
+        $('#trade-save').on('click', function(){
+
+            $('#trade-form').submit();
+        });
+        $(".profile__tradelink").on("click", function(){
+            $("#trade").show();
+        });
+
+
+
+        $("#trade-close").on('click', function(){
+            $("#trade").hide();
+        })
+    });
+
+</script>
 <style>
     .pagination {
         display: -webkit-box;
@@ -579,6 +618,7 @@ if(!Yii::$app->user->isGuest){
                                           'itemView' => '_item',
                                           'itemOptions' => [
                                               'class' => 'items-incase__item',
+
                                           ],
                                           //    'options' => ['class' => 'cases'],
                                           'layout' => "<div><div class='items-incase'>{items}</div><br><div></div></div>"
