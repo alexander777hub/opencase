@@ -29,6 +29,7 @@ use Yii;
  * @property Opening[] $openings
  *  @property OpeningItemInit[] $initOpenings
  * @property float|null $price
+ * @property int|null $is_gold
  */
 class Item extends \yii\db\ActiveRecord
 {

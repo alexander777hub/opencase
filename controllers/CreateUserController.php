@@ -182,6 +182,8 @@ class CreateUserController extends Controller
 
 
 
+
+
         $r =  json_decode($request->getBody()->getContents(), true);
         //[{
         //	"id": "00014c0a-7b56-446d-b04f-43be5758f031",
@@ -350,6 +352,22 @@ class CreateUserController extends Controller
         }
         die('HEHE');
 
+
+    }
+
+    public function actionGetRarity()
+    {
+
+        $rows = Item::find()
+            ->where(['like', 'market_hash_name','%'. 'Knife' . '%', false])
+            ->orWhere(['like', 'market_hash_name','%'. 'Gloves' . '%', false])
+            ->all();
+
+        foreach ($rows as $row){
+            $row->is_gold = 1;
+            $row->save(false);
+        }
+        die("YES");
 
     }
 
