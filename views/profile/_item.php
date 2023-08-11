@@ -19,7 +19,6 @@ $show_sell_btns = false;
   $oi_id = $model ? isset($model['oi_id']) : $model['oi_id'];
 
 
-var_dump($model['rarity']);
 
 ?>
 
