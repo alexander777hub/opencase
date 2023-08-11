@@ -1,5 +1,5 @@
 <?php
-var_dump($model->exterior);
+
 ?>
 
 <a href=<?= "https://market.csgo.com/?search=" . $model->market_hash_name ?> target="_blank" rel="noreferrer noopener" class="skin skin_in-case milspec">
