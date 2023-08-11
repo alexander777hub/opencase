@@ -619,7 +619,7 @@ class Opening extends \yii\db\ActiveRecord
         $winItemByRarity = $this->winItemBy($rarityList);
         $winItemByExterior = $this->winItemBy(self::getExteriorList());
         if(!$winItemByRarity || $winItemByRarity == "Rarity_Mythical" || $winItemByRarity == "Rarity_Legendary") { // костыль
-            $winItemByRarity = self::getRarityList()[0]['name'];
+            $winItemByRarity = self::getRarityList()[0]['Rarity_Ancient_Weapon'];
         }
         if(!$winItemByExterior) {
             $winItemByExterior = self::getExteriorList()[0]['name'];
