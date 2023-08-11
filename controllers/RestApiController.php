@@ -29,7 +29,7 @@ class RestApiController extends Controller
     {
         if (\Yii::$app->request->isAjax && \Yii::$app->request->isPost) {
             $post = $_POST;
-            if (!isset($post['item_id']) || !isset($post['user_id']) || !isset($post['price'])) {
+            if (!isset($post['item_id']) || !isset($post['user_id']) || !isset($post['price']) || !isset($post['oi_id'])) {
                 return;
             }
 
@@ -44,9 +44,13 @@ class RestApiController extends Controller
             $profile->credit = $profile->credit + floatval($post['price']);
 
             $profile->save(false);
-            $q = 'DELETE FROM `opening_item` WHERE
-                    `opening_item`.`user_id` = ' . intval($post['user_id']) . ' AND   `opening_item`.`item_id` = ' . intval($post['item_id']) . '
+
+            $q = 'UPDATE `opening_item` SET is_sold=1 WHERE
+                    `opening_item`.`id` = ' . intval($post['oi_id']) . '
                      ';
+            /*$q = 'DELETE FROM `opening_item` WHERE
+                    `opening_item`.`user_id` = ' . intval($post['user_id']) . ' AND   `opening_item`.`item_id` = ' . intval($post['item_id']) . '
+                     '; */
             \Yii::$app->db->createCommand($q)->execute();
 
 

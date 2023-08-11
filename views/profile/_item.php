@@ -15,6 +15,9 @@ $show_sell_btns = false;
       }
 
   }
+  if($model['is_sold']){
+      $show_sell_btns = false;
+  }
 
   $oi_id = $model ? isset($model['oi_id']) : $model['oi_id'];
 
@@ -52,7 +55,7 @@ $show_sell_btns = false;
                     <div class="btn btn_color-success btn_size-small btn_uppercase btn_with-icon tosell">
                         <div class="btn__content">
                             <i  style="margin-right: 5px;" class="fa fa-shopping-cart" aria-hidden="true"></i>
-                            <div data-id="<?= $model ? $model['id'] :  null ?>"  data-name="<?= $model ? $model['market_hash_name'] :  null ?>" data-price="<?= $model ? round($model['price'],2) :  null ?>" class="btn__label data-price"><span class="price price-RUB"><?= $model ? round($model['price'],2)  :  null ?></span></div>
+                            <div  data-oi=<?= intval($model['oi_id'])     ?> data-id="<?= $model ? $model['id'] :  null ?>"  data-name="<?= $model ? $model['market_hash_name'] :  null ?>" data-price="<?= $model ? round($model['price'],2) :  null ?>" class="btn__label data-price"><span class="price price-RUB"><?= $model ? round($model['price'],2)  :  null ?></span></div>
                         </div>
                     </div>
                 </div>

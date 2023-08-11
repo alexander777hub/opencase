@@ -23,7 +23,7 @@ $best_drop_name = null;
 $favorite_case = null;
 if(!Yii::$app->user->isGuest){
     $best_drop = User::getUser(Yii::$app->user->getId())->getProfile()->getBestDrop($dataProvider);
-    $best_drop_price = $best_drop && isset($best_drop['price']) ? $best_drop['price'] : '';
+    $best_drop_price = $best_drop && isset($best_drop['price']) ? round($best_drop['price'], 2) : '';
     $best_drop_case_name = $best_drop && isset($best_drop['case_id']) ? \app\modules\mng\models\Opening::getCaseName($best_drop['case_id']) : '';
 
     $best_photo = $best_drop ? User::getUser(Yii::$app->user->getId())->getProfile()->getBestDropPhoto($best_drop) : '';
@@ -138,8 +138,9 @@ if(!Yii::$app->user->isGuest){
         $(".tosell").on("click", function (e) {
 
             let item_id = $(this).find(".data-price").data('id');
+            let oi_id = $(this).find(".data-price").data('oi');
             console.log($(this).closest(".items-incase__item"), "PARENT");
-            let parent = $(this).closest(".items-incase__item");
+            let parent = $(this).closest(".item__btns");
             let price_div = parent.find(".price-RUB");
             console.log($(this).find(".data-price"), "TARG");
             let price = $(this).find(".data-price").data('price');
@@ -149,7 +150,8 @@ if(!Yii::$app->user->isGuest){
             data = {
                 item_id: item_id,
                 user_id: '<?= $user_js_id  ?>',
-                price: price
+                price: price,
+                oi_id: oi_id
 
             };
 
@@ -167,7 +169,7 @@ if(!Yii::$app->user->isGuest){
                         console.log(response, "RESPONSE");
 
                         $("#sell").css("display", "none");
-                        parent.remove();
+                        parent.empty();
                         $("#append-credit").empty();
                         $("#append-credit").text(response.profile_credit);
                         $("#balance-left").empty();
