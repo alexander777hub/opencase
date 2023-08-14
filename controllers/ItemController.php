@@ -95,11 +95,10 @@ class ItemController extends \yii\web\Controller
             ];
 
             if(isset($session['upgrade']['oi_from'])) {
-                var_dump($session['upgrade']['oi_from']);
-                exit;
+
                 $item_from = OpeningItem::find()->where(['id' => $session['upgrade']['oi_from']])->one();
                 $item_item_from = Item::findOne(intval($session['upgrade']['oi_from']));
-                $img_from = $item_item_from ? $item_item_from : null;
+                $img_from = $item_item_from ? $item_item_from->icon_url : null;
             }
             $img_to = null;
             if(isset($session['upgrade']) && isset($session['upgrade']['oi_from']) && isset($session['upgrade']['oi_to'])) {
