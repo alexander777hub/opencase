@@ -81,16 +81,20 @@
                 success: function (response) {
                     console.log(response);
                     console.log(response.chance, "CHANCE");
-                    var chance_px = (293 / 100) * response.chance;
+                    if(response.chance) {
+                        $(".upgrade-title").empty();
+                        var chance_px = (293 / 100) * response.chance;
 
-                    console.log(chance_px, "PX");
-                    $(".upgrade-main-cell__chance-bar").css('background-color', '#6dae01');
-                    $(".upgrade-main-cell__chance-bar").css('height', chance_px + 'px');
-                    var html = '<div class="upgrade-title__percent">' +
-                        '<span>' +   response.chance + '</span>' +
-                        '<p>Шанс апгрейда</p>' +
-                    '</div>';
-                    $('.upgrade-title').append(html);
+                        console.log(chance_px, "PX");
+                        $(".upgrade-main-cell__chance-bar").css('background-color', '#6dae01');
+                        $(".upgrade-main-cell__chance-bar").css('height', chance_px + 'px');
+                        var html = '<div class="upgrade-title__percent">' +
+                            '<span>' +   response.chance + '</span>' +
+                            '<p>Шанс апгрейда</p>' +
+                            '</div>';
+                        $('.upgrade-title').append(html);
+                    }
+
                     if(response.img_from) {
                         $('.item-left').css('background-image', 'url(' + response.img_from + ')');
                     }
