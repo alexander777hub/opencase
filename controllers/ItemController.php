@@ -100,6 +100,8 @@ class ItemController extends \yii\web\Controller
                 $item_item_from = Item::findOne($item_from->id);
 
                 $img_from = $item_item_from ? $item_item_from->icon_url : null;
+                var_dump($item_item_from->icon_url);
+                exit;
                 $session['upgrade'] = [
                     'oi_from' => isset($session['upgrade']['oi_from']) ? $session['upgrade']['oi_from'] : null,
                     'oi_to' => isset($session['upgrade']['oi_to']) ? $session['upgrade']['oi_to'] : null,
