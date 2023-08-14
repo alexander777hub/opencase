@@ -93,10 +93,13 @@ class ItemController extends \yii\web\Controller
                 'oi_to' => isset($_POST['oi_id_to'])? intval($_POST['oi_id_to']) : (isset($session['upgrade']['oi_to']) ? $session['upgrade']['oi_to'] : null),
                 'chance' => null,
             ];
+
             if(isset($session['upgrade']['oi_from'])) {
+                var_dump($session['upgrade']['oi_from']);
+                exit;
                 $item_from = OpeningItem::find()->where(['id' => $session['upgrade']['oi_from']])->one();
                 $item_item_from = Item::findOne(intval($session['upgrade']['oi_from']));
-                $img_from = $item_item_from->icon_url;
+                $img_from = $item_item_from ? $item_item_from : null;
             }
             $img_to = null;
             if(isset($session['upgrade']) && isset($session['upgrade']['oi_from']) && isset($session['upgrade']['oi_to'])) {
