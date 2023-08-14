@@ -97,6 +97,10 @@ class ItemController extends \yii\web\Controller
                 'oi_to' => isset($_POST['oi_id_to'])? intval($_POST['oi_id_to']) : (isset($session['upgrade']['oi_to']) ? $session['upgrade']['oi_to'] : null),
                 'chance' => null,
             ];
+            $item_from = OpeningItem::find()->where(['id' => $session['upgrade']['oi_from']])->one();
+            $item_item_from = Item::findOne(intval($session['upgrade']['oi_from']));
+            $img_from = $item_item_from->icon_url;
+            $img_to = null;
             if(isset($session['upgrade']) && isset($session['upgrade']['oi_from']) && isset($session['upgrade']['oi_to'])) {
                 if($session['upgrade']['oi_from'] == null || $session['upgrade']['oi_to'] == null ) {
                     $session->close();
@@ -106,9 +110,8 @@ class ItemController extends \yii\web\Controller
                         'success',
                     ];
                 }
-                $item_from = OpeningItem::find()->where(['id' => $session['upgrade']['oi_from']])->one();
-                $item_item_from = Item::findOne(intval($session['upgrade']['oi_from']));
-                $img_from = $item_item_from->icon_url;
+
+
                 $item_to =  Item::find()->where(['id' => $session['upgrade']['oi_to']])->one();
                 $img_to = $item_to->icon_url;
                 $price_to = $item_to->updatePrice($item_to->market_hash_name);
