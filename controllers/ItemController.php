@@ -133,10 +133,7 @@ class ItemController extends \yii\web\Controller
 
                 ];
             }
-            if(isset($session['upgrade'])){
 
-               var_dump($session['upgrade']);
-            }
 
             $session->close();
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
