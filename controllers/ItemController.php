@@ -111,7 +111,6 @@ class ItemController extends \yii\web\Controller
                     ];
                 }
 
-
                 $item_to =  Item::find()->where(['id' => $session['upgrade']['oi_to']])->one();
                 $img_to = $item_to->icon_url;
                 $price_to = $item_to->updatePrice($item_to->market_hash_name);
