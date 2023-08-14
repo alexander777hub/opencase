@@ -7,6 +7,24 @@
         src="https://code.jquery.com/jquery-3.7.0.min.js"
         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
         crossorigin="anonymous"></script>
+<style>
+    .upgrade-item.active {
+        border: 2px solid red;
+    }
+    .button_upgrade {
+        padding: 10px 15px 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: skewX(-10deg);
+        border-radius: 6px;
+        background-color: #6dae01;
+        border: 1px solid transparent;
+        transition: .2s ease-in-out;
+        cursor: pointer;
+        color: #fff;
+    }
+</style>
 
 <script type="text/javascript">
     $(document).ready(function(){
@@ -67,6 +85,7 @@
                 oi_id_to: oi_id_to
 
             };
+            var el = $(this).find(".data-js");
 
             $.ajax({
                 url: "/item/set-upgrade",
@@ -89,7 +108,9 @@
                             '<p>Шанс апгрейда</p>' +
                             '</div>';
                         $('.upgrade-title').append(html);
+                        el.addClass('active');
                     }
+
                     console.log(response.img_from, "IMG");
                     if(response.img_from) {
                         $('.item-left').css('background-image', 'url(' + response.img_from + ')');
@@ -135,6 +156,7 @@
 
             let oi_id = $(this).find(".data-js").data('id');
             let price = $(this).find(".data-js").data('price');
+            var el = $(this).find(".data-js");
 
             data = {
                 price: price,
@@ -155,6 +177,11 @@
                     if(response.img_from) {
                         $('.item-left').css('background-image', 'url(' + response.img_from + ')');
                     }
+
+
+                    el.addClass('active');
+
+
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -261,9 +288,10 @@
         <!-- btn -->
         <div class="upgrade-body__btn">
 
-            <button id="start" class="button button_upgrade">
+            <button id="start" class="button button_upgrade active">
                 <span>UPGRADE</span>
             </button>
+
 
         </div>
         <!-- btn end-->
