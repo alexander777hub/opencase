@@ -98,8 +98,7 @@ class ItemController extends \yii\web\Controller
 
                 $item_from = OpeningItem::find()->where(['id' => $session['upgrade']['oi_from']])->one();
                 $item_item_from = Item::findOne($item_from->id);
-                var_dump($item_item_from);
-                exit;
+
                 $img_from = $item_item_from ? $item_item_from->icon_url : null;
             }
             $img_to = null;
