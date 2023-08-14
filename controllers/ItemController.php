@@ -88,6 +88,7 @@ class ItemController extends \yii\web\Controller
             $session = \Yii::$app->session;
             $session->open();
             var_dump($_POST['oi_id']);
+            exit;
             $session['upgrade'] = [
                 'oi_from' => isset($_POST['oi_id']) ? intval($_POST['oi_id']) : (isset($session['upgrade']['oi_from']) ? $session['upgrade']['oi_from'] : null),
                 'oi_to' => isset($_POST['oi_id_to'])? intval($_POST['oi_id_to']) : (isset($session['upgrade']['oi_to']) ? $session['upgrade']['oi_to'] : null),
