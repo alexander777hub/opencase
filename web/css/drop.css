@@ -12308,14 +12308,12 @@ strong {
 
 .button_upgrade {
     position: relative;
-    background-color: transparent;
     font-weight: 700;
     font-size: 22px;
     line-height: 30px;
     text-align: center;
     text-transform: uppercase;
     color: #fff;
-    pointer-events: none;
     white-space: nowrap
 }
 
@@ -36526,7 +36524,7 @@ body > #toast-container > .toast-warning {
     top: -89px;
     left: 51%;
     transform: translateX(-50%);
-    background-image: url(public/img/upgrade/flask_main.png);
+    background-image: url(/uploads/img/upgrade/flask_main.png);
     background-size: contain;
     background-position: 50%;
     background-repeat: no-repeat;
@@ -36606,7 +36604,7 @@ body > #toast-container > .toast-warning {
 }
 
 .upgrade-cell-void__img {
-    background-image: url(public/img/upgrade/weapon_void.png);
+    background-image: url(/uploads/img/upgrade/weapon_void.png);
     background-size: contain;
     background-position: 50%;
     background-repeat: no-repeat;
@@ -36814,7 +36812,7 @@ body > #toast-container > .toast-warning {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    background-image: url(public/img/upgrade/flask_back.png);
+    background-image: url(/uploads/img/upgrade/flask_back.png);
     background-size: contain;
     background-position: 50%;
     background-repeat: no-repeat;

@@ -1505,8 +1505,8 @@ if(!Yii::$app->user->isGuest){
 
 
 
-                                    <a href="/upgrade" class="nav-site__link">
-                                        <span class="nav-site__link-inner nav-site__link-inner_upgrade">Upgrade</span>
+                                    <a href="/item/index" class="nav-site__link">
+                                        <span class="nav-supgradeite__link-inner nav-site__link-inner_upgrade">Upgrade</span>
                                     </a>
 
 

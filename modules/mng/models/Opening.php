@@ -565,7 +565,6 @@ class Opening extends \yii\db\ActiveRecord
         foreach ($list as $item) {
             if ($item['chance'] === 0) continue;
 
-
             if ($i == 0) {
                 $from = 1;
             } else {

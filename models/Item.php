@@ -130,4 +130,99 @@ class Item extends \yii\db\ActiveRecord
         $original =  str_replace('public', 'original', $icon);
         return $original;
     }
+
+    public function getWinner($chance)
+    {
+        $list = [
+            ['name' => 'unsuccess',
+                'chance' => 100 - $chance,
+            ],
+            ['name' => 'success',
+                'chance' => $chance,
+            ]
+        ];
+
+        $items = [];
+        $i = 0;
+        $maxTickets = 0;
+
+        foreach ($list as $item) {
+            if ($item['chance'] === 0) continue;
+
+            if ($i == 0) {
+                $from = 1;
+            } else {
+                $from = $items[$i - 1]['to'];
+            }
+
+            $to = $from + $item['chance'];
+            $maxTickets = $to;
+
+            $items[$i] = [
+                'from' => $from,
+                'to' => $to,
+                'name' => $item['name']
+            ];
+
+            $i++;
+        }
+
+        try {
+            $winTicket = mt_rand(1, $maxTickets);
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        $winItem = null;
+
+        foreach ($items as $item) {
+            if ($item['from'] <= $winTicket && $item['to'] >= $winTicket) {
+                $winItem = $item;
+                break;
+            }
+        }
+        return $winItem['name'] == 'success' ? 1 : 0;
+
+    }
+
+
+    public function updatePrice($market_hash_name)
+    {
+        $client = new \GuzzleHttp\Client([
+            'timeout' => 60,
+            'debug' => false,
+        ]);
+        $request = $client->request('GET', 'https://market.csgo.com/api/v2/prices/RUB.json', [
+
+            'timeout' => 300,
+        ]);
+        //
+
+        $r =  json_decode($request->getBody()->getContents(), true);
+        if(isset($r['items']) && !empty($r['items'])) {
+            $arr = [];
+            foreach ($r['items'] as $k=>$val){
+                if(isset($val['market_hash_name']) && $val['market_hash_name'] == $market_hash_name){
+                    $arr[] = $val['price'];
+
+                }
+            }
+
+            if(!empty($arr)){
+                ksort($arr);
+                $i = 0;
+                if(!isset($arr[$i])){
+                    echo "NO data IN item" . '' . $market_hash_name . '<br>';
+                    var_dump($arr);
+                    exit;
+                }
+
+            } else {
+                echo "NO data for item" . '' . $market_hash_name . '<br>';
+            }
+        }
+        $price = $arr[0];
+        return $price;
+    }
+
 }
