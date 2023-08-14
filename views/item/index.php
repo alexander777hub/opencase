@@ -57,9 +57,7 @@
         });
         console.log(items, "ITEMS");
         console.log( $(".tomarket"), 'EL');
-        $("#close-sell").on("click", function(){
-            $("#sell").css("display", "none");
-        });
+
         $(".upgrade_to").on("click", function (e) {
 
             let oi_id_to = $(this).find(".data-js").data('id');
@@ -76,8 +74,6 @@
                 type: "post",
 
                 data: data,
-
-
                 success: function (response) {
                     console.log(response);
                     console.log(response.chance, "CHANCE");
@@ -94,7 +90,7 @@
                             '</div>';
                         $('.upgrade-title').append(html);
                     }
-
+                    console.log(response.img_from, "IMG");
                     if(response.img_from) {
                         $('.item-left').css('background-image', 'url(' + response.img_from + ')');
                     }
@@ -156,6 +152,9 @@
 
                 success: function (response) {
                     console.log(response);
+                    if(response.img_from) {
+                        $('.item-left').css('background-image', 'url(' + response.img_from + ')');
+                    }
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
