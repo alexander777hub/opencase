@@ -97,9 +97,10 @@ class ItemController extends \yii\web\Controller
             if(isset($session['upgrade']['oi_from'])) {
 
                 $item_from = OpeningItem::find()->where(['id' => $session['upgrade']['oi_from']])->one();
-                $item_item_from = Item::findOne($item_from->id);
+                $item_item_from = Item::findOne($item_from->item_id);
 
                 $img_from = $item_item_from ? $item_item_from->icon_url : null;
+                var_dump($item_item_from);
                 var_dump($item_item_from->icon_url);
                 exit;
                 $session['upgrade'] = [
