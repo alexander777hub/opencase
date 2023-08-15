@@ -24,7 +24,7 @@ class ItemController extends \yii\web\Controller
         ]);
 
         $query = Item::find()->where(['>',
-           'price', 1.23
+           0, 1
         ]);
 
         if(\Yii::$app->request->isAjax){
