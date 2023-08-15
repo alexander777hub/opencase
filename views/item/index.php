@@ -213,7 +213,7 @@ $this->registerJs('
                         data: data,
                         success: function (response) {
                             $(document).ready(function() {
-                                $(window).load(function() {
+
                                     alert("document is ready");
                                     console.log($('.item-left'), "READY");
                                     console.log(response, "READY R");
@@ -222,7 +222,7 @@ $this->registerJs('
                                     }
 
                                     $("#" + oi_id).addClass('active');
-                                });
+
                             });
 
                         },
