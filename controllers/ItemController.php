@@ -83,7 +83,7 @@ class ItemController extends \yii\web\Controller
                     $model->case_id = 0;
                     $model->save(false);
                 } else {
-                    $oi = OpeningItem::findOne($session['upgrade']['oi_id']);
+                    $oi = OpeningItem::findOne($session['upgrade']['oi_from']);
                     $oi->delete();
                 }
 
