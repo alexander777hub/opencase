@@ -4,7 +4,7 @@
 ?>
 
 
-<div data-img=<?= $model['icon_url']    ?> data-rarity="<?= !$model['is_gold'] ?  $model['rarity']  : "Special_Gold"    ?>" data-id=<?= intval($model['oi_id'])     ?>" class="upgrade-item common data-js">
+<div id=<?= intval($model['oi_id'])     ?>  data-price=<?= $model['price']    ?> data-rarity="<?= !$model['is_gold'] ?  $model['rarity']  : "Special_Gold"    ?>" data-id=<?= intval($model['oi_id'])     ?>  class="upgrade-item common data-js">
    <input id="upgrate-session" value="" type="hidden">
     <img src="<?= $model['icon_url']    ?>" class="upgrade-item__img">
     <div class="upgrade-item__price">

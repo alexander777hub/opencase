@@ -27,6 +27,16 @@ class ItemController extends \yii\web\Controller
            'price', 1.23
         ]);
 
+        if(\Yii::$app->request->isAjax){
+            $post = $_POST;
+            $query = Item::find()->where(['>',
+                'price', $_POST['price'] * 1.23
+            ])->andWhere(['<',
+                'price', $_POST['price'] * 10
+            ]);
+
+        }
+
         $allScinsDataProvider = new ActiveDataProvider([
             'query' => $query,
 
@@ -86,6 +96,11 @@ class ItemController extends \yii\web\Controller
     {
         if (\Yii::$app->request->isAjax && \Yii::$app->request->isPost) {
             $session = \Yii::$app->session;
+            $direction = 0;
+
+            if(isset($_POST['oi_id_to'])){
+                $direction = 1;
+            }
             $session->open();
 
             $session['upgrade'] = [
@@ -131,6 +146,7 @@ class ItemController extends \yii\web\Controller
                     'img_from' => $img_from ? $img_from : null,
                     'img_to' => $img_to ? $img_to : null,
 
+
                 ];
             }
 
@@ -143,6 +159,8 @@ class ItemController extends \yii\web\Controller
                 'chance' => isset($session['upgrade']['chance']) ? $session['upgrade']['chance'] : null,
                 'img_from' => $img_from ? $img_from : null,
                 'img_to' => $img_to ? $img_to : null,
+                'direction' => $direction,
+                'price_to' => $direction ? $price_to : null
 
             ];
         }

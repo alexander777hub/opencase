@@ -1,5 +1,16 @@
 <?php
 
+/** @var yii\web\View $this */
+
+$this->registerJs('
+  jQuery(document).pjax(".add-drop", "#item_list", {
+      "push": true,
+      "replace": false,
+      "timeout": 1000,
+      "scrollTo": false
+  });
+  ');
+
 
 ?>
 
@@ -171,10 +182,10 @@
 
 
         $(".add-drop").on("click", function (e) {
-
+            let parent = $(this).find(".data-js");
             let oi_id = $(this).find(".data-js").data('id');
             let price = $(this).find(".data-js").data('price');
-            var el = $(this).find(".data-js");
+
 
             data = {
                 price: price,
@@ -183,7 +194,7 @@
             };
 
             $.ajax({
-                url: "/item/set-upgrade",
+                url: "/item/index",
 
                 type: "post",
 
@@ -191,15 +202,34 @@
 
 
                 success: function (response) {
-                    console.log(response);
-                    if(response.img_from) {
-                        $('.item-left').css('background-image', 'url(' + response.img_from + ')');
-                    }
+                    var newDoc = document.open("text/html", "replace");
+                    newDoc.write(response);
+                    newDoc.close();
+                    $.ajax({
+                        url: "/item/set-upgrade",
 
+                        type: "post",
 
-                    el.addClass('active');
+                        data: data,
+                        success: function (response) {
+                            $(document).ready(function() {
+                                $(window).load(function() {
+                                    alert("document is ready");
+                                    console.log($('.item-left'), "READY");
+                                    console.log(response, "READY R");
+                                    if(response.img_from) {
+                                        $('.item-left').css('background-image', 'url(' + response.img_from + ')');
+                                    }
 
+                                    $("#" + oi_id).addClass('active');
+                                });
+                            });
 
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus, errorThrown);
+                        }
+                    });
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -251,7 +281,7 @@
 
 
             <!-- void -->
-            <div class="upgrade-cell-void">
+            <div id="void-price" class="upgrade-cell-void">
                 <a class="upgrade-cell-void__img item-left"></a>
                 <p class="upgrade-cell-void__text">
                     Выберите предмет из инвентаря
@@ -302,15 +332,12 @@
 
         </div>
 
-
         <!-- btn -->
         <div class="upgrade-body__btn">
 
             <button id="start" class="button button_upgrade active">
                 <span>UPGRADE</span>
             </button>
-
-
         </div>
         <!-- btn end-->
     </div>
@@ -393,7 +420,9 @@
             </label>
         </div>
 
-        <?php echo \yii\widgets\ListView::widget([
+        <?php \yii\widgets\Pjax::begin(['id' => 'item_list']); ?>
+
+        <?= \yii\widgets\ListView::widget([
             'dataProvider' => $allScinsDataProvider,
             'itemView' => '_item',
             'itemOptions' => [
@@ -403,7 +432,10 @@
             //    'options' => ['class' => 'cases'],
             'layout' => "<div><div class='upgrade-items__grid'>{items}</div><br><div></div></div>"
         ]); ?>
+        <?php \yii\widgets\Pjax::end(); ?>
     </div>
     <!-- upgrade-items end-->
 </div>
+
+
 
