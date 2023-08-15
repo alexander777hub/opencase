@@ -45,6 +45,8 @@ class ItemController extends \yii\web\Controller
             ],
         ]);
 
+        $m = $allScinsDataProvider->getModels();
+
 
         return $this->render('index', [
             'myScinsDataProvider' => $myScinsDataProvider,
@@ -82,11 +84,6 @@ class ItemController extends \yii\web\Controller
                 ];
 
             }
-
-
-
-
-
         }
 
     }

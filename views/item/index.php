@@ -106,8 +106,10 @@ $this->registerJs('
         console.log( $(".tomarket"), 'EL');
 
         $(".upgrade_to").on("click", function (e) {
-
+            console.log("CLICK");
             let oi_id_to = $(this).find(".data-js").data('id');
+            let type = $(this).find(".data-js").data('type');
+            let market_hash_name = $(this).find(".data-js").data('name');
 
 
             data = {
@@ -185,7 +187,8 @@ $this->registerJs('
             let parent = $(this).find(".data-js");
             let oi_id = $(this).find(".data-js").data('id');
             let price = $(this).find(".data-js").data('price');
-
+            let type = $(this).find(".data-js").data('type');
+            let market_hash_name = $(this).find(".data-js").data('name');
 
             data = {
                 price: price,
@@ -202,9 +205,10 @@ $this->registerJs('
 
 
                 success: function (response) {
-                    var newDoc = document.open("text/html", "replace");
-                    newDoc.write(response);
-                    newDoc.close();
+                    var myHtml = $(response).find('#item_list').html();
+                    console.log(myHtml);
+                    $('#item_list').replaceWith(myHtml);
+
                     $.ajax({
                         url: "/item/set-upgrade",
 
@@ -213,8 +217,6 @@ $this->registerJs('
                         data: data,
                         success: function (response) {
                             $(document).ready(function() {
-
-                                    alert("document is ready");
                                     console.log($('.item-left'), "READY");
                                     console.log(response, "READY R");
                                     if(response.img_from) {
@@ -222,6 +224,21 @@ $this->registerJs('
                                     }
 
                                     $("#" + oi_id).addClass('active');
+                                var html = '<a class="upgrade-cell-void__img upgrade-cell-void__img_full" style="background-image: url(https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpovrG1eVcwg8zAaAJF_t24nZSOqP_xMq3I2DtTucNz3rmQpt2sjAew-kpqNTj6cI6UI1dsMwmF-gS_x-q8hZTvtJTXiSw0GvFmxcU/320fx214f/image.png);"></a>' +
+                                    '<div class="upgrade-cell-void__value">' +
+
+                                    '<span class="price price-RUB">'+ price + '</span>' +
+
+
+                                    '</div>'+
+                                    '<p class="upgrade-cell-void__text upgrade-cell-void__text_full">' +
+                                    '<span>'+ type + '</span>' +
+                                    market_hash_name +
+                                    '<a action="remove-drop" href="#" class="upgrade-cell-void__btn-del"></a>' +
+                                    '</p>';
+
+                                $("#price-left").empty();
+                                $("#price-left").html(html);
 
                             });
 
@@ -283,9 +300,12 @@ $this->registerJs('
             <!-- void -->
             <div id="void-price" class="upgrade-cell-void">
                 <a class="upgrade-cell-void__img item-left"></a>
-                <p class="upgrade-cell-void__text">
-                    Выберите предмет из инвентаря
-                </p>
+                <div id="price-left">
+                    <p class="upgrade-cell-void__text">
+                        Выберите предмет из инвентаря
+                    </p>
+                </div>
+
             </div>
             <!-- void end-->
 
@@ -370,7 +390,7 @@ $this->registerJs('
     <!-- mob-nav end-->
 
     <!-- my-items -->
-    <div id="my-items-upgrade" class="upgrade-items__section upgrade-items__section_my active">
+    <div id="my-items-upgrade-left" class="upgrade-items__section upgrade-items__section_my active">
         <div class="upgrade-items__bar upgrade-items__bar_my">
             <p>Мои предметы</p>
             <label class="upgrade-items__search">
@@ -394,7 +414,7 @@ $this->registerJs('
     <!-- my-items end-->
 
     <!-- upgrade-items -->
-    <div id="my-items-upgrade" class="upgrade-items__section upgrade-items__section_up">
+    <div id="my-items-upgrade-right" class="upgrade-items__section upgrade-items__section_up">
         <div class="upgrade-items__bar upgrade-items__bar_my">
             <p>Скины</p>
 
