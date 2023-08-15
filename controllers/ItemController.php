@@ -80,6 +80,7 @@ class ItemController extends \yii\web\Controller
                     $model->price = $price;
                     $model->item_id = intval($item_id);
                     $model->user_id = intval(\Yii::$app->user->id);
+                    $model->case_id = 0;
                     $model->save(false);
                 } else {
                     $oi = OpeningItem::findOne($session['upgrade']['oi_id']);
