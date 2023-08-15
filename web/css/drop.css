@@ -36734,7 +36734,7 @@ body > #toast-container > .toast-warning {
 .upgrade-cell-void__btn-del {
     width: 17px;
     height: 17px;
-    background-image: url(public/img/upgrade/cross_blue.svg);
+    background-image: url(/uploads/img/upgrade/cross_blue.svg);
     background-size: contain;
     background-position: 50%;
     background-repeat: no-repeat;

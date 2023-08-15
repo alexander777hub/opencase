@@ -22,6 +22,8 @@ $this->registerJs('
     .upgrade-item.active {
         border: 2px solid red;
     }
+
+
     .button_upgrade {
         padding: 10px 15px 12px;
         display: flex;
@@ -104,13 +106,14 @@ $this->registerJs('
         });
         console.log(items, "ITEMS");
         console.log( $(".tomarket"), 'EL');
-
-        $(".upgrade_to").on("click", function (e) {
+        $(document).on('click', ".upgrade_to",function(e){
             console.log("CLICK");
             let oi_id_to = $(this).find(".data-js").data('id');
             let type = $(this).find(".data-js").data('type');
             let market_hash_name = $(this).find(".data-js").data('name');
-
+            console.log(e.target, 'TARGET');
+            let parent_to = e.target.closest('.upgrade_to');
+            let target = e.target;
 
             data = {
                 oi_id_to: oi_id_to
@@ -139,26 +142,49 @@ $this->registerJs('
                             '<p>Шанс апгрейда</p>' +
                             '</div>';
                         $('.upgrade-title').append(html);
-                        el.addClass('active');
+                        console.log(parent_to, "PAR");
+                        console.log(target, "TAR");
+                        $(parent_to).addClass('active');
+                        $(document).on('click', ".upgrade_to" ,function(e){
+                            $(parent_to).removeClass('active');
+                        });
+                        $(document).on('click', "#start" ,function(e){
+                            $(parent_to).removeClass('active');
+                        });
+
                     }
 
-                    console.log(response.img_from, "IMG");
-                    if(response.img_from) {
-                        $('.item-left').css('background-image', 'url(' + response.img_from + ')');
-                    }
                     if(response.img_to) {
                         $('.item-right').css('background-image', 'url(' + response.img_to + ')');
                     }
+                    var html = '<a class="upgrade-cell-void__img upgrade-cell-void__img_full"></a>' +
+                        '<div class="upgrade-cell-void__value">' +
+
+                        '<span class="price price-RUB">'+ response.price_to + '</span>' +
 
 
+                        '</div>'+
+                        '<p class="upgrade-cell-void__text upgrade-cell-void__text_full">' +
+                        '<span>'+ type + '</span>' + '  ' +
+                        market_hash_name +
+                        '<a action="remove-drop" href="#" class="upgrade-cell-void__btn-del"></a>' +
+                        '</p>';
+
+                    $("#price-right").empty();
+                    $("#price-right").html(html);
+                    $("#price-right").html(html);
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(textStatus, errorThrown);
                 }
             });
-
+            // your code here
         });
+
+
+
+
 
         $("#start").on("click", function (e) {
 
@@ -169,10 +195,13 @@ $this->registerJs('
 
                 data: {},
 
-
                 success: function (response) {
-
-
+                    if(response.win == 0){
+                        alert("Проигрыш");
+                    } else {
+                        alert("Вы выиграли");
+                    }
+                    window.location.reload();
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(textStatus, errorThrown);
@@ -189,7 +218,7 @@ $this->registerJs('
             let price = $(this).find(".data-js").data('price');
             let type = $(this).find(".data-js").data('type');
             let market_hash_name = $(this).find(".data-js").data('name');
-
+             let parent_from = $(this).find('.upgrade-item');
             data = {
                 price: price,
                 oi_id: oi_id
@@ -216,15 +245,22 @@ $this->registerJs('
 
                         data: data,
                         success: function (response) {
-                            $(document).ready(function() {
                                     console.log($('.item-left'), "READY");
                                     console.log(response, "READY R");
                                     if(response.img_from) {
                                         $('.item-left').css('background-image', 'url(' + response.img_from + ')');
                                     }
 
-                                    $("#" + oi_id).addClass('active');
-                                var html = '<a class="upgrade-cell-void__img upgrade-cell-void__img_full" style="background-image: url(https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpovrG1eVcwg8zAaAJF_t24nZSOqP_xMq3I2DtTucNz3rmQpt2sjAew-kpqNTj6cI6UI1dsMwmF-gS_x-q8hZTvtJTXiSw0GvFmxcU/320fx214f/image.png);"></a>' +
+                                    $(parent_from).addClass('active');
+                                    $(document).on('click', ".img_left" ,function(e){
+                                        $(parent_from).removeClass('active');
+                                    });
+                                    $(document).on('click', "#start" ,function(e){
+                                        $(parent_from).removeClass('active');
+                                    });
+
+
+                                var html = '<a class="upgrade-cell-void__img upgrade-cell-void__img_full"></a>' +
                                     '<div class="upgrade-cell-void__value">' +
 
                                     '<span class="price price-RUB">'+ price + '</span>' +
@@ -232,15 +268,16 @@ $this->registerJs('
 
                                     '</div>'+
                                     '<p class="upgrade-cell-void__text upgrade-cell-void__text_full">' +
-                                    '<span>'+ type + '</span>' +
-                                    market_hash_name +
+                                    '<span>'+ type + '</span>' + '  ' +
+                                         market_hash_name +
                                     '<a action="remove-drop" href="#" class="upgrade-cell-void__btn-del"></a>' +
                                     '</p>';
 
+
                                 $("#price-left").empty();
+
                                 $("#price-left").html(html);
 
-                            });
 
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
@@ -368,9 +405,12 @@ $this->registerJs('
             <!-- void -->
             <div class="upgrade-cell-void">
                 <a class="upgrade-cell-void__img item-right"></a>
-                <p class="upgrade-cell-void__text">
-                    Выберите предмет для апгрейда
-                </p>
+                <div id="price-right">
+                    <p class="upgrade-cell-void__text">
+                        Выберите предмет для апгрейда
+                    </p>
+                </div>
+
             </div>
             <!-- void end-->
 
@@ -439,21 +479,24 @@ $this->registerJs('
                 <button class="upgrade-items__btn-search"></button>
             </label>
         </div>
+        <div id="replace">
+            <?php \yii\widgets\Pjax::begin(['id' => 'item_list']); ?>
 
-        <?php \yii\widgets\Pjax::begin(['id' => 'item_list']); ?>
+            <?= \yii\widgets\ListView::widget([
+                'dataProvider' => $allScinsDataProvider,
+                'itemView' => '_item',
+                'itemOptions' => [
+                    'class' => 'upgrade-item covert upgrade_to',
 
-        <?= \yii\widgets\ListView::widget([
-            'dataProvider' => $allScinsDataProvider,
-            'itemView' => '_item',
-            'itemOptions' => [
-                'class' => 'upgrade-item covert upgrade_to',
+                ],
+                //    'options' => ['class' => 'cases'],
+                'layout' => "<div><div class='upgrade-items__grid'>{items}</div><br><div></div></div>"
+            ]); ?>
+            <?php \yii\widgets\Pjax::end(); ?>
+        </div>
 
-            ],
-            //    'options' => ['class' => 'cases'],
-            'layout' => "<div><div class='upgrade-items__grid'>{items}</div><br><div></div></div>"
-        ]); ?>
-        <?php \yii\widgets\Pjax::end(); ?>
-    </div>
+        </div>
+
     <!-- upgrade-items end-->
 </div>
 

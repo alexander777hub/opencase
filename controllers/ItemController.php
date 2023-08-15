@@ -66,16 +66,30 @@ class ItemController extends \yii\web\Controller
     {
         if (\Yii::$app->request->isAjax && \Yii::$app->request->isPost) {
             $session = \Yii::$app->session;
-            $session->open();
+
             if(isset($session['upgrade'])){
 
-
+                $session->open();
                 $chance = isset($session['upgrade']['chance']) ? $session['upgrade']['chance'] : 0;
                 $win = (new Item())->getWinner($chance);
+
+                if ($win == 1) {
+                    $item_id = $session['upgrade']['oi_to'];
+                    $price = $session['upgrade']['price_to'];
+                    $model = new OpeningItem();
+                    $model->price = $price;
+                    $model->item_id = intval($item_id);
+                    $model->user_id = intval(\Yii::$app->user->id);
+                    $model->save(false);
+                } else {
+                    $oi = OpeningItem::findOne($session['upgrade']['oi_id']);
+                    $oi->delete();
+                }
 
 
                 \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
                 \Yii::$app->response->statusCode = 200;
+                $session->close();
                 return [
                     'success',
                     'win' => $win,
@@ -142,6 +156,7 @@ class ItemController extends \yii\web\Controller
                     'chance' => $chance,
                     'img_from' => $img_from ? $img_from : null,
                     'img_to' => $img_to ? $img_to : null,
+                    'price_to' =>  $price_to
 
 
                 ];

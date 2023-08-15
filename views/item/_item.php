@@ -5,7 +5,7 @@
 
 
     <img src=<?= $model['icon_url']    ?> class="upgrade-item__img">
-    <div id=<?= intval($model['id'])     ?> data-img=<?= $model['icon_url']    ?> data-id="<?= intval($model['id'])     ?>"  class="upgrade-item__price data-js">
+    <div id=<?= intval($model['id'])     ?> data-img=<?= $model['icon_url']    ?> data-id="<?= intval($model['id'])     ?>" data-type=<?= $model['type']    ?> data-name=<?= $model['market_hash_name']    ?>  class="upgrade-item__price data-js">
         <span class="price price-RUB">"<?= round($model['price'], 2)     ?>"</span>
 
     </div>
