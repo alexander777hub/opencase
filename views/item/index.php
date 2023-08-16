@@ -192,7 +192,7 @@ $is_session = $session ? 1 : 0;
                     } else {
                         var session = null;
                         if("<?= $is_session   ?>" == 1){
-                            var session = <?= $session   ?>;
+                             session = <?= $session   ?>;
                         }
 
 
