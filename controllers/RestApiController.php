@@ -260,7 +260,8 @@ class RestApiController extends Controller
 
             }
 
-            $market_hash_name =$post['market_hash_name'];
+            $market_hash_name = $post['market_hash_name'];
+
             $price = $this->actionUpdatePrice($market_hash_name);
 
 
@@ -271,10 +272,11 @@ class RestApiController extends Controller
             ];
         }
 
-        }
+    }
 
 
         public function actionUpdatePrice($market_hash_name){
+
             $client = new \GuzzleHttp\Client([
                 'timeout' => 60,
                 'debug' => false,
@@ -308,8 +310,11 @@ class RestApiController extends Controller
                     echo "NO data for item" . '' . $market_hash_name . '<br>';
                 }
             }
+
             $price = $arr[0];
             return $price;
+
+
         }
 
 

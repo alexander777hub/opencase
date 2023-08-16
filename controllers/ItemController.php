@@ -99,6 +99,8 @@ class ItemController extends \yii\web\Controller
                 }
                 $oi->delete();
 
+                $session->remove('upgrade');
+
 
                 \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
                 \Yii::$app->response->statusCode = 200;
@@ -135,6 +137,7 @@ class ItemController extends \yii\web\Controller
                 'oi_from' => isset($_POST['oi_id']) ? intval($_POST['oi_id']) : (isset($session['upgrade']['oi_from']) ? $session['upgrade']['oi_from'] : null),
                 'oi_to' => isset($_POST['oi_id_to'])? intval($_POST['oi_id_to']) : (isset($session['upgrade']['oi_to']) ? $session['upgrade']['oi_to'] : null),
                 'chance' => null,
+                'price_to' =>  isset($_POST['price_to'])? $_POST['price_to'] : (isset($session['upgrade']['price_to']) ? $session['upgrade']['price_to'] : null),
             ];
             $s = \Yii::$app->session->get('upgrade');
 
@@ -144,10 +147,10 @@ class ItemController extends \yii\web\Controller
                 $item_item_from = Item::findOne($item_from->item_id);
 
                 $img_from = $item_item_from ? $item_item_from->icon_url : null;
-                if(isset($session['upgrade']['oi_to'])) {
+                if(isset($session['upgrade']['oi_to']) && isset($session['upgrade']['price_to'])) {
                     $item_to =  Item::find()->where(['id' => $session['upgrade']['oi_to']])->one();
                     $img_to = $item_to->icon_url;
-                    $price_to = $item_to->updatePrice($item_to->market_hash_name);
+                    $price_to = $session['upgrade']['price_to'];
 
                     $chance = round((($item_from->price / $price_to) * 91.8), 2);
 
@@ -182,7 +185,7 @@ class ItemController extends \yii\web\Controller
 
                 $item_to =  Item::find()->where(['id' => $session['upgrade']['oi_to']])->one();
                 $img_to = $item_to->icon_url;
-                $price_to = $item_to->updatePrice($item_to->market_hash_name);
+                $price_to = $session['upgrade']['price_to'];
 
                 $chance = round((($item_from->price / $price_to) * 91.8), 2);
                 $session['upgrade'] = [
@@ -199,7 +202,7 @@ class ItemController extends \yii\web\Controller
             if(!isset($session['upgrade']['oi_from'])){
                 $item_to =  Item::find()->where(['id' => $session['upgrade']['oi_to']])->one();
                 $img_to = $item_to->icon_url;
-                $price_to = $item_to->updatePrice($item_to->market_hash_name);
+                $price_to = $session['upgrade']['price_to'];;
                 $query = (new \yii\db\Query())->select(['item.id', 'item.market_hash_name', 'item.type', 'item.is_gold', 'item.icon_url', 'opening_item.price', 'opening_item.id as oi_id', 'opening_item.status as status', 'opening_item.case_id as case_id', 'opening_item.is_sold as is_sold',  'item.rarity', 'item.exterior'])->from('item')->innerJoin('opening_item', 'item.id = opening_item.item_id')->where(['opening_item.user_id'=> \Yii::$app->user->id]);
                 $query->andWhere(['<',
                     'opening_item.price', $price_to / 1.23
@@ -228,7 +231,7 @@ class ItemController extends \yii\web\Controller
                         'pageSize' => 50,
                     ],
                 ]);
-
+                $session->open();
                 $session['upgrade'] = [
                     'oi_from' => isset($session['upgrade']['oi_from']) ? $session['upgrade']['oi_from'] : null,
                     'oi_to' => isset($session['upgrade']['oi_to']) ? $session['upgrade']['oi_to'] : null,
@@ -247,6 +250,7 @@ class ItemController extends \yii\web\Controller
                 ];
 
 
+                $session->close();
                 return $this->render('index', $params);
 
             }

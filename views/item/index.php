@@ -27,9 +27,21 @@ $this->registerJs('
       "scrollTo": false
   });
   ');
+$img_to = " ";
+$session = [];
 
-$session = Yii::$app->session->has('upgrade')  ? \yii\helpers\Json::encode(Yii::$app->session->get('upgrade')) : '';
-$is_session = $session ? 1 : 0;
+
+if(Yii::$app->session->has('upgrade') &&  Yii::$app->session->open()){
+    $session = Yii::$app->session;
+
+    $img_to = $session['upgrade']['img_to'];
+    $session->close();
+}
+
+
+
+
+
 
 ?>
 
@@ -135,106 +147,121 @@ $is_session = $session ? 1 : 0;
             let oi_id_to = $(this).find(".data-js").data('id');
             let type = $(this).find(".data-js").data('type');
             let market_hash_name = $(this).find(".data-js").data('name');
+
+            let img_to = $(this).find(".data-js").data('img');
             console.log(e.target, 'TARGET');
             let parent_to = e.target.closest('.upgrade_to');
             let target = e.target;
-
-            data = {
-                oi_id_to: oi_id_to
-
-            };
-            var el = $(this).find(".data-js");
-
+            let price_to = null;
             $.ajax({
-                url: "/item/set-upgrade",
+                url: "/rest-api/get-price",
 
                 type: "post",
-                data: data,
+
+                data: {
+                    market_hash_name: market_hash_name
+                },
+
                 success: function (response) {
-                    if(response.chance) {
-                        $(".upgrade-title").empty();
-                        var chance_px = (293 / 100) * response.chance;
+                    price_to = response.price
 
-                        console.log(chance_px, "PX");
-                        $(".upgrade-main-cell__chance-bar").css('background-color', '#6dae01');
-                        $(".upgrade-main-cell__chance-bar").css('height', chance_px + 'px');
-                        var html = '<div class="upgrade-title__percent">' +
-                            '<span>' +   response.chance + '</span>' +
-                            '<p>Шанс апгрейда</p>' +
-                            '</div>';
-                        $('.upgrade-title').append(html);
-                        console.log(parent_to, "PAR");
-                        console.log(target, "TAR");
-                        $(parent_to).addClass('active');
-                        $(document).on('click', ".upgrade_to" ,function(e){
-                            $(parent_to).removeClass('active');
-                        });
-                        $(document).on('click', "#start" ,function(e){
-                            $(parent_to).removeClass('active');
-                        });
-                        var html = '<a class="upgrade-cell-void__img upgrade-cell-void__img_full"></a>' +
-                            '<div class="upgrade-cell-void__value">' +
+                    data = {
+                        oi_id_to: oi_id_to,
+                        price_to: price_to
 
-                            '<span class="price price-RUB">'+ response.price_to + '</span>' +
+                    };
 
 
-                            '</div>'+
-                            '<p class="upgrade-cell-void__text upgrade-cell-void__text_full">' +
-                            '<span>'+ type + '</span>' + '  ' +
-                            market_hash_name +
-                            '<a action="remove-drop" href="#" class="upgrade-cell-void__btn-del"></a>' +
-                            '</p>';
+                    $.ajax({
+                        url: "/item/set-upgrade",
 
-                        $("#price-right").empty();
-                        $("#price-right").html(html);
-                        $("#price-right").html(html);
+                        type: "post",
+                        data: data,
+                        success: function (response) {
+                            if(response.chance) {
+                                $(".upgrade-title").empty();
+                                var chance_px = (293 / 100) * response.chance;
 
-                    } else {
-                        var session = null;
-                        if("<?= $is_session   ?>" == 1){
-                             session = <?= $session   ?> ? <?= $session   ?> : null;
-                        }
+                                console.log(chance_px, "PX");
+                                $(".upgrade-main-cell__chance-bar").css('background-color', '#6dae01');
+                                $(".upgrade-main-cell__chance-bar").css('height', chance_px + 'px');
+                                var html = '<div class="upgrade-title__percent">' +
+                                    '<span>' +   response.chance + '</span>' +
+                                    '<p>Шанс апгрейда</p>' +
+                                    '</div>';
+                                $('.upgrade-title').append(html);
+                                console.log(parent_to, "PAR");
+                                console.log(target, "TAR");
+                                $(parent_to).addClass('active');
+                                $(document).on('click', ".upgrade_to" ,function(e){
+                                    $(parent_to).removeClass('active');
+                                });
+                                $(document).on('click', "#start" ,function(e){
+                                    $(parent_to).removeClass('active');
+                                });
 
+                            } else {
+                                var myHtml = $(response).find('#item_list2').html();
+                                $('#item_list2').replaceWith(myHtml);
+                                var htmlRight = '<div class="upgrade-body__right">' +
+                                    '<div class="upgrade-cell">' +
 
-                        var myHtml = $(response).find('#item_list2').html();
-                        console.log(session, "SESSION");
-                        $('#item_list2').replaceWith(myHtml);
-
-                        var htmlRight = '<div class="upgrade-body__right">' +
-                            '<div class="upgrade-cell">' +
-
-                                '<div class="upgrade-cell-void">' +
-                                    '<a style="background-image: url(' + session.img_to +')" class="upgrade-cell-void__img item-right"></a>' +
+                                    '<div class="upgrade-cell-void">' +
+                                    '<a style="background-image: url(' + img_to + ')" class="upgrade-cell-void__img item-right"></a>' +
                                     '<div id="price-right">' +
-                                        '<p class="upgrade-cell-void__text">' +
-                                           session.market_hash_name_to +
-                                        '</p>' +
+                                    '<p class="upgrade-cell-void__text">' +
+                                    market_hash_name +
+                                    '</p>' +
                                     '</div>' +
 
-                                '</div>' +
-                            '</div>' +
-                        '</div>';
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>';
 
 
-                        $('.upgrade-body__right').replaceWith(htmlRight);
-                        $(parent_to).addClass('active');
-                        $(document).on('click', ".upgrade_to" ,function(e){
-                            $(parent_to).removeClass('active');
-                        });
-                        $(document).on('click', "#start" ,function(e){
-                            $(parent_to).removeClass('active');
-                        });
-                    }
+                                $('.upgrade-body__right').replaceWith(htmlRight);
+                                $(parent_to).addClass('active');
+                                $(document).on('click', ".upgrade_to" ,function(e){
+                                    $(parent_to).removeClass('active');
+                                });
+                                $(document).on('click', "#start" ,function(e){
+                                    $(parent_to).removeClass('active');
+                                });
 
-                    if(response.img_to) {
-                        $('.item-right').css('background-image', 'url(' + response.img_to + ')');
-                    }
 
+                            }
+                            var html = '<a class="upgrade-cell-void__img upgrade-cell-void__img_full"></a>' +
+                                '<div class="upgrade-cell-void__value">' +
+
+                                '<span class="price price-RUB">'+ price_to + '</span>' +
+
+
+                                '</div>'+
+                                '<p class="upgrade-cell-void__text upgrade-cell-void__text_full">' +
+                                '<span>'+ type + '</span>' + '  ' +
+                                market_hash_name +
+                                '<a action="remove-drop" href="#" class="upgrade-cell-void__btn-del"></a>' +
+                                '</p>';
+
+                            $("#price-right").empty();
+                            $("#price-right").html(html);
+                            $("#price-right").html(html);
+
+                            if(response.img_to) {
+                                $('.item-right').css('background-image', 'url(' + response.img_to + ')');
+                            }
+
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus, errorThrown);
+                        }
+                    });
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(textStatus, errorThrown);
                 }
             });
+
             // your code here
         });
 
@@ -628,22 +655,13 @@ $is_session = $session ? 1 : 0;
 
             <!-- void -->
             <div class="upgrade-cell-void">
-                <?php if(Yii::$app->session->has('upgrade') && $session = Yii::$app->session->get('upgrade')  && isset($session['upgrade']['img_to'])):    ?>
-                <a style=<?='background-image: url(' . $session['upgrade']['img_to'] . ')'?>  class="upgrade-cell-void__img item-right"></a>
-                <div id="price-right">
-                    <p class="upgrade-cell-void__text">
-                       HEHE
-                    </p>
-                </div>
-                <?php else: ?>
+
                     <a  class="upgrade-cell-void__img item-right"></a>
                     <div id="price-right">
                         <p class="upgrade-cell-void__text">
                             Выберите предмет для апгрейда
                         </p>
                     </div>
-
-                <?php endif; ?>
 
             </div>
             <!-- void end-->
