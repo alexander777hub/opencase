@@ -48,7 +48,12 @@ class ItemController extends \yii\web\Controller
             ])->andWhere(['<',
                 'price', $_POST['price'] * 10
             ]);
+            $q = $query->createCommand()->getRawSql();
 
+        } else {
+            if(\Yii::$app->session->has('upgrade')){
+                \Yii::$app->session->remove('upgrade');
+            }
         }
 
         $allScinsDataProvider = new ActiveDataProvider([
