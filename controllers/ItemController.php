@@ -72,7 +72,7 @@ class ItemController extends \yii\web\Controller
                 $session->open();
                 $chance = isset($session['upgrade']['chance']) ? $session['upgrade']['chance'] : 0;
                 $win = (new Item())->getWinner($chance);
-
+                $oi = OpeningItem::findOne($session['upgrade']['oi_from']);
                 if ($win == 1) {
                     $item_id = $session['upgrade']['oi_to'];
                     $price = $session['upgrade']['price_to'];
@@ -82,10 +82,8 @@ class ItemController extends \yii\web\Controller
                     $model->user_id = intval(\Yii::$app->user->id);
                     $model->case_id = 0;
                     $model->save(false);
-                } else {
-                    $oi = OpeningItem::findOne($session['upgrade']['oi_from']);
-                    $oi->delete();
                 }
+                $oi->delete();
 
 
                 \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
