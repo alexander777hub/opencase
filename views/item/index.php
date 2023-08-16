@@ -107,6 +107,10 @@ $this->registerJs('
         });
         console.log(items, "ITEMS");
         console.log( $(".tomarket"), 'EL');
+
+        $(document).on('click', '.upgrade-cell-void__btn-del', function(){
+            window.location.reload();
+        });
         $(document).on('click', ".upgrade_to",function(e){
             console.log("CLICK");
             let oi_id_to = $(this).find(".data-js").data('id');
@@ -475,10 +479,10 @@ $this->registerJs('
     <div id="my-items-upgrade-left" class="upgrade-items__section upgrade-items__section_my active">
         <div class="upgrade-items__bar upgrade-items__bar_my">
             <p>Мои предметы</p>
-            <label class="upgrade-items__search">
+            <!--<label class="upgrade-items__search">
                 <input action="search-drops-items" type="text" placeholder="Быстрый поиск">
                 <button class="upgrade-items__btn-search"></button>
-            </label>
+            </label> !-->
         </div>
 
             <?php echo \yii\widgets\ListView::widget([
@@ -500,7 +504,7 @@ $this->registerJs('
         <div class="upgrade-items__bar upgrade-items__bar_my">
             <p>Скины</p>
 
-            <a action="selling-items-sort" class="upgrade-items__btn-sort">Цена</a>
+        <!--    <a action="selling-items-sort" class="upgrade-items__btn-sort">Цена</a>
 
             <div class="upgrade-items__price-sort">
                 <div class="upgrade-price-sort">
@@ -519,7 +523,7 @@ $this->registerJs('
             <label class="upgrade-items__search">
                 <input action="search-selling-items" type="text" placeholder="Быстрый поиск">
                 <button class="upgrade-items__btn-search"></button>
-            </label>
+            </label> !-->
         </div>
         <div id="replace">
             <?php \yii\widgets\Pjax::begin(['id' => 'item_list']); ?>
