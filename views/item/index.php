@@ -103,6 +103,7 @@ $this->registerJs('
             var parent = $( this ).closest(".add-drop");
             parent.addClass(jsClass);
 
+
         });
         console.log(items, "ITEMS");
         console.log( $(".tomarket"), 'EL');
@@ -173,6 +174,9 @@ $this->registerJs('
                     $("#price-right").empty();
                     $("#price-right").html(html);
                     $("#price-right").html(html);
+
+
+
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -258,6 +262,44 @@ $this->registerJs('
                                     $(document).on('click', "#start" ,function(e){
                                         $(parent_from).removeClass('active');
                                     });
+                            var items = $('.upgrade_to');
+                            console.log(items, "UPGR");
+                            items.each(function() {
+                                var rarity = $(this).find('.data-js').data('rarity');
+                                console.log(rarity, "RAR");
+                                var jsClass = '';
+                                switch (rarity){
+                                    case 'Rarity_Common_Weapon':
+                                        jsClass = 'rarity_common_weapon';
+                                        break;
+                                    case 'Rarity_Mythical':
+                                        jsClass = 'rarity_mythical';
+                                        break;
+                                    case 'Rarity_Legendary':
+                                        jsClass = 'rarity_legendary';
+                                        break;
+                                    case 'Rarity_Ancient':
+                                        jsClass = 'rarity_ancient';
+                                        break;
+                                    case 'Rarity_Ancient_Weapon':
+                                        jsClass = 'rarity_ancient_weapon';
+                                        break;
+                                    case 'Rarity_Rare_Weapon':
+                                        jsClass = 'rarity_rare_weapon';
+                                        break;
+                                    case 'Special_Gold':
+                                        jsClass = 'rarity_special_gold';
+                                        break;
+                                    default:
+                                        break;
+
+                                }
+
+
+                                $(this).addClass(jsClass);
+
+
+                            });
 
 
                                 var html = '<a class="upgrade-cell-void__img upgrade-cell-void__img_full"></a>' +
@@ -486,7 +528,7 @@ $this->registerJs('
                 'dataProvider' => $allScinsDataProvider,
                 'itemView' => '_item',
                 'itemOptions' => [
-                    'class' => 'upgrade-item covert upgrade_to',
+                    'class' => 'upgrade-item upgrade_to',
 
                 ],
                 //    'options' => ['class' => 'cases'],
