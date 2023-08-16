@@ -351,9 +351,15 @@ if(Yii::$app->session->has('upgrade') &&  Yii::$app->session->open()){
 
                 success: function (response) {
                     if(!response.skip){
-                        var myHtml = $(response).find('#item_list').html();
+
+                        var myHtml = $(response).find('#replace').html();
                         console.log(myHtml);
-                        $('#item_list').replaceWith(myHtml);
+                        console.log("HERE");
+                    //    $('#item_list').replaceWith(myHtml);
+                        $("#replace").empty();
+                        $("#replace").html(myHtml);
+                        console.log($("#replace"), "REPLACE AFTER");
+
                     }
                     $.ajax({
                         url: "/item/set-upgrade",
