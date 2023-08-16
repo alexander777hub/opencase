@@ -8,6 +8,8 @@ use yii\data\ActiveDataProvider;
 
 class ItemController extends \yii\web\Controller
 {
+
+    public $_params_ = [];
     public function actionIndex()
     {
         $user_id = \Yii::$app->user->getId();
@@ -23,11 +25,23 @@ class ItemController extends \yii\web\Controller
             ],
         ]);
 
-        $query = Item::find()->where(['>',
-           0, 1
-        ]);
+        $query = Item::find();
 
         if(\Yii::$app->request->isAjax){
+            $session = \Yii::$app->session;
+            $session->open();
+
+            if(isset($session['upgrade']['oi_to'])){
+                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                \Yii::$app->response->statusCode = 200;
+                $session->close();
+                return [
+                    'skip' => 1
+
+                ];
+
+            }
+
             $post = $_POST;
             $query = Item::find()->where(['>',
                 'price', $_POST['price'] * 1.23
@@ -107,6 +121,10 @@ class ItemController extends \yii\web\Controller
         if (\Yii::$app->request->isAjax && \Yii::$app->request->isPost) {
             $session = \Yii::$app->session;
             $direction = 0;
+            $img_from = null;
+            $img_to = null;
+            $price_to = null;
+            $chance = null;
 
             if(isset($_POST['oi_id_to'])){
                 $direction = 1;
@@ -118,24 +136,42 @@ class ItemController extends \yii\web\Controller
                 'oi_to' => isset($_POST['oi_id_to'])? intval($_POST['oi_id_to']) : (isset($session['upgrade']['oi_to']) ? $session['upgrade']['oi_to'] : null),
                 'chance' => null,
             ];
+            $s = \Yii::$app->session->get('upgrade');
+
 
             if(isset($session['upgrade']['oi_from'])) {
-
                 $item_from = OpeningItem::find()->where(['id' => $session['upgrade']['oi_from']])->one();
                 $item_item_from = Item::findOne($item_from->item_id);
 
                 $img_from = $item_item_from ? $item_item_from->icon_url : null;
+                if(isset($session['upgrade']['oi_to'])) {
+                    $item_to =  Item::find()->where(['id' => $session['upgrade']['oi_to']])->one();
+                    $img_to = $item_to->icon_url;
+                    $price_to = $item_to->updatePrice($item_to->market_hash_name);
 
+                    $chance = round((($item_from->price / $price_to) * 91.8), 2);
+
+                }
                 $session['upgrade'] = [
                     'oi_from' => isset($session['upgrade']['oi_from']) ? $session['upgrade']['oi_from'] : null,
                     'oi_to' => isset($session['upgrade']['oi_to']) ? $session['upgrade']['oi_to'] : null,
-                    'chance' => null,
+                    'chance' => $chance ? $chance : null,
                     'img_from' => $img_from,
+                    'price_to' =>  isset($session['upgrade']['price_to']) ? $session['upgrade']['price_to'] : null,
+                    'market_hash_name_to' =>  isset($session['upgrade']['market_hash_name_to']) ? $item_to->market_hash_name : null
                 ];
             }
-            $img_to = null;
+
             if(isset($session['upgrade']) && isset($session['upgrade']['oi_from']) && isset($session['upgrade']['oi_to'])) {
-                if($session['upgrade']['oi_from'] == null || $session['upgrade']['oi_to'] == null ) {
+                if($session['upgrade']['oi_from'] == null) {
+                    $session->close();
+                    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                    \Yii::$app->response->statusCode = 200;
+                    return [
+                        'success',
+                    ];
+                }
+                if($session['upgrade']['oi_to'] == null ){
                     $session->close();
                     \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
                     \Yii::$app->response->statusCode = 200;
@@ -155,14 +191,66 @@ class ItemController extends \yii\web\Controller
                     'chance' => $chance,
                     'img_from' => $img_from ? $img_from : null,
                     'img_to' => $img_to ? $img_to : null,
-                    'price_to' =>  $price_to
+                    'price_to' =>  $price_to,
+                ];
+            }
+            $session->close();
+
+            if(!isset($session['upgrade']['oi_from'])){
+                $item_to =  Item::find()->where(['id' => $session['upgrade']['oi_to']])->one();
+                $img_to = $item_to->icon_url;
+                $price_to = $item_to->updatePrice($item_to->market_hash_name);
+                $query = (new \yii\db\Query())->select(['item.id', 'item.market_hash_name', 'item.type', 'item.is_gold', 'item.icon_url', 'opening_item.price', 'opening_item.id as oi_id', 'opening_item.status as status', 'opening_item.case_id as case_id', 'opening_item.is_sold as is_sold',  'item.rarity', 'item.exterior'])->from('item')->innerJoin('opening_item', 'item.id = opening_item.item_id')->where(['opening_item.user_id'=> \Yii::$app->user->id]);
+                $query->andWhere(['<',
+                    'opening_item.price', $price_to / 1.23
+                ])->andWhere(['>',
+                    'opening_item.price', $price_to / 10
+                ]);
+                $query->orderBy(["opening_item.id" => SORT_DESC]);
+                $q = $query->createCommand()->getRawSql();
+
+                $myScinsDataProvider = new ActiveDataProvider([
+                    'query' => $query,
+
+                    'pagination' => [
+                        'pageSize' => 50,
+                    ],
+                ]);
+
+
+
+                $m = $myScinsDataProvider->getModels();
+                $query = Item::find();
+                $allScinsDataProvider = new ActiveDataProvider([
+                    'query' => $query,
+
+                    'pagination' => [
+                        'pageSize' => 50,
+                    ],
+                ]);
+
+                $session['upgrade'] = [
+                    'oi_from' => isset($session['upgrade']['oi_from']) ? $session['upgrade']['oi_from'] : null,
+                    'oi_to' => isset($session['upgrade']['oi_to']) ? $session['upgrade']['oi_to'] : null,
+                    'chance' => null,
+                    'img_from' => $img_from,
+                    'img_to' => $img_to,
+                    'price_to' =>  $price_to,
+                    'market_hash_name_to' => $item_to ? $item_to->market_hash_name : null
+                ];
+                $this->_params_ = $params = [
+                    'allScinsDataProvider' => $allScinsDataProvider,
+                    'myScinsDataProvider' => $myScinsDataProvider,
+                    'hehe' => 'hehe'
 
 
                 ];
+
+
+                return $this->render('index', $params);
+
             }
 
-
-            $session->close();
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             \Yii::$app->response->statusCode = 200;
             return [

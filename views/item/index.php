@@ -11,6 +11,24 @@ $this->registerJs('
   });
   ');
 
+$this->registerJs('
+  jQuery(document).pjax(".upgrade_to", "#item_list2", {
+      "push": true,
+      "replace": false,
+      "timeout": 1000,
+      "scrollTo": false
+  });
+  ');
+$this->registerJs('
+  jQuery(document).pjax(".upgrade_to", "#upgrade-right", {
+      "push": true,
+      "replace": false,
+      "timeout": 1000,
+      "scrollTo": false
+  });
+  ');
+
+
 
 ?>
 
@@ -130,11 +148,8 @@ $this->registerJs('
                 url: "/item/set-upgrade",
 
                 type: "post",
-
                 data: data,
                 success: function (response) {
-                    console.log(response);
-                    console.log(response.chance, "CHANCE");
                     if(response.chance) {
                         $(".upgrade-title").empty();
                         var chance_px = (293 / 100) * response.chance;
@@ -156,31 +171,60 @@ $this->registerJs('
                         $(document).on('click', "#start" ,function(e){
                             $(parent_to).removeClass('active');
                         });
+                        var html = '<a class="upgrade-cell-void__img upgrade-cell-void__img_full"></a>' +
+                            '<div class="upgrade-cell-void__value">' +
 
+                            '<span class="price price-RUB">'+ response.price_to + '</span>' +
+
+
+                            '</div>'+
+                            '<p class="upgrade-cell-void__text upgrade-cell-void__text_full">' +
+                            '<span>'+ type + '</span>' + '  ' +
+                            market_hash_name +
+                            '<a action="remove-drop" href="#" class="upgrade-cell-void__btn-del"></a>' +
+                            '</p>';
+
+                        $("#price-right").empty();
+                        $("#price-right").html(html);
+                        $("#price-right").html(html);
+
+                    } else {
+                        var session = <?= Yii::$app->session->has('upgrade')  ? \yii\helpers\Json::encode($session = Yii::$app->session->get('upgrade')) : null  ?>;
+
+
+                        var myHtml = $(response).find('#item_list2').html();
+                       console.log(session, "SESSION");
+                        $('#item_list2').replaceWith(myHtml);
+
+                        var htmlRight = '<div class="upgrade-body__right">' +
+                            '<div class="upgrade-cell">' +
+
+                                '<div class="upgrade-cell-void">' +
+                                    '<a style="background-image: url(' + session.img_to +')" class="upgrade-cell-void__img item-right"></a>' +
+                                    '<div id="price-right">' +
+                                        '<p class="upgrade-cell-void__text">' +
+                                           session.market_hash_name_to +
+                                        '</p>' +
+                                    '</div>' +
+
+                                '</div>' +
+                            '</div>' +
+                        '</div>';
+
+
+                        $('.upgrade-body__right').replaceWith(htmlRight);
+                        $(parent_to).addClass('active');
+                        $(document).on('click', ".upgrade_to" ,function(e){
+                            $(parent_to).removeClass('active');
+                        });
+                        $(document).on('click', "#start" ,function(e){
+                            $(parent_to).removeClass('active');
+                        });
                     }
 
                     if(response.img_to) {
                         $('.item-right').css('background-image', 'url(' + response.img_to + ')');
                     }
-                    var html = '<a class="upgrade-cell-void__img upgrade-cell-void__img_full"></a>' +
-                        '<div class="upgrade-cell-void__value">' +
-
-                        '<span class="price price-RUB">'+ response.price_to + '</span>' +
-
-
-                        '</div>'+
-                        '<p class="upgrade-cell-void__text upgrade-cell-void__text_full">' +
-                        '<span>'+ type + '</span>' + '  ' +
-                        market_hash_name +
-                        '<a action="remove-drop" href="#" class="upgrade-cell-void__btn-del"></a>' +
-                        '</p>';
-
-                    $("#price-right").empty();
-                    $("#price-right").html(html);
-                    $("#price-right").html(html);
-
-
-
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -219,8 +263,136 @@ $this->registerJs('
         });
 
 
+        $(document).on('click', ".add-drop", function(){
+            let parent = $(this).find(".data-js");
+            let oi_id = $(this).find(".data-js").data('id');
+            let price = $(this).find(".data-js").data('price');
+            let type = $(this).find(".data-js").data('type');
+            let market_hash_name = $(this).find(".data-js").data('name');
+            let parent_from = $(this).find('.upgrade-item');
+            data = {
+                price: price,
+                oi_id: oi_id
 
-        $(".add-drop").on("click", function (e) {
+            };
+
+            $.ajax({
+                url: "/item/index",
+                dataType: 'json',
+                type: "post",
+
+                data: data,
+
+
+                success: function (response) {
+                    if(!response.skip){
+                        var myHtml = $(response).find('#item_list').html();
+                        console.log(myHtml);
+                        $('#item_list').replaceWith(myHtml);
+                    }
+                    $.ajax({
+                        url: "/item/set-upgrade",
+
+                        type: "post",
+
+                        data: data,
+                        success: function (response) {
+                            if(response.chance){
+                                $(".upgrade-title").empty();
+                                var chance_px = (293 / 100) * response.chance;
+
+                                console.log(chance_px, "PX");
+                                $(".upgrade-main-cell__chance-bar").css('background-color', '#6dae01');
+                                $(".upgrade-main-cell__chance-bar").css('height', chance_px + 'px');
+                                var html = '<div class="upgrade-title__percent">' +
+                                    '<span>' +   response.chance + '</span>' +
+                                    '<p>Шанс апгрейда</p>' +
+                                    '</div>';
+                                $('.upgrade-title').append(html);
+                            }
+                            console.log($('.item-left'), "READY");
+                            console.log(response, "READY R");
+                            if(response.img_from) {
+                                $('.item-left').css('background-image', 'url(' + response.img_from + ')');
+                            }
+
+                            $(parent_from).addClass('active');
+                            $(document).on('click', ".img_left" ,function(e){
+                                $(parent_from).removeClass('active');
+                            });
+                            $(document).on('click', "#start" ,function(e){
+                                $(parent_from).removeClass('active');
+                            });
+                            var items = $('.upgrade_to');
+                            console.log(items, "UPGR");
+                            items.each(function() {
+                                var rarity = $(this).find('.data-js').data('rarity');
+                                console.log(rarity, "RAR");
+                                var jsClass = '';
+                                switch (rarity){
+                                    case 'Rarity_Common_Weapon':
+                                        jsClass = 'rarity_common_weapon';
+                                        break;
+                                    case 'Rarity_Mythical':
+                                        jsClass = 'rarity_mythical';
+                                        break;
+                                    case 'Rarity_Legendary':
+                                        jsClass = 'rarity_legendary';
+                                        break;
+                                    case 'Rarity_Ancient':
+                                        jsClass = 'rarity_ancient';
+                                        break;
+                                    case 'Rarity_Ancient_Weapon':
+                                        jsClass = 'rarity_ancient_weapon';
+                                        break;
+                                    case 'Rarity_Rare_Weapon':
+                                        jsClass = 'rarity_rare_weapon';
+                                        break;
+                                    case 'Special_Gold':
+                                        jsClass = 'rarity_special_gold';
+                                        break;
+                                    default:
+                                        break;
+
+                                }
+                                $(this).addClass(jsClass);
+                            });
+                            var html = '<a class="upgrade-cell-void__img upgrade-cell-void__img_full"></a>' +
+                                '<div class="upgrade-cell-void__value">' +
+
+                                '<span class="price price-RUB">'+ price + '</span>' +
+
+
+                                '</div>'+
+                                '<p class="upgrade-cell-void__text upgrade-cell-void__text_full">' +
+                                '<span>'+ type + '</span>' + '  ' +
+                                market_hash_name +
+                                '<a action="remove-drop" href="#" class="upgrade-cell-void__btn-del"></a>' +
+                                '</p>';
+
+
+                            $("#price-left").empty();
+
+                            $("#price-left").html(html);
+
+
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus, errorThrown);
+                        }
+                    });
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+
+        });
+
+
+
+    /*    $(".add-drop").on("click", function (e) {
             let parent = $(this).find(".data-js");
             let oi_id = $(this).find(".data-js").data('id');
             let price = $(this).find(".data-js").data('price');
@@ -337,7 +509,7 @@ $this->registerJs('
                 }
             });
 
-        });
+        }); */
 
 
 
@@ -445,17 +617,29 @@ $this->registerJs('
         <!-- btn end-->
     </div>
 
+    <?php \yii\widgets\Pjax::begin(['id' => 'upgrade-right']); ?>
+
     <div class="upgrade-body__right">
         <div class="upgrade-cell">
 
             <!-- void -->
             <div class="upgrade-cell-void">
-                <a class="upgrade-cell-void__img item-right"></a>
+                <?php if(Yii::$app->session->has('upgrade') && $session = Yii::$app->session->get('upgrade')  && isset($session['upgrade']['img_to'])):    ?>
+                <a style=<?='background-image: url(' . $session['upgrade']['img_to'] . ')'?>  class="upgrade-cell-void__img item-right"></a>
                 <div id="price-right">
                     <p class="upgrade-cell-void__text">
-                        Выберите предмет для апгрейда
+                       HEHE
                     </p>
                 </div>
+                <?php else: ?>
+                    <a  class="upgrade-cell-void__img item-right"></a>
+                    <div id="price-right">
+                        <p class="upgrade-cell-void__text">
+                            Выберите предмет для апгрейда
+                        </p>
+                    </div>
+
+                <?php endif; ?>
 
             </div>
             <!-- void end-->
@@ -463,6 +647,9 @@ $this->registerJs('
         </div>
 
     </div>
+
+    <?php \yii\widgets\Pjax::end(); ?>
+
 
 </div>
 <!-- body end-->
@@ -485,6 +672,8 @@ $this->registerJs('
             </label> !-->
         </div>
 
+        <div id="replace2">
+            <?php \yii\widgets\Pjax::begin(['id' => 'item_list2']); ?>
             <?php echo \yii\widgets\ListView::widget([
                 'dataProvider' => $myScinsDataProvider,
                 'itemView' => '_myItem',
@@ -495,6 +684,11 @@ $this->registerJs('
                 //    'options' => ['class' => 'cases'],
                 'layout' => "<div><div class='upgrade-items__grid'>{items}</div><br><div></div></div>"
             ]); ?>
+            <?php \yii\widgets\Pjax::end(); ?>
+
+        </div>
+
+
 
     </div>
     <!-- my-items end-->
