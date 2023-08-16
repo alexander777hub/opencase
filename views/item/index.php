@@ -99,6 +99,45 @@ if(Yii::$app->session->has('upgrade') &&  Yii::$app->session->open()){
                 $("body").removeClass("loading");
             }
         });
+
+        function updateStylesRight()
+        {
+            var items = $('.upgrade_to');
+            console.log(items, "UPGR");
+            items.each(function() {
+                var rarity = $(this).find('.data-js').data('rarity');
+                console.log(rarity, "RAR");
+                var jsClass = '';
+                switch (rarity){
+                    case 'Rarity_Common_Weapon':
+                        jsClass = 'rarity_common_weapon';
+                        break;
+                    case 'Rarity_Mythical':
+                        jsClass = 'rarity_mythical';
+                        break;
+                    case 'Rarity_Legendary':
+                        jsClass = 'rarity_legendary';
+                        break;
+                    case 'Rarity_Ancient':
+                        jsClass = 'rarity_ancient';
+                        break;
+                    case 'Rarity_Ancient_Weapon':
+                        jsClass = 'rarity_ancient_weapon';
+                        break;
+                    case 'Rarity_Rare_Weapon':
+                        jsClass = 'rarity_rare_weapon';
+                        break;
+                    case 'Special_Gold':
+                        jsClass = 'rarity_special_gold';
+                        break;
+                    default:
+                        break;
+
+                }
+                $(this).addClass(jsClass);
+            });
+        }
+        updateStylesRight();
         var items = $('.data-js');
 
         items.each(function() {
@@ -349,40 +388,7 @@ if(Yii::$app->session->has('upgrade') &&  Yii::$app->session->open()){
                             $(document).on('click', "#start" ,function(e){
                                 $(parent_from).removeClass('active');
                             });
-                            var items = $('.upgrade_to');
-                            console.log(items, "UPGR");
-                            items.each(function() {
-                                var rarity = $(this).find('.data-js').data('rarity');
-                                console.log(rarity, "RAR");
-                                var jsClass = '';
-                                switch (rarity){
-                                    case 'Rarity_Common_Weapon':
-                                        jsClass = 'rarity_common_weapon';
-                                        break;
-                                    case 'Rarity_Mythical':
-                                        jsClass = 'rarity_mythical';
-                                        break;
-                                    case 'Rarity_Legendary':
-                                        jsClass = 'rarity_legendary';
-                                        break;
-                                    case 'Rarity_Ancient':
-                                        jsClass = 'rarity_ancient';
-                                        break;
-                                    case 'Rarity_Ancient_Weapon':
-                                        jsClass = 'rarity_ancient_weapon';
-                                        break;
-                                    case 'Rarity_Rare_Weapon':
-                                        jsClass = 'rarity_rare_weapon';
-                                        break;
-                                    case 'Special_Gold':
-                                        jsClass = 'rarity_special_gold';
-                                        break;
-                                    default:
-                                        break;
-
-                                }
-                                $(this).addClass(jsClass);
-                            });
+                            updateStylesRight();
                             var html = '<a class="upgrade-cell-void__img upgrade-cell-void__img_full"></a>' +
                                 '<div class="upgrade-cell-void__value">' +
 
