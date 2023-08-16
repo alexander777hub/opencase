@@ -28,7 +28,8 @@ $this->registerJs('
   });
   ');
 
-
+$session = Yii::$app->session->has('upgrade')  ? \yii\helpers\Json::encode(Yii::$app->session->get('upgrade')) : '';
+$is_session = $session ? 1 : 0;
 
 ?>
 
@@ -189,11 +190,14 @@ $this->registerJs('
                         $("#price-right").html(html);
 
                     } else {
-                        var session = '<?= Yii::$app->session->has('upgrade')  ? \yii\helpers\Json::encode($session = Yii::$app->session->get('upgrade')) : ''  ?>';
+                        var session = null;
+                        if("<?= $is_session   ?>" == 1){
+                            var session = <?= $session   ?>;
+                        }
 
 
                         var myHtml = $(response).find('#item_list2').html();
-                       console.log(session, "SESSION");
+                        console.log(session, "SESSION");
                         $('#item_list2').replaceWith(myHtml);
 
                         var htmlRight = '<div class="upgrade-body__right">' +
