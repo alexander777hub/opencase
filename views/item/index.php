@@ -265,10 +265,6 @@ if(Yii::$app->session->has('upgrade') &&  Yii::$app->session->open()){
             // your code here
         });
 
-
-
-
-
         $("#start").on("click", function (e) {
 
             $.ajax({
@@ -309,7 +305,6 @@ if(Yii::$app->session->has('upgrade') &&  Yii::$app->session->open()){
 
             $.ajax({
                 url: "/item/index",
-                dataType: 'json',
                 type: "post",
 
                 data: data,
