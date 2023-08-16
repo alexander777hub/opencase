@@ -189,7 +189,7 @@ $this->registerJs('
                         $("#price-right").html(html);
 
                     } else {
-                        var session = <?= Yii::$app->session->has('upgrade')  ? \yii\helpers\Json::encode($session = Yii::$app->session->get('upgrade')) : ''  ?>;
+                        var session = '<?= Yii::$app->session->has('upgrade')  ? \yii\helpers\Json::encode($session = Yii::$app->session->get('upgrade')) : ''  ?>';
 
 
                         var myHtml = $(response).find('#item_list2').html();
