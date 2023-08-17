@@ -4,7 +4,7 @@
 ?>
 
 
-<div id=<?= intval($model['oi_id'])     ?>  data-price=<?= round($model['price'], 2)   ?> data-type=<?= $model['type']    ?> data-name="<?= $model['market_hash_name']    ?>" data-rarity="<?= !$model['is_gold'] ?  $model['rarity']  : "Special_Gold"    ?>" data-id=<?= intval($model['oi_id'])     ?>  class="upgrade-item data-js">
+<div data-img="<?= $model['icon_url']   ?>" id="<?= intval($model['oi_id'])     ?>"  data-price="<?= round($model['price'], 2)   ?>" data-type=<?= $model['type']    ?> data-name="<?= $model['market_hash_name']    ?>" data-rarity="<?= !$model['is_gold'] ?  $model['rarity']  : "Special_Gold"    ?>" data-id=<?= intval($model['oi_id'])     ?>  class="upgrade-item data-js">
    <input id="upgrate-session" value="" type="hidden">
     <img src="<?= $model['icon_url']    ?>" class="upgrade-item__img img_left">
     <div class="upgrade-item__price">

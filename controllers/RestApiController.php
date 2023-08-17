@@ -3,7 +3,9 @@
 
 namespace app\controllers;
 
+use app\models\Item;
 use app\models\Profile;
+use app\modules\mng\models\Contract;
 use app\modules\mng\models\MarketOrder;
 use app\modules\mng\models\OpeningItem;
 use app\modules\mng\models\Task;
@@ -22,6 +24,44 @@ class RestApiController extends Controller
     {
         $this->enableCsrfValidation = false;
         return parent::beforeAction($action);
+    }
+
+
+    public function actionContract()
+    {
+        if (\Yii::$app->request->isAjax && \Yii::$app->request->isPost) {
+            $post = $_POST;
+             if(!isset($post['ids'])){
+                 return;
+             }
+
+            $user_items = Item::find()
+                ->where(['>', 'price', $post['min']])
+                ->andWhere(['<', 'price', $post['max']])
+                ->all();
+            $winner = $user_items[mt_rand(0, (count($user_items) -1))];
+            $contract = new Contract();
+            $contract->user_id = \Yii::$app->user->id;
+            $contract->price = $winner->price;
+            $contract->save(false);
+
+            $item = new OpeningItem();
+            $item->user_id = \Yii::$app->user->id;
+            $item->item_id = $winner->id;
+            $item->price = $winner->price;
+            $item->contract_id = $contract->id;
+            $item->save();
+
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            \Yii::$app->response->statusCode = 200;
+
+            return [
+                'success',
+                'winner' => $winner
+            ];
+        }
+
+
     }
 
 

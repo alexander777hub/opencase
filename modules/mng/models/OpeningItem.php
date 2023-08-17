@@ -15,6 +15,7 @@ use Yii;
  * @property int|null $status
  * @property int|null $count
  * @property int|null $is_sold
+ * @property int|null $contract_id
  */
 class OpeningItem extends \yii\db\ActiveRecord
 {
