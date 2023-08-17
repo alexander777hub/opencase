@@ -40,6 +40,8 @@ if(!Yii::$app->user->isGuest){
     $favorite_case_photo =  User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCasePhoto($favorite_case);
 
     $countCases = User::getUser(Yii::$app->user->getId())->getProfile()->getCountCases();
+    $countContracts = User::getUser(Yii::$app->user->getId())->getProfile()->getCountContracts();
+    $countUpgrades = User::getUser(Yii::$app->user->getId())->getProfile()->getCountUpgrades();
 
 }
 
@@ -567,12 +569,12 @@ if(!Yii::$app->user->isGuest){
                             <div class="user-stat-item">
                                 <div class="user-stat-item__label">Контракты</div>
                                 <div class="user-stat-item__value">
-                                    <div class="user-stat-item__value-text">0</div>
+                                    <div class="user-stat-item__value-text"><?= $countContracts   ?></div>
                                     <div class="user-stat-item__value-icon icon icon_contracts"></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="profile__stat-item">
+                   <!--     <div class="profile__stat-item">
                             <div class="user-stat-item">
                                 <div class="user-stat-item__label">Карточки</div>
                                 <div class="user-stat-item__value">
@@ -589,12 +591,12 @@ if(!Yii::$app->user->isGuest){
                                     <div class="user-stat-item__value-icon icon icon_battles"></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> !-->
                         <div class="profile__stat-item">
                             <div class="user-stat-item">
                                 <div class="user-stat-item__label">Апгрейды</div>
                                 <div class="user-stat-item__value">
-                                    <div class="user-stat-item__value-text"><span>0</span>/<span class="user-stat-item__wins">0</span></div>
+                                    <div class="user-stat-item__value-text"><!--<span>0</span>/<span class="user-stat-item__wins"> !--><?= $countUpgrades   ?></span></div>
                                     <div class="user-stat-item__value-icon icon icon_upgrades"></div>
                                 </div>
                             </div>

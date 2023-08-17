@@ -333,19 +333,9 @@
 
 <div class="contract-page__user-items">
     <div class="upgrade-items__bar upgrade-items__bar_my">
-        <div id="sell-all">
-            <div class="items-topbar__section items-topbar__section_btn">
-                <button class="btn btn_color-success btn_uppercase btn_fullwidth">
-                    <div class="btn__content">
-                        <div class="btn__label">Создать контракт</div>
-                    </div>
-                </button>
-            </div>
-
-        </div>
         <p>Доступные для контракта предметы</p>
 
-        <button action="drops-item-price-sort" class="upgrade-items__btn-sort active">Цена</button>
+    <!--<button action="drops-item-price-sort" class="upgrade-items__btn-sort active">Цена</button>
 
         <div class="upgrade-items__price-sort">
             <div class="upgrade-price-sort">
@@ -364,7 +354,7 @@
         <label class="upgrade-items__search">
             <input name="search-drops-items" type="text" placeholder="Быстрый поиск">
             <button class="upgrade-items__btn-search"></button>
-        </label>
+        </label> !-->
     </div>
     <?php   if($myScinsDataProvider->getModels()): ?>
     <div id="replace2">
