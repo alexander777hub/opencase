@@ -435,6 +435,13 @@ class Profile extends BaseProfile
         return isset($array['market_hash_name']) ? $array['market_hash_name'] : 'Не задано';
 
     }
+    public function getCountCases()
+    {
+        $q = 'SELECT COUNT(case_id) FROM opening_user WHERE user_id=' . intval($this->user_id) . '';
+
+        $count = \Yii::$app->db->createCommand($q)->queryOne();
+        return $count['COUNT(case_id)'];
+    }
 
 
 

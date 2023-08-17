@@ -37,7 +37,11 @@ if(!Yii::$app->user->isGuest){
 
     $favorite_case_count = User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCaseCountOpen($favorite_case);
 
-}   $favorite_case_photo =  User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCasePhoto($favorite_case);
+    $favorite_case_photo =  User::getUser(Yii::$app->user->getId())->getProfile()->getFavoritCasePhoto($favorite_case);
+
+    $countCases = User::getUser(Yii::$app->user->getId())->getProfile()->getCountCases();
+
+}
 
 ?>
 <script
@@ -532,7 +536,6 @@ if(!Yii::$app->user->isGuest){
                             <div class="item__price"><span class="price price-RUB"><?= $best_drop_price  ?></span></div>
                             <div class="profile__favorite-case-label"> Кейс <?= $best_drop_case_name  ?></div>
                             <div class="item__icons">
-                                <a href="/case/lake" class="item__icon status linkcase" title="Кейс"> Test</a>
                                 <div class="item__icon status selled">
                                     <span class="tooltip tooltip_center tooltip_extramin">Продано</span>
                                 </div>
@@ -555,7 +558,7 @@ if(!Yii::$app->user->isGuest){
                             <div class="user-stat-item">
                                 <div class="user-stat-item__label">Кейсы</div>
                                 <div class="user-stat-item__value">
-                                    <div class="user-stat-item__value-text">0</div>
+                                    <div class="user-stat-item__value-text"> <?= $countCases   ?></div>
                                     <div class="user-stat-item__value-icon icon icon_drops"></div>
                                 </div>
                             </div>
