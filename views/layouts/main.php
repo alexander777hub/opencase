@@ -1492,7 +1492,7 @@ if(!Yii::$app->user->isGuest){
                             <div class="header-bottom__nav-inner">
                                 <nav class="nav-site nav-site_bottom">
 
-                                    <a href="/site/contact" class="nav-site__link">
+                                    <a href="/contract/index" class="nav-site__link">
                                         <span class="nav-site__link-inner nav-site__link-inner_contracts">Contacts</span>
                                     </a>
 

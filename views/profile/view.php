@@ -111,7 +111,7 @@ if(!Yii::$app->user->isGuest){
                 type: "post",
                 data:  {
                     item_id: item_id,
-                    user_id: $user_js_id,
+                    user_id:  '<?= $user_js_id  ?>',
                     oi_id: oi_id,
                     market_hash_name : $(this).find(".data-price").data('name'),
                 },
