@@ -191,110 +191,96 @@ if(Yii::$app->session->has('upgrade') &&  Yii::$app->session->open()){
             console.log(e.target, 'TARGET');
             let parent_to = e.target.closest('.upgrade_to');
             let target = e.target;
-            let price_to = null;
+            let price_to = $(this).find(".data-js").data('price');
+            data = {
+                oi_id_to: oi_id_to,
+                price_to: price_to
+
+            };
+
             $.ajax({
-                url: "/rest-api/get-price",
+                url: "/item/set-upgrade",
 
                 type: "post",
-
-                data: {
-                    market_hash_name: market_hash_name
-                },
-
+                data: data,
                 success: function (response) {
-                    price_to = response.price
+                    if(response.chance) {
+                        $(".upgrade-title").empty();
+                        var chance_px = (293 / 100) * response.chance;
 
-                    data = {
-                        oi_id_to: oi_id_to,
-                        price_to: price_to
+                        console.log(chance_px, "PX");
+                        $(".upgrade-main-cell__chance-bar").css('background-color', '#6dae01');
+                        $(".upgrade-main-cell__chance-bar").css('height', chance_px + 'px');
+                        var html = '<div class="upgrade-title__percent">' +
+                            '<span>' +   response.chance + '</span>' +
+                            '<p>Шанс апгрейда</p>' +
+                            '</div>';
+                        $('.upgrade-title').append(html);
+                        console.log(parent_to, "PAR");
+                        console.log(target, "TAR");
+                        $(parent_to).addClass('active');
+                        $(document).on('click', ".upgrade_to" ,function(e){
+                            $(parent_to).removeClass('active');
+                        });
+                        $(document).on('click', "#start" ,function(e){
+                            $(parent_to).removeClass('active');
+                        });
 
-                    };
+                    } else {
+                        var myHtml = $(response).find('#item_list2').html();
+                        $('#item_list2').replaceWith(myHtml);
+                        var htmlRight = '<div class="upgrade-body__right">' +
+                            '<div class="upgrade-cell">' +
 
+                            '<div class="upgrade-cell-void">' +
+                            '<a style="background-image: url(' + img_to + ')" class="upgrade-cell-void__img item-right"></a>' +
+                            '<div id="price-right">' +
+                            '<p class="upgrade-cell-void__text">' +
+                            market_hash_name +
+                            '</p>' +
+                            '</div>' +
 
-                    $.ajax({
-                        url: "/item/set-upgrade",
-
-                        type: "post",
-                        data: data,
-                        success: function (response) {
-                            if(response.chance) {
-                                $(".upgrade-title").empty();
-                                var chance_px = (293 / 100) * response.chance;
-
-                                console.log(chance_px, "PX");
-                                $(".upgrade-main-cell__chance-bar").css('background-color', '#6dae01');
-                                $(".upgrade-main-cell__chance-bar").css('height', chance_px + 'px');
-                                var html = '<div class="upgrade-title__percent">' +
-                                    '<span>' +   response.chance + '</span>' +
-                                    '<p>Шанс апгрейда</p>' +
-                                    '</div>';
-                                $('.upgrade-title').append(html);
-                                console.log(parent_to, "PAR");
-                                console.log(target, "TAR");
-                                $(parent_to).addClass('active');
-                                $(document).on('click', ".upgrade_to" ,function(e){
-                                    $(parent_to).removeClass('active');
-                                });
-                                $(document).on('click', "#start" ,function(e){
-                                    $(parent_to).removeClass('active');
-                                });
-
-                            } else {
-                                var myHtml = $(response).find('#item_list2').html();
-                                $('#item_list2').replaceWith(myHtml);
-                                var htmlRight = '<div class="upgrade-body__right">' +
-                                    '<div class="upgrade-cell">' +
-
-                                    '<div class="upgrade-cell-void">' +
-                                    '<a style="background-image: url(' + img_to + ')" class="upgrade-cell-void__img item-right"></a>' +
-                                    '<div id="price-right">' +
-                                    '<p class="upgrade-cell-void__text">' +
-                                    market_hash_name +
-                                    '</p>' +
-                                    '</div>' +
-
-                                    '</div>' +
-                                    '</div>' +
-                                    '</div>';
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
 
 
-                                $('.upgrade-body__right').replaceWith(htmlRight);
-                                $(parent_to).addClass('active');
-                                $(document).on('click', ".upgrade_to" ,function(e){
-                                    $(parent_to).removeClass('active');
-                                });
-                                $(document).on('click', "#start" ,function(e){
-                                    $(parent_to).removeClass('active');
-                                });
+                        $('.upgrade-body__right').replaceWith(htmlRight);
+                        $(parent_to).addClass('active');
+                        $(document).on('click', ".upgrade_to" ,function(e){
+                            $(parent_to).removeClass('active');
+                        });
+                        $(document).on('click', "#start" ,function(e){
+                            $(parent_to).removeClass('active');
+                        });
 
 
-                            }
-                            var html = '<a class="upgrade-cell-void__img upgrade-cell-void__img_full"></a>' +
-                                '<div class="upgrade-cell-void__value">' +
+                    }
+                    var html = '<a class="upgrade-cell-void__img upgrade-cell-void__img_full"></a>' +
+                        '<div class="upgrade-cell-void__value">' +
 
-                                '<span class="price price-RUB">'+ price_to + '</span>' +
+                        '<span class="price price-RUB">'+ price_to + '</span>' +
 
 
-                                '</div>'+
-                                '<p class="upgrade-cell-void__text upgrade-cell-void__text_full">' +
-                                '<span>'+ type + '</span>' + '  ' +
-                                market_hash_name +
-                                '<a action="remove-drop" href="#" class="upgrade-cell-void__btn-del"></a>' +
-                                '</p>';
+                        '</div>'+
+                        '<p class="upgrade-cell-void__text upgrade-cell-void__text_full">' +
+                        '<span>'+ type + '</span>' + '  ' +
+                        market_hash_name +
+                        '<a action="remove-drop" href="#" class="upgrade-cell-void__btn-del"></a>' +
+                        '</p>';
 
-                            $("#price-right").empty();
-                            $("#price-right").html(html);
-                            $("#price-right").html(html);
+                    $("#price-right").empty();
+                    $("#price-right").addClass('active');
+                    if( $("#price-left").hasClass('active')){
+                        $("#start").removeAttr("disabled")
+                    }
+                    $("#price-right").html(html);
+                    $("#price-right").html(html);
 
-                            if(response.img_to) {
-                                $('.item-right').css('background-image', 'url(' + response.img_to + ')');
-                            }
+                    if(response.img_to) {
+                        $('.item-right').css('background-image', 'url(' + response.img_to + ')');
+                    }
 
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            console.log(textStatus, errorThrown);
-                        }
-                    });
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(textStatus, errorThrown);
@@ -410,6 +396,10 @@ if(Yii::$app->session->has('upgrade') &&  Yii::$app->session->open()){
 
 
                             $("#price-left").empty();
+                            $("#price-left").addClass('active');
+                            if( $("#price-right").hasClass('active')){
+                                $("#start").removeAttr("disabled")
+                            }
 
                             $("#price-left").html(html);
 
@@ -648,7 +638,7 @@ if(Yii::$app->session->has('upgrade') &&  Yii::$app->session->open()){
         <!-- btn -->
         <div class="upgrade-body__btn">
 
-            <button id="start" class="button button_upgrade active">
+            <button disabled="disabled" id="start" class="button button_upgrade active">
                 <span>UPGRADE</span>
             </button>
         </div>
