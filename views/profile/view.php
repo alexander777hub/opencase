@@ -134,6 +134,29 @@ if(!Yii::$app->user->isGuest){
             });
 
         });
+        $("#sell-all").on("click", function(){
+
+            data = {
+                user_id: '<?= $user_js_id  ?>',
+            };
+            $.ajax({
+                url: "/rest-api/sell-all",
+
+                type: "post",
+
+                data: data,
+
+
+                success: function (response) {
+                    console.log(response, "RESPONSE");
+                    window.location.reload();
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        });
 
         $(".tosell").on("click", function (e) {
 
@@ -154,6 +177,8 @@ if(!Yii::$app->user->isGuest){
                 oi_id: oi_id
 
             };
+
+
 
             $("#confirm-sell").on("click", function(){
 
@@ -631,13 +656,17 @@ if(!Yii::$app->user->isGuest){
                                                   <span class="switch__right-text">Доступные</span>
                                               </label>
                                           </div>
-                                          <div class="items-topbar__section items-topbar__section_btn">
-                                              <button class="btn btn_color-success btn_uppercase btn_fullwidth" action="sellItems">
-                                                  <div class="btn__content">
-                                                      <div class="btn__label">Продать все</div>
-                                                  </div>
-                                              </button>
+                                          <div id="sell-all">
+                                              <div class="items-topbar__section items-topbar__section_btn">
+                                                  <button  class="btn btn_color-success btn_uppercase btn_fullwidth">
+                                                      <div  class="btn__content">
+                                                          <div class="btn__label">Продать все</div>
+                                                      </div>
+                                                  </button>
+                                              </div>
+
                                           </div>
+
                                       </div>
                                   </div>
                               </div>

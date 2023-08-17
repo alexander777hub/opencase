@@ -25,6 +25,39 @@ class RestApiController extends Controller
     }
 
 
+
+    public function actionSellAll()
+    {
+        if (\Yii::$app->request->isAjax && \Yii::$app->request->isPost) {
+            $post = $_POST;
+            if (!isset($post['user_id'])) {
+                return;
+            }
+
+            $profile = Profile::find()->where(['user_id' => intval($post['user_id'])])->one();
+
+
+            $user_items = OpeningItem::find()->where(['user_id' => intval($post['user_id'])])->andWhere(['status' => null])->all();
+
+            foreach( $user_items as $item){
+                $item->is_sold = 1;
+                $profile->credit = $profile->credit + floatval($item->price);
+                $item->save(false);
+            }
+            $profile->save(false);
+
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            \Yii::$app->response->statusCode = 200;
+            return [
+                'success',
+                'profile_credit' => round($profile->credit, 2),
+            ];
+        }
+
+
+    }
+
+
     public function actionSell()
     {
         if (\Yii::$app->request->isAjax && \Yii::$app->request->isPost) {
@@ -32,9 +65,6 @@ class RestApiController extends Controller
             if (!isset($post['item_id']) || !isset($post['user_id']) || !isset($post['price']) || !isset($post['oi_id'])) {
                 return;
             }
-
-
-
 
             $profile = Profile::find()->where(['user_id' => intval($post['user_id'])])->one();
            /* var_dump($profile->credit);

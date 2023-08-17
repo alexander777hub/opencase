@@ -14,6 +14,7 @@ use Yii;
  * @property float $price
  * @property int|null $status
  * @property int|null $count
+ * @property int|null $is_sold
  */
 class OpeningItem extends \yii\db\ActiveRecord
 {
