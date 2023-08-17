@@ -97,8 +97,10 @@ if(!Yii::$app->user->isGuest){
         $("#close-sell").on("click", function(){
             $("#sell").css("display", "none");
         });
+        $("#close-sell-all").on("click", function(){
+            $("#popup-sell-all").css("display", "none");
+        });
         $(".tomarket").on("click", function (e) {
-
             let item_id = $(this).find(".data-price").data('id');
             let oi_id = $(this).find(".data-price").data('oi');
             console.log($(this).closest(".items-incase__item"), "PARENT");
@@ -135,27 +137,33 @@ if(!Yii::$app->user->isGuest){
 
         });
         $("#sell-all").on("click", function(){
+            $("#popup-sell-all").css("display", 'block');
 
-            data = {
-                user_id: '<?= $user_js_id  ?>',
-            };
-            $.ajax({
-                url: "/rest-api/sell-all",
+            $("#confirm-sell-all").on("click", function(){
+                data = {
+                    user_id: '<?= $user_js_id  ?>',
+                };
 
-                type: "post",
+                $.ajax({
+                    url: "/rest-api/sell-all",
 
-                data: data,
+                    type: "post",
+
+                    data: data,
+
+                    success: function (response) {
+                        console.log(response, "RESPONSE");
+                        window.location.reload();
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
+
+            })
 
 
-                success: function (response) {
-                    console.log(response, "RESPONSE");
-                    window.location.reload();
-
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus, errorThrown);
-                }
-            });
         });
 
         $(".tosell").on("click", function (e) {

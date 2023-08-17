@@ -1613,6 +1613,31 @@ if(!Yii::$app->user->isGuest){
                     </div>
                 </footer>
             </div>
+            <div id="popup-sell-all" class="new-popup new-popup_default js-modal-swtalert" style="display: none;">
+                <div class="new-popup__box js-modal-swtalert-inside">
+                    <div class="new-popup__close">
+                        <button class="btn btn_transparent btn_type-square" action="closeSwtalert">
+                            <div class="btn__content">
+                                <div class="btn__icon icon icon_close"></div>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="new-popup__content">
+                        <div class="default-popup">
+                            <div class="default-popup__title js-modal-swtalert-title">Продать все предметы?</div>
+                            <div id="append-sell-text" class="default-popup__text js-modal-swtalert-text"></div>
+                            <div class="default-popup__btns">
+                                <div class="default-popup__btn">
+                                    <button id="confirm-sell-all" class="btn btn_color-success btn_uppercase" action="confirmSwtalert" style="display: block;">Продать</button>
+                                </div>
+                                <div class="default-popup__btn">
+                                    <button id="close-sell-all" class="btn btn_color-primary btn_style-outline btn_uppercase" action="cancelSwtalert" style="display: block;">Отмена</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="sell" class="new-popup new-popup_default js-modal-swtalert" style="display: none;">
                 <div class="new-popup__box js-modal-swtalert-inside">
                     <div class="new-popup__close">
