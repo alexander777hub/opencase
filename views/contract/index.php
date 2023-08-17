@@ -121,8 +121,9 @@
                     console.log($("#close"), "CLOSE");
                     $("#close").on("click", function(){
                         $("#winner-modal").remove();
+                        window.location.reload();
                     })
-                    window.location.reload();
+
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(textStatus, errorThrown);
