@@ -115,8 +115,11 @@ class ItemController extends \yii\web\Controller
                 }
                 $oi->save(false);
                 $upgrade->save(false);
-                $model->upgrade_id = $upgrade->id;
-                $model->save(false);
+                if($win == 1){
+                    $model->upgrade_id = $upgrade->id;
+                    $model->save(false);
+                }
+
 
 
 
