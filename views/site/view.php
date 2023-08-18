@@ -26,6 +26,7 @@ if(!Yii::$app->user->isGuest){
 
 
     $(document).ready(function(){
+        let case_price = '<?= $model->price   ?>';
         var items = $('.js_class');
 
         items.each(function() {
@@ -70,6 +71,10 @@ if(!Yii::$app->user->isGuest){
             }
         });
             $("#open").on("click", function(){
+                if($(this).hasClass('noclick')){
+                    return;
+                }
+
                 var case_id = "<?= $model ?  $model->id : null ?>";
                 console.log("OPEN", case_id);
 
@@ -83,7 +88,6 @@ if(!Yii::$app->user->isGuest){
                     ,
                     success: function (response) {
                         console.log(response, "RESPONSE");
-
 
                         var html = '<div id="winner-modal" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" style="display: block;">' +
                             '<div class="modal-dialog modal-dialog-centered" role="document">' +
@@ -111,6 +115,11 @@ if(!Yii::$app->user->isGuest){
                         $("#close").on("click", function(){
                             $("#winner-modal").remove();
                         })
+                        if(response.credit < case_price){
+                            $("#open-inner").empty();
+                            $("#open-inner").html('<div class="btn__label"><a href="/payment/index">Пополнить баланс</a></div>');
+                            $("#open").addClass('noclick');
+                        }
 
 
                         // You will get response from your PHP page (what you echo or print)
@@ -318,10 +327,10 @@ if(!Yii::$app->user->isGuest){
 
 
             <div class="case-page__btns">
-                <?php if($user && $user->credit > $model->price): ?>
+                <?php if($user && $user->credit >= $model->price): ?>
                 <div class="case-page__btn">
                     <button id="open" class="btn btn_size-big btn_word-wrap btn_color-success btn_uppercase btn_type-fullwidth refill">
-                        <div class="btn__content">
+                        <div id="open-inner" class="btn__content">
                             <div class="btn__label">Открыть</div>
                         </div>
                     </button>

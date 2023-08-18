@@ -717,7 +717,7 @@ class Opening extends \yii\db\ActiveRecord
             $this->updateItems($price, $winner_id, Yii::$app->user->id);
             $profile = Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
 
-            $profile->credit = $profile->credit - ($price + $this->price);
+            $profile->credit = $profile->credit - $this->price;
             $profile->save();
             return [
                 'item_id' => $winner_id,
@@ -725,7 +725,8 @@ class Opening extends \yii\db\ActiveRecord
                 'icon_url' => $item->icon_url,
                 'price' => $price,
                 'market_hash_name' => $item->market_hash_name,
-                'rarity' =>  $item->rarity
+                'rarity' =>  $item->rarity,
+                'credit' => $profile->credit
 
             ];
 
