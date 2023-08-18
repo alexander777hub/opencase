@@ -42,6 +42,7 @@ if(!Yii::$app->user->isGuest){
     $countCases = User::getUser(Yii::$app->user->getId())->getProfile()->getCountCases();
     $countContracts = User::getUser(Yii::$app->user->getId())->getProfile()->getCountContracts();
     $countUpgrades = User::getUser(Yii::$app->user->getId())->getProfile()->getCountUpgrades();
+    $countSuccessUpgrades = User::getUser(Yii::$app->user->getId())->getProfile()->getCountSuccessUpgrades();
 
 }
 
@@ -596,7 +597,7 @@ if(!Yii::$app->user->isGuest){
                             <div class="user-stat-item">
                                 <div class="user-stat-item__label">Апгрейды</div>
                                 <div class="user-stat-item__value">
-                                    <div class="user-stat-item__value-text"><!--<span>0</span>/<span class="user-stat-item__wins"> !--><?= $countUpgrades   ?></span></div>
+                                    <div class="user-stat-item__value-text"><span><?= $countSuccessUpgrades   ?></span>/<span class="user-stat-item__wins"> <?= $countUpgrades   ?></span></div>
                                     <div class="user-stat-item__value-icon icon icon_upgrades"></div>
                                 </div>
                             </div>

@@ -457,6 +457,13 @@ class Profile extends BaseProfile
         $count = \Yii::$app->db->createCommand($q)->queryOne();
         return $count['COUNT("*")'];
     }
+    public function getCountSuccessUpgrades()
+    {
+        $q = 'SELECT COUNT("*") FROM opening_item WHERE user_id=' . intval($this->user_id) . ' AND case_id=0 AND upgrade_status=1';
+
+        $count = \Yii::$app->db->createCommand($q)->queryOne();
+        return $count['COUNT("*")'];
+    }
 
 
 
