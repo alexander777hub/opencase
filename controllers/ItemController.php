@@ -104,6 +104,7 @@ class ItemController extends \yii\web\Controller
                     $model->price = $price;
                     $model->item_id = intval($item_id);
                     $model->user_id = intval(\Yii::$app->user->id);
+                    $model->upgrade_status = OpeningItem::UPGRADE_STATUS_SUCCESS;
                     $model->case_id = 0;
                     $model->save(false);
                     $oi->upgrade_status = OpeningItem::UPGRADE_STATUS_SUCCESS;
@@ -114,6 +115,8 @@ class ItemController extends \yii\web\Controller
                 }
                 $oi->save(false);
                 $upgrade->save(false);
+                $model->upgrade_id = $upgrade->id;
+                $model->save(false);
 
 
 

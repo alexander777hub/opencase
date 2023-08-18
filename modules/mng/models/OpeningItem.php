@@ -17,6 +17,7 @@ use Yii;
  * @property int|null $is_sold
  * @property int|null $contract_id
  * @property int $upgrade_status
+ * @property int|null $upgrade_id
  */
 class OpeningItem extends \yii\db\ActiveRecord
 {
