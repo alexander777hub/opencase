@@ -1,12 +1,14 @@
 <?php
 
 use app\models\Item;
+use app\modules\mng\models\OpeningItem;
 
 
 
 $icon = isset($model['icon_url']) && $model['icon_url'] ? $model['icon_url'] : '/uploads/photo/default.png';
 $show_sell_btns = false;
  $status = $model ? $model['status'] : null;
+ $upgrade_status = $model ? $model['upgrade_status'] : null;
   if(!$status) {
       $show_sell_btns = true;
   } else {
@@ -14,6 +16,9 @@ $show_sell_btns = false;
           $show_sell_btns = true;
       }
 
+  }
+  if($upgrade_status == OpeningItem::UPGRADE_STATUS_SUCCESS || $upgrade_status == OpeningItem::UPGRADE_STATUS_FAIL){
+      $show_sell_btns = false;
   }
   if($model['is_sold']){
       $show_sell_btns = false;

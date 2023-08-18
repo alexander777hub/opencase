@@ -299,6 +299,22 @@ class CreateUserController extends Controller
         die("all");
     }
 
+    public function actionUpgradeStatus()
+    {
+        $items = OpeningItem::find()->all();
+
+        foreach ($items as $item){
+            if($item->case_id == 0){
+                $item->upgrade_status = OpeningItem::UPGRADE_STATUS_SUCCESS;
+            } else {
+                $item->upgrade_status = OpeningItem::UPGRADE_STATUS_NONE;
+            }
+            $item->save(false);
+        }
+        die('updated');
+
+    }
+
     public function actionCountMarket()
     {
         $users = Profile::find()->asArray()->all();

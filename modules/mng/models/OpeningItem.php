@@ -16,9 +16,15 @@ use Yii;
  * @property int|null $count
  * @property int|null $is_sold
  * @property int|null $contract_id
+ * @property int $upgrade_status
  */
 class OpeningItem extends \yii\db\ActiveRecord
 {
+
+    const UPGRADE_STATUS_SUCCESS = 1;
+    const UPGRADE_STATUS_FAIL = 2;
+
+    const UPGRADE_STATUS_NONE = 0;
     /**
      * {@inheritdoc}
      */
