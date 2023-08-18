@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Item;
 use app\modules\mng\models\OpeningItem;
+use app\modules\mng\models\Upgrade;
 use yii\data\ActiveDataProvider;
 
 class ItemController extends \yii\web\Controller
@@ -89,12 +90,16 @@ class ItemController extends \yii\web\Controller
             if(isset($session['upgrade'])){
 
                 $session->open();
+                $item_id = $session['upgrade']['oi_to'];
+                $price = $session['upgrade']['price_to'];
                 $chance = isset($session['upgrade']['chance']) ? $session['upgrade']['chance'] : 0;
                 $win = (new Item())->getWinner($chance);
                 $oi = OpeningItem::findOne($session['upgrade']['oi_from']);
+                $upgrade = new Upgrade();
+                $upgrade->user_id = intval(\Yii::$app->user->id);
+                $upgrade->price = $price;
+                $upgrade->item_id = intval($item_id);
                 if ($win == 1) {
-                    $item_id = $session['upgrade']['oi_to'];
-                    $price = $session['upgrade']['price_to'];
                     $model = new OpeningItem();
                     $model->price = $price;
                     $model->item_id = intval($item_id);
@@ -102,10 +107,13 @@ class ItemController extends \yii\web\Controller
                     $model->case_id = 0;
                     $model->save(false);
                     $oi->upgrade_status = OpeningItem::UPGRADE_STATUS_SUCCESS;
+                    $upgrade->status = OpeningItem::UPGRADE_STATUS_SUCCESS;
                 } else {
                     $oi->upgrade_status = OpeningItem::UPGRADE_STATUS_FAIL;
+                    $upgrade->status = OpeningItem::UPGRADE_STATUS_FAIL;
                 }
                 $oi->save(false);
+                $upgrade->save(false);
 
 
 

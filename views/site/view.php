@@ -318,7 +318,7 @@ if(!Yii::$app->user->isGuest){
 
 
             <div class="case-page__btns">
-                <?php if($user && $user->credit > $model->price + 50): ?>
+                <?php if($user && $user->credit > $model->price): ?>
                 <div class="case-page__btn">
                     <button id="open" class="btn btn_size-big btn_word-wrap btn_color-success btn_uppercase btn_type-fullwidth refill">
                         <div class="btn__content">
@@ -327,7 +327,6 @@ if(!Yii::$app->user->isGuest){
                     </button>
                 </div>
                 <?php else: ?>
-
                     <div class="case-page__btns">
                         <div class="case-page__btn">
                             <?php  if(!Yii::$app->user->isGuest): ?>

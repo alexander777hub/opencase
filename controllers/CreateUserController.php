@@ -8,6 +8,7 @@ use app\models\Profile;
 use app\models\User;
 use app\modules\mng\models\MarketOrder;
 use app\modules\mng\models\OpeningItem;
+use app\modules\mng\models\Upgrade;
 use yii\web\Controller;
 
 /**
@@ -298,6 +299,24 @@ class CreateUserController extends Controller
         }
         die("all");
     }
+
+    public function actionUpgrade()
+    {
+        $items = OpeningItem::find()->where(['upgrade_status' => OpeningItem::UPGRADE_STATUS_SUCCESS ])->all();
+
+        foreach ($items as $item){
+            $up = new Upgrade();
+            $up->user_id = $item->user_id;
+            $up->price = $item->price;
+            $up->item_id = $item->id;
+            $up->status = OpeningItem::UPGRADE_STATUS_SUCCESS;
+            $up->save(false);
+        }
+        die('updated');
+
+    }
+
+
 
     public function actionUpgradeStatus()
     {
