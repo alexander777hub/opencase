@@ -14,7 +14,7 @@ class ItemController extends \yii\web\Controller
     {
         $user_id = \Yii::$app->user->getId();
 
-        $query = (new \yii\db\Query())->select(['item.id', 'item.market_hash_name', 'item.type', 'item.is_gold', 'item.icon_url', 'opening_item.price', 'opening_item.id as oi_id', 'opening_item.status as status', 'opening_item.case_id as case_id', 'opening_item.is_sold as is_sold',  'item.rarity', 'item.exterior'])->from('item')->innerJoin('opening_item', 'item.id = opening_item.item_id')->where(['opening_item.user_id'=> \Yii::$app->user->id])->orderBy(["opening_item.id" => SORT_DESC]);
+        $query = (new \yii\db\Query())->select(['item.id', 'item.market_hash_name', 'item.type', 'item.is_gold', 'item.icon_url', 'opening_item.price', 'opening_item.id as oi_id', 'opening_item.status as status', 'opening_item.case_id as case_id', 'opening_item.is_sold as is_sold',  'item.rarity', 'item.exterior'])->from('item')->innerJoin('opening_item', 'item.id = opening_item.item_id')->where(['opening_item.user_id'=> \Yii::$app->user->id, 'opening_item.is_sold' => null, 'opening_item.status'=> null])->orderBy(["opening_item.id" => SORT_DESC]);
 
 
         $myScinsDataProvider = new ActiveDataProvider([
@@ -208,7 +208,7 @@ class ItemController extends \yii\web\Controller
                 $item_to =  Item::find()->where(['id' => $session['upgrade']['oi_to']])->one();
                 $img_to = $item_to->icon_url;
                 $price_to = $session['upgrade']['price_to'];;
-                $query = (new \yii\db\Query())->select(['item.id', 'item.market_hash_name', 'item.type', 'item.is_gold', 'item.icon_url', 'opening_item.price', 'opening_item.id as oi_id', 'opening_item.status as status', 'opening_item.case_id as case_id', 'opening_item.is_sold as is_sold',  'item.rarity', 'item.exterior'])->from('item')->innerJoin('opening_item', 'item.id = opening_item.item_id')->where(['opening_item.user_id'=> \Yii::$app->user->id]);
+                $query = (new \yii\db\Query())->select(['item.id', 'item.market_hash_name', 'item.type', 'item.is_gold', 'item.icon_url', 'opening_item.price', 'opening_item.id as oi_id', 'opening_item.status as status', 'opening_item.case_id as case_id', 'opening_item.is_sold as is_sold',  'item.rarity', 'item.exterior'])->from('item')->innerJoin('opening_item', 'item.id = opening_item.item_id')->where(['opening_item.user_id'=> \Yii::$app->user->id, 'opening_item.is_sold' => null, 'opening_item.status'=> null]);
                 $query->andWhere(['<',
                     'opening_item.price', $price_to / 1.23
                 ])->andWhere(['>',
