@@ -12,7 +12,6 @@ class m230820_151733_add_contract_id_column extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('{{%opening_item}}', 'contract_id', $this->integer(11)->null());
         $this->addColumn('{{%opening_item}}', 'contract_status', $this->tinyInteger(1)->null());
 
     }
@@ -22,7 +21,6 @@ class m230820_151733_add_contract_id_column extends Migration
      */
     public function safeDown()
     {
-        $this->dropColumn('{{%opening_item}}', 'contract_id');
         $this->dropColumn('{{%opening_item}}', 'contract_status');
         return true;
     }
