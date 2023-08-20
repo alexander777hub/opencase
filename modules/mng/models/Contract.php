@@ -13,6 +13,9 @@ use Yii;
  */
 class Contract extends \yii\db\ActiveRecord
 {
+    const CONTRACT_STATUS_REPLACED = 3;
+
+    const CONTRACT_STATUS_SUCCESS = 1;
     /**
      * {@inheritdoc}
      */

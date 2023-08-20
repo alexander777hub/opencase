@@ -46,11 +46,20 @@ class RestApiController extends Controller
             $contract->save(false);
 
             $item = new OpeningItem();
+            $item->case_id = 0;
             $item->user_id = \Yii::$app->user->id;
             $item->item_id = $winner->id;
             $item->price = $winner->price;
             $item->contract_id = $contract->id;
-            $item->save();
+            $item->contract_status = Contract::CONTRACT_STATUS_SUCCESS;
+            $item->save(false);
+
+            foreach($post['ids'] as $id){
+                $oi = OpeningItem::findOne(intval($id));
+                $oi->contract_id = $contract->id;
+                $oi->contract_status = Contract::CONTRACT_STATUS_REPLACED;
+                $oi->save(false);
+            }
 
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             \Yii::$app->response->statusCode = 200;

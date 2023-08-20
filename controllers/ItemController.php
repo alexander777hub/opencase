@@ -17,7 +17,7 @@ class ItemController extends \yii\web\Controller
 
         $query = (new \yii\db\Query())->select(['item.id', 'item.market_hash_name', 'item.type', 'item.is_gold', 'item.icon_url', 'opening_item.upgrade_status', 'opening_item.price', 'opening_item.id as oi_id', 'opening_item.status as status', 'opening_item.case_id as case_id', 'opening_item.is_sold as is_sold',  'item.rarity', 'item.exterior'])->from('item')->innerJoin('opening_item', 'item.id = opening_item.item_id')->where(['opening_item.user_id'=> \Yii::$app->user->id, 'opening_item.is_sold' => null, 'opening_item.status'=> null, 'opening_item.upgrade_status'=> 0])->orderBy(["opening_item.id" => SORT_DESC]);
 
-
+      
         $myScinsDataProvider = new ActiveDataProvider([
             'query' => $query,
 
@@ -88,7 +88,7 @@ class ItemController extends \yii\web\Controller
             $session = \Yii::$app->session;
 
             if(isset($session['upgrade'])){
-
+                $model = null;
                 $session->open();
                 $item_id = $session['upgrade']['oi_to'];
                 $price = $session['upgrade']['price_to'];
@@ -107,7 +107,7 @@ class ItemController extends \yii\web\Controller
                     $model->upgrade_status = OpeningItem::UPGRADE_STATUS_SUCCESS;
                     $model->case_id = 0;
                     $model->save(false);
-                    $oi->upgrade_status = OpeningItem::UPGRADE_STATUS_SUCCESS;
+                    $oi->upgrade_status = OpeningItem::UPGRADE_STATUS_REPLACED;
                     $upgrade->status = OpeningItem::UPGRADE_STATUS_SUCCESS;
                 } else {
                     $oi->upgrade_status = OpeningItem::UPGRADE_STATUS_FAIL;
@@ -115,7 +115,7 @@ class ItemController extends \yii\web\Controller
                 }
                 $oi->save(false);
                 $upgrade->save(false);
-                if($win == 1){
+                if($model){
                     $model->upgrade_id = $upgrade->id;
                     $model->save(false);
                 }

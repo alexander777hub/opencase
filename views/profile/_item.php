@@ -9,6 +9,7 @@ $icon = isset($model['icon_url']) && $model['icon_url'] ? $model['icon_url'] : '
 $show_sell_btns = false;
  $status = $model ? $model['status'] : null;
  $upgrade_status = $model ? $model['upgrade_status'] : null;
+ $contract_status = $model ? $model['contract_status'] : null;
   if(!$status) {
       $show_sell_btns = true;
   } else {
@@ -17,12 +18,16 @@ $show_sell_btns = false;
       }
 
   }
-  if($upgrade_status == OpeningItem::UPGRADE_STATUS_SUCCESS || $upgrade_status == OpeningItem::UPGRADE_STATUS_FAIL){
+  if($upgrade_status == OpeningItem::UPGRADE_STATUS_FAIL || $upgrade_status == OpeningItem::UPGRADE_STATUS_REPLACED){
       $show_sell_btns = false;
   }
   if($model['is_sold']){
       $show_sell_btns = false;
   }
+  if($contract_status == \app\modules\mng\models\Contract::CONTRACT_STATUS_REPLACED){
+      $show_sell_btns = false;
+  }
+
 
   $oi_id = $model ? isset($model['oi_id']) : $model['oi_id'];
 

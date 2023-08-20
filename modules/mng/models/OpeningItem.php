@@ -18,10 +18,11 @@ use Yii;
  * @property int|null $contract_id
  * @property int $upgrade_status
  * @property int|null $upgrade_id
+ * @property int|null $contract_status
  */
 class OpeningItem extends \yii\db\ActiveRecord
 {
-
+    const UPGRADE_STATUS_REPLACED = 3;
     const UPGRADE_STATUS_SUCCESS = 1;
     const UPGRADE_STATUS_FAIL = 2;
 
