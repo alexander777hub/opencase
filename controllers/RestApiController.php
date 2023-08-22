@@ -152,7 +152,6 @@ class RestApiController extends Controller
                 return;
             }
 
-
             $market_hash_name =$post['market_hash_name'];
 
             $price1 = $this->actionUpdatePrice($market_hash_name);

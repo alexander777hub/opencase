@@ -726,7 +726,7 @@ class Opening extends \yii\db\ActiveRecord
                 'price' => $price,
                 'market_hash_name' => $item->market_hash_name,
                 'rarity' =>  $item->rarity,
-                'credit' => $profile->credit
+                'credit' => round($profile->credit, 2)
 
             ];
 

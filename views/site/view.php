@@ -111,6 +111,8 @@ if(!Yii::$app->user->isGuest){
                     '</div>' +
                     '</div>';
                         $("#append").prepend(html);
+                        $("#append-credit").empty();
+                        $("#append-credit").text(response.credit);
                         console.log($("#close"), "CLOSE");
                         $("#close").on("click", function(){
                             $("#winner-modal").remove();
