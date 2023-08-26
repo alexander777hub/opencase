@@ -235,7 +235,6 @@ class CaseController extends Controller
     {
        if(\Yii::$app->request->isAjax && \Yii::$app->request->isPost ){
            $data = $_POST;
-
            $id = $data['case_id'];
            $case = Opening::findOne($id);
           $result = $case->open();
