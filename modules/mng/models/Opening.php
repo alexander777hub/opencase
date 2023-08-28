@@ -645,7 +645,8 @@ class Opening extends \yii\db\ActiveRecord
         foreach($data as $val){
            $rarity_list[] = [
                'hash_name' => $val['market_hash_name'],
-               'name' => $val['rarity']
+               'name' => $val['rarity'],
+                'chance' => 0.00
            ];
         }
         foreach($rarity_list as $k=>&$val){
