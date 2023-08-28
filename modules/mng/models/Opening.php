@@ -624,8 +624,6 @@ class Opening extends \yii\db\ActiveRecord
             return false;
 
         }
-
-
         $query = (new \yii\db\Query())->select(['item_id'])->from('opening_item_init')->where(['case_id' => $this->id]);
         $command = $query->createCommand();
         $data = $command->queryAll();
@@ -653,7 +651,7 @@ class Opening extends \yii\db\ActiveRecord
         foreach($rarity_list as $k=>&$val){
             foreach(self::getRarityList() as $key => $value){
                 if($val['name'] == $value['name']){
-                    if(strpos($val['market_hash_name'], 'StatTrak')) {
+                    if(strpos($val['hash_name'], 'StatTrak')) {
                         $val['chance'] = 0.023;
                         continue;
                     }
