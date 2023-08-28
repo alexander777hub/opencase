@@ -72,17 +72,16 @@ class OpeningItemForm extends BaseObject
 
     public function create()
     {
-        $cases = self::getCase();
-        $ids = array_unique(array_merge($cases, $this->model->item_ids));
+        //убираем автоподбор по требованию клиента
+     //   $cases = self::getCase();
+        $ids = array_unique($this->model->item_ids);
         foreach($ids as $item){
             $model = new OpeningItemInit();
 
             $model->case_id = $this->model->id;
             $model->item_id = $item;
             $model->price = $this->model->price;
-
             $model->save(false);
-
         }
     }
 }

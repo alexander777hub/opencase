@@ -122,7 +122,8 @@ class SiteController extends Controller
             $openid = new LightOpenID(Yii::$app->params['domain']);
             if (!$openid->mode) {
                 $openid->identity = 'http://steamcommunity.com/openid/?l=russian';
-                header('Location: ' . $openid->authUrl());
+                return $this->redirect($openid->authUrl());
+               // header('Location: ' . $openid->authUrl());
             } elseif ($openid->mode == 'cancel') {
                 header('Location: /'); // здесь можно редиректить пользователя, если он начал процесс авторизации через steam, но отказался от него
             } elseif ($openid->validate()) {

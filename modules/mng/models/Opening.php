@@ -46,6 +46,14 @@ class Opening extends \yii\db\ActiveRecord
     {
         return [
             [
+                'name' => 'Rarity_Rare_Character',
+                'chance' =>  0.023,
+            ],
+            [
+                'name' => 'Rarity_Common',
+                'chance' => 79.98,
+            ],
+            [
                 'name' => 'Rarity_Common_Weapon',
                 'chance' => 79.98,
             ],
@@ -601,7 +609,7 @@ class Opening extends \yii\db\ActiveRecord
             }
         }
         if(!$winItem){
-           $winItem = $list[1];
+           return 'Rarity_Common_Weapon';
         }
 
         return $winItem['name'];
@@ -617,32 +625,53 @@ class Opening extends \yii\db\ActiveRecord
 
         }
 
-        $rarityList = self::getRarityList();
-        $winItemByRarity = $this->winItemBy($rarityList);
-        $winItemByExterior = $this->winItemBy(self::getExteriorList());
-        if(!$winItemByRarity || $winItemByRarity == "Rarity_Mythical" || $winItemByRarity == "Rarity_Legendary") { // костыль
-            $winItemByRarity = self::getRarityList()[0]['name'];
-        }
-        if(!$winItemByExterior) {
-            $winItemByExterior = self::getExteriorList()[0]['name'];
-        }
 
         $query = (new \yii\db\Query())->select(['item_id'])->from('opening_item_init')->where(['case_id' => $this->id]);
         $command = $query->createCommand();
         $data = $command->queryAll();
+
         $arr_ids = [];
         foreach($data as $val){
             $arr_ids[] = intval($val['item_id']);
         }
+        //rarity_list
+
+
+
+        $query = (new \yii\db\Query())->select(['*'])->from('item')->where(['id'=> $arr_ids]);
+
+
+        $q = $query->createCommand()->getRawSql();
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+        foreach($data as $val){
+           $rarity_list[] = [
+               'hash_name' => $val['market_hash_name'],
+               'name' => $val['rarity']
+           ];
+        }
+        foreach($rarity_list as $k=>&$val){
+            foreach(self::getRarityList() as $key => $value){
+                if($val['name'] == $value['name']){
+                    if(strpos($val['market_hash_name'], 'StatTrak')) {
+                        $val['chance'] = 0.023;
+                        continue;
+                    }
+                    $val['chance'] = $value['chance'];
+                }
+            }
+        }
+
+        $winItemByRarity = $this->winItemBy($rarity_list);
+        $winItemByExterior = $this->winItemBy(self::getExteriorList());
 
         $w = $winItemByRarity;
         $e = $winItemByExterior;
         try {
             $query = (new \yii\db\Query())->select(['*'])->from('item')->where(['rarity' => $winItemByRarity])->andWhere(['id'=> $arr_ids]);
+            $q = $query->createCommand()->getRawSql();
             $command = $query->createCommand();
             $data = $command->queryAll();
-
-            $ids = [];
 
         } catch(\Exception $exception) {
             $err = $exception;
@@ -652,29 +681,18 @@ class Opening extends \yii\db\ActiveRecord
             var_dump($w);
             exit;
         }
-
         if(!empty($data)){
-            $byRar = [];
-            foreach ($data as $item) {
-                if ($item['rarity'] != "Rarity_Rare_Weapon") {
-                    $byRar[] = $item['id'];
-                }
-
-                if ($item['exterior'] == $winItemByExterior) {
-                    $ids[] = $item['id'];
-                }
+            if(count($data) > 1) {
+                $winner_item = $data[mt_rand(0, (count($data)-1))];
+            } else {
+                $winner_item = $data[0];
             }
+            $winner_id_pos = array_search(intval($winner_item['id']), $arr_ids);
 
-            if (empty($ids)) {
-                $id = $byRar[mt_rand(0, count($byRar) - 1)];
-                foreach ($data as $item) {
-                    if ($item['id'] == $id) {
-                        $ids[] = $item['id'];
-                    }
-                }
-            }
-            $winner_id = $ids[mt_rand(0, (count($ids)-1))];
+            $winner_id = $arr_ids[$winner_id_pos];
+
             $item = Item::findOne($winner_id);
+
             $client = new \GuzzleHttp\Client([
                 'timeout' => 60,
                 'debug' => false,
@@ -731,12 +749,9 @@ class Opening extends \yii\db\ActiveRecord
             ];
 
         }
-
         var_dump($winItemByRarity);
         var_dump($winItemByExterior);
-        echo 'RESTART';
         $this->open();
-
 
     }
 
