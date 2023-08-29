@@ -437,10 +437,10 @@ class Profile extends BaseProfile
     }
     public function getCountCases()
     {
-        $q = 'SELECT COUNT(case_id) FROM opening_user WHERE user_id=' . intval($this->user_id) . '';
+        $q = 'SELECT COUNT("*") FROM opening_item WHERE user_id=' . intval($this->user_id) . '  AND case_id>0';
 
         $count = \Yii::$app->db->createCommand($q)->queryOne();
-        return $count['COUNT(case_id)'];
+        return $count['COUNT("*")'];
     }
     public function getCountContracts()
     {
