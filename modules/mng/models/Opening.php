@@ -488,13 +488,13 @@ class Opening extends \yii\db\ActiveRecord
                if($val == $winner_id){
                    foreach($this->user_ids as $k=>$user_id){
                        if(!in_array(intval($user_id), $values_users)){
-                           $query = (new \yii\db\Query())->select(['id'])->from('opening_item')->where(['case_id' => $this->id, 'item_id' => intval($val), 'user_id' => intval($user_id), 'price'=> $insertPrice]);
-
-                           $command = $query->createCommand();
-                           $data = $command->queryAll();
+                           //дубли можно по указанию клиента
+                         //  $query = (new \yii\db\Query())->select(['id'])->from('opening_item')->where(['case_id' => $this->id, 'item_id' => intval($val), 'user_id' => intval($user_id), 'price'=> $insertPrice]);
+                        //   $command = $query->createCommand();
+                        /*   $data = $command->queryAll();
                            if(!empty($data)){
                                continue;
-                           }
+                           } */
                            if($user_winner_id && $user_id != $user_winner_id){
                                continue;
                            }

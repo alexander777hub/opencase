@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Item;
+use app\modules\mng\models\Contract;
 use app\modules\mng\models\OpeningItem;
 use app\modules\mng\models\Upgrade;
 use yii\data\ActiveDataProvider;
@@ -15,7 +16,9 @@ class ItemController extends \yii\web\Controller
     {
         $user_id = \Yii::$app->user->getId();
 
-        $query = (new \yii\db\Query())->select(['item.id', 'item.market_hash_name', 'item.type', 'item.is_gold', 'item.icon_url', 'opening_item.upgrade_status', 'opening_item.contract_status as status', 'opening_item.price', 'opening_item.id as oi_id', 'opening_item.status as status', 'opening_item.case_id as case_id', 'opening_item.is_sold as is_sold',  'item.rarity', 'item.exterior'])->from('item')->innerJoin('opening_item', 'item.id = opening_item.item_id')->where(['opening_item.user_id'=> \Yii::$app->user->id, 'opening_item.is_sold' => null, 'opening_item.status'=> null, 'opening_item.upgrade_status'=> [0,1]])->orderBy(["opening_item.id" => SORT_DESC]);
+        $query = (new \yii\db\Query())->select(['item.id', 'item.market_hash_name', 'item.type', 'item.is_gold', 'item.icon_url', 'opening_item.upgrade_status', 'opening_item.price', 'opening_item.id as oi_id', 'opening_item.status as status', 'opening_item.case_id as case_id', 'opening_item.is_sold as is_sold',  'item.rarity', 'item.exterior'])->from('item')->innerJoin('opening_item', 'item.id = opening_item.item_id')->where(['opening_item.user_id'=> \Yii::$app->user->id, 'opening_item.is_sold' => null, 'opening_item.status'=> null, 'opening_item.upgrade_status'=> [0,1]])->andWhere(['in', 'opening_item.contract_status', [null, Contract::CONTRACT_STATUS_SUCCESS]])->orderBy([ "opening_item.id" => SORT_DESC]);
+        $q = $query->createCommand()->getRawSql();
+
 
       
         $myScinsDataProvider = new ActiveDataProvider([
