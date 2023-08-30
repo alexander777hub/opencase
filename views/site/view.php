@@ -201,9 +201,7 @@ if(!Yii::$app->user->isGuest){
 </script>
 <style>
     @import url('https://fonts.googleapis.com/css?family=Arvo');
-    body {
-        background: rgb(25,25,33);
-    }
+
     .raffle-roller {
         height: 100px;
         position: relative;
@@ -447,7 +445,7 @@ if(!Yii::$app->user->isGuest){
             </div>
         </div>
     </div>
-    <div class="raffle-roller">
+<!--    <div class="raffle-roller">
         <div class="raffle-roller-holder">
             <div class="raffle-roller-container" style="margin-left: 0px;">
             </div>
@@ -458,7 +456,7 @@ if(!Yii::$app->user->isGuest){
 <button id="generate">go</button>
 
     <br>
-    <div class="inventory"></div>
+    <div class="inventory"></div>  !-->
 
 
 
