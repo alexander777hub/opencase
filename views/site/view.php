@@ -168,6 +168,7 @@ if(!Yii::$app->user->isGuest){
             setTimeout(function() {
                 $('#CardNumber78').addClass('winning-item');
                 $('#rolled').html(skin);
+                $('#win').text('Ваш выигрыш');
                 var win_element = "<div class='item class_red_item' style='background-image: url("+skinimg+")'></div>";
                 $(win_element).appendTo('.inventory');
             }, 8500);
@@ -434,7 +435,7 @@ if(!Yii::$app->user->isGuest){
             </div>
         </div>
     </div>
-    <center><span style="font-size: 25px;">Ваш выигрыш <span style="
+    <center><span id="win" style="font-size: 25px;"> <span style="
     color: green;" id="rolled"></span>
 <br>
 
