@@ -233,9 +233,9 @@ class CaseController extends Controller
 
     public function actionOpen()
     {
-       if(\Yii::$app->request->isAjax && \Yii::$app->request->isPost ){
+       if(\Yii::$app->request->isAjax && \Yii::$app->request->isPost){
            $data = $_POST;
-           $id = $data['case_id'];
+           $id = intval($data['case_id']);
            $case = Opening::findOne($id);
           $result = $case->open();
            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

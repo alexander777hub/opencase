@@ -26,6 +26,8 @@ if(!Yii::$app->user->isGuest){
 
 
     $(document).ready(function(){
+        let img_array = '<?= $img_array    ?>';
+        let img_object = JSON.parse(img_array);
         let case_price = '<?= $model->price   ?>';
         var items = $('.js_class');
 
@@ -62,81 +64,7 @@ if(!Yii::$app->user->isGuest){
             parent.addClass(jsClass);
         });
 
-        $(document).on({
-            ajaxStart: function(){
-                $("body").addClass("loading");
-            },
-            ajaxStop: function(){
-                $("body").removeClass("loading");
-            }
-        });
-            $("#open").on("click", function(){
-                if($(this).hasClass('noclick')){
-                    return;
-                }
-
-                var case_id = "<?= $model ?  $model->id : null ?>";
-                console.log("OPEN", case_id);
-
-                $.ajax({
-                    url: "/mng/case/open",
-
-                    type: "post",
-                    data:  {
-                        case_id : case_id,
-                    }
-                    ,
-                    success: function (response) {
-                        console.log(response, "RESPONSE");
-
-                        var html = '<div id="winner-modal" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" style="display: block;">' +
-                            '<div class="modal-dialog modal-dialog-centered" role="document">' +
-                            '<div class="modal-content">' +
-                            '<div style="color: red" class="modal-body">' +
-                                    'Выигрыш:' + response.market_hash_name +
-                                '<div id="win">' +
-                                    '<p>Имя предмета :' + response.market_hash_name +'</p>  <br>'+
-                                    '<p>Цена предмета : ' + response.price +'</p>' +
-                                 /*   '<p>Rarity : ' + response.rarity +'</p>' + */
-                                '</div>' +
-                            '</div>' +
-                            '<div class="card" style="width: 18rem;">' +
-                                '<img class="card-img-top" src='+ response.icon_url +' alt="Card image cap">' +
-
-                            '</div>' +
-                        '<div class="modal-footer">' +
-                            '<button id="close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>' +
-
-                        '</div>' +
-                    '</div>' +
-                    '</div>';
-                        $("#append").prepend(html);
-                        $("#append-credit").empty();
-                        $("#append-credit").text(response.credit);
-                        console.log($("#close"), "CLOSE");
-                        $("#close").on("click", function(){
-                            $("#winner-modal").remove();
-                        })
-                        if(response.credit < case_price){
-                            $("#open-inner").empty();
-                            $("#open-inner").html('<div class="btn__label"><a href="/payment/index">Пополнить баланс</a></div>');
-                            $("#open").addClass('noclick');
-                        }
-
-
-                        // You will get response from your PHP page (what you echo or print)
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log(textStatus, errorThrown);
-                    }
-                });
-            });
-            $("#generate").on("click", function(){
-                generate(1);
-            });
-
-
-        var items = {
+        let itemsRoll = {
             simple: {
                 skin: "M4A1-S | Cyrex",
                 img: "https://steamcdn-a.akamaihd.net/apps/730/icons/econ/default_generated/weapon_m4a1_silencer_cu_m4a1s_cyrex_light_large.144b4053eb73b4a47f8128ebb0e808d8e28f5b9c.png"
@@ -150,31 +78,88 @@ if(!Yii::$app->user->isGuest){
                 img: "https://steamcdn-a.akamaihd.net/apps/730/icons/econ/default_generated/weapon_m4a1_cu_m4_asimov_light_large.af03179f3d43ff55b0c3d114c537eac77abdb6cf.png"
             }
         };
+
+
+            $("#open").on("click", function(){
+                if($(this).hasClass('noclick')){
+                    return;
+                }
+                generate(1);
+
+                var case_id = "<?= $model ?  $model->id : null ?>";
+                console.log("OPEN", case_id);
+
+                $.ajax({
+                    url: "/mng/case/open",
+
+                    type: "post",
+                    data:  {
+                        case_id : case_id,
+                    },
+                    beforeSend: function() {
+                        alert("HEHE");
+                        $('.raffle-roller-container').css({
+                            transition: "all 8s cubic-bezier(.08,.6,0,1)"
+                        });
+                        $('.raffle-roller-container').css('margin-left', '-3000px');
+                        setTimeout(function() {
+                            $('.raffle-roller-container').css('margin-left', '-6620px');
+                        }, 5000);
+
+                    },
+
+                    success: function (response) {
+                        console.log(response, "RESPONSE");
+                        $('.raffle-roller-container').stop();
+                        goRoll(response.market_hash_name, response.icon_url);
+
+                        $("#append-credit").empty();
+                        $("#append-credit").text(response.credit);
+                        console.log($("#close"), "CLOSE");
+                        $("#close").on("click", function(){
+                            $("#winner-modal").remove();
+                        })
+                        if(response.credit < case_price){
+                            $("#open-inner").empty();
+                            $("#open-inner").html('<div class="btn__label"><a href="/payment/index">Пополнить баланс</a></div>');
+                            $("#open").addClass('noclick');
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
+            });
+            $("#generate").on("click", function(){
+                generate(1);
+            });
+
         function generate(ng) {
             $('.raffle-roller-container').css({
                 transition: "sdf",
                 "margin-left": "0px"
             }, 10).html('');
-            var randed2 = prompt('enter skin(1-asiimov,3-cyrex,2-chantico)','');
-            for(var i = 0;i < 101; i++) {
-                var element = '<div id="CardNumber'+i+'" class="item class_red_item" style="background-image:url('+items.simple.img+');"></div>';
+            let len = 0;
+            while (len < 101){
+                $.each(img_object, function(key,val) {
+                    var element = '<div data-name="' + key +'" id="CardNumber'+len+'" class="item class_red_item" style="background-image:url('+val+');"></div>';
+                    console.log(key, val);
+                    $(element).appendTo('.raffle-roller-container');
+                    len++;
+                });
+            }
+
+           /* for(var i = 0;i < 101; i++) {
+                var element = '<div id="CardNumber'+i+'" class="item class_red_item" style="background-image:url('+itemsRoll.simple.img+');"></div>';
                 var randed = randomInt(1,1000);
                 if(randed < 50) {
-                    element = '<div id="CardNumber'+i+'" class="item class_red_item" style="background-image:url('+items.super.img+');"></div>';
+                    element = '<div id="CardNumber'+i+'" class="item class_red_item" style="background-image:url('+itemsRoll.super.img+');"></div>';
                 } else if(500 < randed) {
-                    element = '<div id="CardNumber'+i+'" class="item class_red_item" style="background-image:url('+items.middle.img+');"></div>';
+                    element = '<div id="CardNumber'+i+'" class="item class_red_item" style="background-image:url('+itemsRoll.middle.img+');"></div>';
                 }
                 $(element).appendTo('.raffle-roller-container');
-            }
-            setTimeout(function() {
-                if(randed2 == 2) {
-                    goRoll(items.middle.skin, items.middle.img);
-                } else if(randed2 == 1) {
-                    goRoll(items.super.skin, items.super.img);
-                } else {
-                    goRoll(items.simple.skin, items.simple.img);
-                }
-            }, 500);
+            } */
+
         }
         function goRoll(skin, skinimg) {
             $('.raffle-roller-container').css({
@@ -189,18 +174,19 @@ if(!Yii::$app->user->isGuest){
                 var win_element = "<div class='item class_red_item' style='background-image: url("+skinimg+")'></div>";
                 $(win_element).appendTo('.inventory');
             }, 8500);
-            $('.raffle-roller-container').css('margin-left', '-6620px');
+            $('.raffle-roller-container').css('margin-left', '-6620px')
         }
         function randomInt(min, max) {
             return Math.floor(Math.random() * (max - min)) + min;
         }
-
 
     })
 
 </script>
 <style>
     @import url('https://fonts.googleapis.com/css?family=Arvo');
+
+
 
     .raffle-roller {
         height: 100px;
@@ -445,18 +431,19 @@ if(!Yii::$app->user->isGuest){
             </div>
         </div>
     </div>
-<!--    <div class="raffle-roller">
+    <div class="raffle-roller">
         <div class="raffle-roller-holder">
             <div class="raffle-roller-container" style="margin-left: 0px;">
             </div>
         </div>
     </div>
-    <center><span style="font-size: 25px;">You winning is <span style="color: green;" id="rolled">rolling</span>
+    <center><span style="font-size: 25px;">You winning is <span style="
+    color: green;" id="rolled">rolling</span>
 <br>
 <button id="generate">go</button>
 
     <br>
-    <div class="inventory"></div>  !-->
+    <div class="inventory"></div>
 
 
 

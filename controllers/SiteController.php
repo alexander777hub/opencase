@@ -15,6 +15,7 @@ use SteamWebApi\SteamWebApi;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -110,10 +111,15 @@ class SiteController extends Controller
         ]);
 
         $m = $dataProvider->getModels();
+        $img_array = [];
+        foreach ($dataProvider->getModels() as $item){
+            $img_array[ $item['market_hash_name']] = $item['icon_url'];
+        }
 
         return $this->render('view', [
             'model' => $model,
             'dataProvider' => $dataProvider,
+            'img_array' => Json::encode($img_array)
         ]);
     }
     public function actionSteam()
