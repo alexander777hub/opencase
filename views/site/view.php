@@ -170,7 +170,7 @@ if(!Yii::$app->user->isGuest){
                 $('#rolled').html(skin);
                 $('#win-item').remove();
 
-                $('#win').prepend('<p id="win-item">Ваш выигрыш</p><br>');
+                $('#win').prepend('<div id="win-item"><p>Ваш выигрыш</p><br></div>');
                 var win_element = "<div class='item class_red_item' style='background-image: url("+skinimg+")'></div>";
                 $(win_element).appendTo('.inventory');
             }, 8500);
