@@ -168,7 +168,7 @@ if(!Yii::$app->user->isGuest){
             setTimeout(function() {
                 $('#CardNumber78').addClass('winning-item');
                 $('#rolled').html(skin);
-                $('#win').text('Ваш выигрыш');
+                $('#win').prepend('Ваш выигрыш');
                 var win_element = "<div class='item class_red_item' style='background-image: url("+skinimg+")'></div>";
                 $(win_element).appendTo('.inventory');
             }, 8500);
