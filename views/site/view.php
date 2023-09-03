@@ -101,7 +101,6 @@ if(!Yii::$app->user->isGuest){
                         case_id : case_id,
                     },
                     beforeSend: function() {
-                        alert("HEHE");
                         $('.raffle-roller-container').css({
                             transition: "all 8s cubic-bezier(.08,.6,0,1)"
                         });
