@@ -11,8 +11,12 @@ use app\models\Userform;
 
 
 $user = null;
+
 if(!Yii::$app->user->isGuest){
     $user = Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
+} else {
+    $img_array = '';
+    $rand_expensive = '';
 }
 ?>
 
@@ -111,7 +115,7 @@ if(!Yii::$app->user->isGuest){
                     success: function (response) {
                         console.log(response, "RESPONSE");
                         $('.raffle-roller-container').stop();
-                        goRoll(response.market_hash_name, response.icon_url);
+                        goRoll(response.market_hash_name, response.icon_url, response.is_cheap);
 
                         $("#append-credit").empty();
                         $("#append-credit").text(response.credit);
@@ -148,20 +152,14 @@ if(!Yii::$app->user->isGuest){
                     len++;
                 });
             }
-
-           /* for(var i = 0;i < 101; i++) {
-                var element = '<div id="CardNumber'+i+'" class="item class_red_item" style="background-image:url('+itemsRoll.simple.img+');"></div>';
-                var randed = randomInt(1,1000);
-                if(randed < 50) {
-                    element = '<div id="CardNumber'+i+'" class="item class_red_item" style="background-image:url('+itemsRoll.super.img+');"></div>';
-                } else if(500 < randed) {
-                    element = '<div id="CardNumber'+i+'" class="item class_red_item" style="background-image:url('+itemsRoll.middle.img+');"></div>';
-                }
-                $(element).appendTo('.raffle-roller-container');
-            } */
-
         }
-        function goRoll(skin, skinimg) {
+        function goRoll(skin, skinimg, is_cheap) {
+            if(is_cheap == 1){
+                let rand_expensive = '<?=  $rand_expensive  ?>';
+                var html = '<div id="CardNumber77" class="item class_red_item" style="background-image:url('+rand_expensive+');"></div>';
+                $("#CardNumber77").css("background-image", "url(" + rand_expensive + ")");
+            }
+
             $('.raffle-roller-container').css({
                 transition: "all 8s cubic-bezier(.08,.6,0,1)"
             });
@@ -437,10 +435,9 @@ if(!Yii::$app->user->isGuest){
             </div>
         </div>
     </div>
-    <center><span style="font-size: 25px;">You winning is <span style="
-    color: green;" id="rolled">rolling</span>
+    <center><span style="font-size: 25px;">Ваш выигрыш <span style="
+    color: green;" id="rolled"></span>
 <br>
-<button id="generate">go</button>
 
     <br>
     <div class="inventory"></div>

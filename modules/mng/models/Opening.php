@@ -736,6 +736,10 @@ class Opening extends \yii\db\ActiveRecord
 
             $profile->credit = $profile->credit - $this->price;
             $profile->save();
+            $is_cheap = 0;
+            if($item->rarity == 'Rarity_Common' || $item->rarity == 'Rarity_Common_Weapon'||  $item->rarity == 'Rarity_Mythical' || $item->rarity == 'Rarity_Legendary'){
+                $is_cheap = 1;
+            }
             return [
                 'item_id' => $winner_id,
                 'user_id' => intval(Yii::$app->user->id),
@@ -743,7 +747,8 @@ class Opening extends \yii\db\ActiveRecord
                 'price' => $price,
                 'market_hash_name' => $item->market_hash_name,
                 'rarity' =>  $item->rarity,
-                'credit' => round($profile->credit, 2)
+                'credit' => round($profile->credit, 2),
+                'is_cheap' => $is_cheap
 
             ];
 

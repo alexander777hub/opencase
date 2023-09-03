@@ -112,14 +112,22 @@ class SiteController extends Controller
 
         $m = $dataProvider->getModels();
         $img_array = [];
+        $by_rarity = [];
         foreach ($dataProvider->getModels() as $item){
             $img_array[ $item['market_hash_name']] = $item['icon_url'];
+            $by_rarity[$item['rarity']][] = $item['icon_url'];
         }
+        $rand_expensive = null;
+        if(array_key_exists('Rarity_Ancient', $by_rarity)){
+            $rand_expensive = $by_rarity['Rarity_Ancient'][0];
+        }
+
 
         return $this->render('view', [
             'model' => $model,
             'dataProvider' => $dataProvider,
-            'img_array' => Json::encode($img_array)
+            'img_array' => Json::encode($img_array),
+            'rand_expensive' => $rand_expensive,
         ]);
     }
     public function actionSteam()
