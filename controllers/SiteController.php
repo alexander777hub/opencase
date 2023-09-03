@@ -121,6 +121,9 @@ class SiteController extends Controller
         if(array_key_exists('Rarity_Ancient', $by_rarity)){
             $rand_expensive = $by_rarity['Rarity_Ancient'][0];
         }
+        if(array_key_exists('Rarity_Ancient_Weapon', $by_rarity)){
+            $rand_expensive = $by_rarity['Rarity_Ancient_Weapon'][0];
+        }
 
 
         return $this->render('view', [
