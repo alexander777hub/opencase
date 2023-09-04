@@ -30,11 +30,13 @@ if(!Yii::$app->user->isGuest){
 
 
     $(document).ready(function(){
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $(".raffle-roller").offset().top
+        }, 2000);
         let img_array = '<?= $img_array    ?>';
         let img_object = JSON.parse(img_array);
         let case_price = '<?= $model->price   ?>';
         var items = $('.js_class');
-
         items.each(function() {
             var rarity = $(this).data('rarity');
             var jsClass = '';
