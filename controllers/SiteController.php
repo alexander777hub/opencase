@@ -114,7 +114,7 @@ class SiteController extends Controller
         $img_array = [];
         $by_rarity = [];
         foreach ($dataProvider->getModels() as $item){
-            $img_array[ $item['market_hash_name']] = $item['icon_url'];
+            $img_array[ !$item['is_gold'] ? $item['rarity'] : 'Special_Gold'] = $item['icon_url'];
             $by_rarity[$item['rarity']][] = $item['icon_url'];
         }
         $rand_expensive = null;

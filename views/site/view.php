@@ -30,9 +30,6 @@ if(!Yii::$app->user->isGuest){
 
 
     $(document).ready(function(){
-        $([document.documentElement, document.body]).animate({
-            scrollTop: $(".raffle-roller").offset().top
-        }, 2000);
         let img_array = '<?= $img_array    ?>';
         let img_object = JSON.parse(img_array);
         let case_price = '<?= $model->price   ?>';
@@ -69,13 +66,14 @@ if(!Yii::$app->user->isGuest){
             var parent = $( this ).closest(".items-incase__item");
             parent.addClass(jsClass);
         });
-
-
             $("#open").on("click", function(){
+
                 if($(this).hasClass('noclick')){
                     return;
                 }
-                generate(1);
+                reset();
+
+                generate();
 
                 var case_id = "<?= $model ?  $model->id : null ?>";
                 console.log("OPEN", case_id);
@@ -91,24 +89,19 @@ if(!Yii::$app->user->isGuest){
                         $('.raffle-roller-container').css({
                             transition: "all 8s cubic-bezier(.08,.6,0,1)"
                         });
-                        $('.raffle-roller-container').css('margin-left', '-3000px');
-                        setTimeout(function() {
-                            $('.raffle-roller-container').css('margin-left', '-6620px');
-                        }, 5000);
-
+                        $('.raffle-roller-container').animate({marginLeft: "-=1000px"}, 10000);
                     },
 
                     success: function (response) {
                         console.log(response, "RESPONSE");
                         $('.raffle-roller-container').stop();
-                        goRoll(response.market_hash_name, response.icon_url, response.is_cheap);
+                        goRoll(response.market_hash_name, response.icon_url, response.is_cheap, response.price);
+                    //  $('#rolled').html(response.market_hash_name);
+                        //$('#win-item').remove();
 
                         $("#append-credit").empty();
                         $("#append-credit").text(response.credit);
-                        console.log($("#close"), "CLOSE");
-                        $("#close").on("click", function(){
-                            $("#winner-modal").remove();
-                        })
+
                         if(response.credit < case_price){
                             $("#open-inner").empty();
                             $("#open-inner").html('<div class="btn__label"><a href="/payment/index">Пополнить баланс</a></div>');
@@ -120,54 +113,89 @@ if(!Yii::$app->user->isGuest){
                     }
                 });
             });
-            $("#generate").on("click", function(){
-                generate(1);
-            });
 
-        function generate(ng) {
-            $('.raffle-roller-container').css({
-                transition: "sdf",
-                "margin-left": "0px"
-            }, 10).html('');
+        function generate() {
             let len = 0;
             while (len < 101){
                 $.each(img_object, function(key,val) {
-                    var element = '<div data-name="' + key +'" id="CardNumber'+len+'" class="item class_red_item" style="background-image:url('+val+');"></div>';
-                    console.log(key, val);
+                    var jsClass = '';
+                    switch (key){
+                        case 'Rarity_Common_Weapon':
+                            jsClass = 'rarity_common_weapon';
+                            break;
+                        case 'Rarity_Mythical':
+                            jsClass = 'rarity_mythical';
+                            break;
+                        case 'Rarity_Legendary':
+                            jsClass = 'rarity_legendary';
+                            break;
+                        case 'Rarity_Ancient':
+                            jsClass = 'rarity_ancient';
+                            break;
+                        case 'Rarity_Ancient_Weapon':
+                            jsClass = 'rarity_ancient_weapon';
+                            break;
+                        case 'Rarity_Rare_Weapon':
+                            jsClass = 'rarity_rare_weapon';
+                            break;
+                        case 'Special_Gold':
+                            jsClass = 'rarity_special_gold';
+                            break;
+                        default:
+                            break;
+
+                    }
+                    var element = '<div data-name="' + key +'" id="CardNumber'+len+'" class="item'
+                        + ' ' + jsClass+'" style="background-image:url('+val+');"></div>';
+
                     $(element).appendTo('.raffle-roller-container');
                     len++;
                 });
             }
         }
-        function goRoll(skin, skinimg, is_cheap) {
-            if(is_cheap == 1){
-                let rand_expensive = '<?=  $rand_expensive  ?>';
-                var html = '<div id="CardNumber77" class="item class_red_item" style="background-image:url('+rand_expensive+');"></div>';
-                $("#CardNumber77").css("background-image", "url(" + rand_expensive + ")");
-            }
+        function reset(){
+            var html = '<div class="raffle-roller">' +
+                '<div class="raffle-roller-holder">' +
+                '<div class="raffle-roller-container" style="margin-left: 0px;">' +
+                '</div>' +
+                '</div>' +
+                '</div>';
 
-            $('.raffle-roller-container').css({
-                transition: "all 8s cubic-bezier(.08,.6,0,1)"
-            });
-            $('#CardNumber78').css({
-                "background-image": "url("+skinimg+")"
-            });
-            setTimeout(function() {
-                $('#CardNumber78').addClass('winning-item');
-                $('#rolled').html(skin);
-                $('#win-item').remove();
-
-                $('#win').prepend('<div id="win-item"><p>Ваш выигрыш</p><br></div>');
-                var win_element = "<div class='item class_red_item' style='background-image: url("+skinimg+")'></div>";
-                $(win_element).appendTo('.inventory');
-            }, 8500);
-            $('.raffle-roller-container').css('margin-left', '-6620px')
+            $(".case-page__roulette").empty();
+            $(".case-page__roulette").html(html);
         }
-        function randomInt(min, max) {
-            return Math.floor(Math.random() * (max - min)) + min;
-        }
+    function goRoll(skin, skinimg, is_cheap, price) {
 
-    })
+             if(is_cheap == 1){
+                 let rand_expensive = '<?=  $rand_expensive  ?>';
+                console.log(rand_expensive, "RAND");
+                 var html = '<div id="CardNumber77" class="item" style="background-image:url('+rand_expensive+');"></div>';
+                 $("#CardNumber77").css("background-image", "url(" + rand_expensive + ")");
+                 //background-color: #bf161c;
+                 $("#CardNumber77").css("background-color", "#bf161c");
+             }
+
+             $('.raffle-roller-container').css({
+                 transition: "all 8s cubic-bezier(.08,.6,0,1)"
+             });
+             $('#CardNumber78').css({
+                 "background-image": "url("+skinimg+")"
+             });
+
+             $('.raffle-roller-container').animate({marginLeft: "-=6590px"}, 3000, function(){
+
+             });
+             setTimeout(function() {
+                 $('#CardNumber78').addClass('winning-item');
+             }, 2000);
+        setTimeout(function() {
+            $('#rolled').html('<p>' + skin +'</p><br>Цена: ' + price + 'Р');
+        }, 10000);
+
+
+
+    }
+    });
 
 </script>
 <style>
@@ -230,7 +258,8 @@ if(!Yii::$app->user->isGuest){
         height: 88px;
         float: left;
         border: 1px solid #70677c;
-        background: #14202b;
+
+
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center;
@@ -416,21 +445,9 @@ if(!Yii::$app->user->isGuest){
             </div>
         </div>
     </div>
-    <div class="raffle-roller">
-        <div class="raffle-roller-holder">
-            <div class="raffle-roller-container" style="margin-left: 0px;">
-            </div>
-        </div>
-    </div>
     <center><span  id="win" style="font-size: 25px;"> <span style="
-    color: green;" id="rolled"></span>
+    color: green;" id="rolled"></span></span></center>
 <br>
-
-    <br>
-    <div class="inventory"></div>
-
-
-
 
     <div class="case-page__roulette">
         <div class="roulette roulette_awaiting">
