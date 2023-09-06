@@ -253,12 +253,12 @@ if(!Yii::$app->user->isGuest){
                  "background-image": "url("+skinimg+")"
              });
 
-             $('.raffle-roller-container').animate({marginLeft: "-=6590px"}, 3000, function(){
+             $('.raffle-roller-container').animate({marginLeft: "-=31100px"}, 3000, function(){
 
              });
 
         setTimeout(function() {
-            $('#rolled').html('<p>' + skin +'</p><br>Цена: ' + price + 'Р');
+            $('#rolled').html('<p>' + skin +'</p>');
             $('#CardNumber78').addClass('winning-item');
             $(".case-page__btns").empty();
             var html = '<div class="case-page__btn">' +
@@ -284,7 +284,7 @@ if(!Yii::$app->user->isGuest){
 <style>
     @import url('https://fonts.googleapis.com/css?family=Arvo');
     .raffle-roller {
-        height: 100px;
+        height: 250px;
         position: relative;
         margin: 60px auto 30px auto;
         width: 900px;
@@ -295,7 +295,7 @@ if(!Yii::$app->user->isGuest){
         left: 0;
         right: 0;
         bottom: 0;
-        height: 100px;
+        height: inherit;
         width: 100%;
     }
     .raffle-roller-holder {
@@ -303,19 +303,11 @@ if(!Yii::$app->user->isGuest){
         border-radius: 2px;
         border: 1px solid #3c3759;
     }
-    .raffle-roller-holder {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 100px;
-        width: 100%;
-    }
+
     .raffle-roller-container {
         width: 9999999999999999999px;
         max-width: 999999999999999999px;
-        height: 100px;
+        height: inherit;
         background: #191726;
         margin-left: 0;
         transition: all 8s cubic-bezier(.08,.6,0,1);
@@ -326,7 +318,7 @@ if(!Yii::$app->user->isGuest){
         border: none;
         z-index: 12222225;
         width: 5px;
-        height: 100%;
+        height: inherit%;
         left: 50%;
         background: #d16266;
     }
@@ -334,54 +326,24 @@ if(!Yii::$app->user->isGuest){
         display: inline-block;
         float: left;
         margin: 4px 0px 0.5px 5px;
-        width: 85px;
-        height: 88px;
+        width: 400px;
+        height: inherit;
         float: left;
         border: 1px solid #70677c;
-
-
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center;
     }
-    .class_red_item {
-        border-bottom: 4px solid #EB4B4B;
-    }
+
     img {
         border: 0;
         vertical-align: middle;
     }
     .winning-item {
-        border: 2px solid #66b233;
+        border: 4px solid #66b233;
         position: relative;
         top: -1px;
         border-bottom: 4px solid #66b233;
-    }
-    .inventory {
-        margin: 0 auto;
-        width: 960px;
-        max-width: 953px;
-        padding: 10px 15px 6px;
-        height: auto;
-        border: 2px solid #1c3344;
-        background: #0e1a23;
-    }
-    .inventory > .item {
-        float: none;
-        cursor: pointer;
-        margin: 4px 2px 0.5px 2px;
-    }
-    .inventory > .item:hover {
-        background-size: 90%;
-        background-color: #182a38;
-    }
-    .inventory > .item:active {
-        height: 83px;
-        width: 80px;
-        position: relative;
-        top: -2px;
-        border: 2px solid #356d27;
-        border-bottom: 4px solid #356d27;
     }
     .pagination {
         display: -webkit-box;
