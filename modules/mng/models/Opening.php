@@ -504,22 +504,14 @@ class Opening extends \yii\db\ActiveRecord
                 //        ' . intval($val) . ',  ' . intval($user_id) . ', ' . $insertPrice .  ')';
 
                            Yii::$app->db->createCommand($q)->execute();
-                           break;
+                           $id = Yii::$app->db->getLastInsertID();
+                           return $id;
                        }
                    }
                }
 
 
            }
-          /* if (in_array(intval($val), $values)) {
-               continue;
-           } else {
-
-
-           }
-
-           $v = $values; */
-
        }
 
 
@@ -731,7 +723,7 @@ class Opening extends \yii\db\ActiveRecord
             $this->user_ids[] = intval(Yii::$app->user->id);
 
             $this->updateUsers();
-            $this->updateItems($price, $winner_id, Yii::$app->user->id);
+            $oi_id = $this->updateItems($price, $winner_id, Yii::$app->user->id);
             $profile = Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
 
             $profile->credit = $profile->credit - $this->price;
@@ -741,6 +733,7 @@ class Opening extends \yii\db\ActiveRecord
                 $is_cheap = 1;
             }
             return [
+                'oi_id' => $oi_id,
                 'item_id' => $winner_id,
                 'user_id' => intval(Yii::$app->user->id),
                 'icon_url' => $item->icon_url,

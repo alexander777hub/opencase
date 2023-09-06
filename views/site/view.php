@@ -67,67 +67,123 @@ if(!Yii::$app->user->isGuest){
             parent.addClass(jsClass);
         });
             $("#open").on("click", function(){
-
                 if($(this).hasClass('noclick')){
                     return;
                 }
-                reset();
-                generate();
-               /* $(".case-page__btns").empty();
-                var html = '<div class="case-page__btn">' +
-                    '<button class="btn btn_size-big btn_word-wrap btn_color-success btn_uppercase btn_type-fullwidth refill">' +
-                    '<div class="btn__content">' +
-                    '<div class="btn__label">Попробовать еще </div>' +
-                    '</div>' +
-                    '</button>' +
-                    '</div>' +
-                    '<div class="case-page__btn">' +
-                    '<button class="btn btn_size-big btn_word-wrap btn_color-primary btn_uppercase btn_type-fullwidth">' +
-                        '<div class="btn__content">' +
-                            '<div class="btn__label">Не хватает <i class="price price-RUB">78.46</i></div>' +
-                        '</div>' +
-                    '</button>' +
-                '</div>';
-                $(".case-page__btns").html(html); */
+                $("#open").css("display", "none");
+                open();
 
-                var case_id = "<?= $model ?  $model->id : null ?>";
-                console.log("OPEN", case_id);
+            });
+            $(document).on("click", "#again", function(){
+                console.log("again");
+                var credit = $("#append-credit").text();
+                console.log("credit", credit);
+                if(credit < case_price){
+                    var diff =  case_price - case_price;
+                    var html =    '<div class="case-page__btn">' +
+                            '<button class="btn btn_size-big btn_word-wrap btn_color-success btn_uppercase btn_type-fullwidth" disabled="">' +
+                                '<div class="btn__content">' +
+                                    '<div class="btn__label">Не хватает <i class="price price-RUB">'+ diff + '</i></div>' +
+                                '</div>' +
+                            '</button>' +
+                        '</div>' +
+                        '<div class="case-page__btn">' +
+                            '<button class="btn btn_size-big btn_word-wrap btn_color-success btn_uppercase btn_type-fullwidth refill">' +
+                                '<div class="btn__content">' +
+                                    '<div class="btn__label"><a href="/payment/index">Пополнение баланса</div>' +
+                                '</div>' +
+                            '</button>' +
+                        '</div>';
+                    $("#case-page__btns").empty();
+                    $("#case-page__btns").html(html);
+                } else {
+                    open();
+                }
+            })
+
+        $(document).on('click', '#tosell', function(){
+            var oi_id = $(this).data('oi');
+            var price = $(this).data('price');
+            var item_id = $(this).data('item');
+            var user_id = '<?= Yii::$app->user->id    ?>';
+
+            console.log($("#sell"), "SELL");
+            $("#sell").css("display", "block");
+            $("#append-sell-text").text("Вы действительно хотите продать этот предмет за " +  price);
+            data = {
+                price: price,
+                oi_id: oi_id,
+                user_id: user_id,
+                item_id: item_id
+
+            };
+            $(document).on("click", "#close-sell", function(){
+                $("#sell").css("display", "none");
+            });
+
+            $("#confirm-sell").on("click", function(){
 
                 $.ajax({
-                    url: "/mng/case/open",
+                    url: "/rest-api/sell",
 
                     type: "post",
-                    data:  {
-                        case_id : case_id,
-                    },
-                    beforeSend: function() {
-                        $('.raffle-roller-container').css({
-                            transition: "all 8s cubic-bezier(.08,.6,0,1)"
-                        });
-                        $('.raffle-roller-container').animate({marginLeft: "-=1000px"}, 10000);
-                    },
+
+                    data: data,
+
 
                     success: function (response) {
                         console.log(response, "RESPONSE");
-                        $('.raffle-roller-container').stop();
-                        goRoll(response.market_hash_name, response.icon_url, response.is_cheap, response.price);
-                    //  $('#rolled').html(response.market_hash_name);
-                        //$('#win-item').remove();
 
+                        $("#sell").css("display", "none");
+                        $("#tosell").css("display", "none");
                         $("#append-credit").empty();
-                        $("#append-credit").text(response.credit);
+                        $("#append-credit").text(response.profile_credit);
+                        $("#balance-left").empty();
+                        $("#balance-left").text(response.profile_credit);
 
-                        if(response.credit < case_price){
-                            $("#open-inner").empty();
-                            $("#open-inner").html('<div class="btn__label"><a href="/payment/index">Пополнить баланс</a></div>');
-                            $("#open").addClass('noclick');
-                        }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         console.log(textStatus, errorThrown);
                     }
                 });
             });
+        })
+
+        function open() {
+            reset();
+            generate();
+            var case_id = "<?= $model ?  $model->id : null ?>";
+            console.log("OPEN", case_id);
+
+            $.ajax({
+                url: "/mng/case/open",
+
+                type: "post",
+                data:  {
+                    case_id : case_id,
+                },
+                beforeSend: function() {
+                    $('.raffle-roller-container').css({
+                        transition: "all 8s cubic-bezier(.08,.6,0,1)"
+                    });
+                    $('.raffle-roller-container').animate({marginLeft: "-=1000px"}, 10000);
+                },
+
+                success: function (response) {
+                    console.log(response, "RESPONSE");
+                    $('.raffle-roller-container').stop();
+                    goRoll(response.market_hash_name, response.icon_url, response.is_cheap, response.price, response.oi_id, response.item_id);
+
+                    $("#append-credit").empty();
+                    $("#append-credit").text(response.credit);
+
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
 
         function generate() {
             let len = 0;
@@ -179,7 +235,7 @@ if(!Yii::$app->user->isGuest){
             $(".case-page__roulette").empty();
             $(".case-page__roulette").html(html);
         }
-    function goRoll(skin, skinimg, is_cheap, price) {
+    function goRoll(skin, skinimg, is_cheap, price, oi_id, item_id) {
 
              if(is_cheap == 1){
                  let rand_expensive = '<?=  $rand_expensive  ?>';
@@ -204,6 +260,22 @@ if(!Yii::$app->user->isGuest){
         setTimeout(function() {
             $('#rolled').html('<p>' + skin +'</p><br>Цена: ' + price + 'Р');
             $('#CardNumber78').addClass('winning-item');
+            $(".case-page__btns").empty();
+            var html = '<div class="case-page__btn">' +
+                '<button id="again" class="btn btn_size-big btn_word-wrap btn_color-success btn_uppercase btn_type-fullwidth refill">' +
+                '<div class="btn__content">' +
+                '<div class="btn__label">Попробовать еще </div>' +
+                '</div>' +
+                '</button>' +
+                '</div>' +
+                '<div class="case-page__btn">' +
+                '<button data-item="'+ item_id +'" data-price="'+ price +'" data-oi="'+ oi_id+'" id="tosell" class="btn btn_size-big btn_word-wrap btn_color-primary btn_uppercase btn_type-fullwidth">' +
+                '<div class="btn__content">' +
+                '<div class="btn__label">Продать за <i class="price price-RUB">' + price + '</i></div>' +
+                '</div>' +
+                '</button>' +
+                '</div>';
+            $(".case-page__btns").html(html);
         }, 10000);
     }
     });
@@ -475,7 +547,7 @@ if(!Yii::$app->user->isGuest){
     <div class="case-page__actions">
         <div class="buttons-incase">
 
-            <div class="farmcase-picker">
+        <!--    <div class="farmcase-picker">
 
                 <div class="farmcase-picker__btn farmcase-amount active" data-farmamount="1"><span>x1</span></div>
 
@@ -497,7 +569,7 @@ if(!Yii::$app->user->isGuest){
 
                 <div class="farmcase-picker__btn farmcase-amount" data-farmamount="10"><span>x10</span></div>
 
-            </div>
+            </div> !-->
 
 
             <div class="case-page__btns">
