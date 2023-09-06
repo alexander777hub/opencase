@@ -78,7 +78,9 @@ if(!Yii::$app->user->isGuest){
                 console.log("again");
                 var credit = $("#append-credit").text();
                 console.log("credit", credit);
+                console.log(case_price, "PRICE");
                 if(credit < case_price){
+                    console.log("HERE1");
                     var diff =  case_price - case_price;
                     var html =    '<div class="case-page__btn">' +
                             '<button class="btn btn_size-big btn_word-wrap btn_color-success btn_uppercase btn_type-fullwidth" disabled="">' +
@@ -97,7 +99,7 @@ if(!Yii::$app->user->isGuest){
                     $("#case-page__btns").empty();
                     $("#case-page__btns").html(html);
                 } else {
-                    console.log("HERE");
+                    console.log("HERE2");
                     open();
                 }
             })
