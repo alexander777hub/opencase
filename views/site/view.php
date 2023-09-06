@@ -79,6 +79,7 @@ if(!Yii::$app->user->isGuest){
                 var credit = $("#append-credit").text();
                 console.log("credit", credit);
                 console.log(case_price, "PRICE");
+                $(".case-page__btns").empty();
                 if(parseFloat(credit) < parseFloat(case_price)){
                     console.log("HERE1");
                     var diff =  case_price - case_price;
@@ -96,8 +97,8 @@ if(!Yii::$app->user->isGuest){
                                 '</div>' +
                             '</button>' +
                         '</div>';
-                    $("#case-page__btns").empty();
-                    $("#case-page__btns").html(html);
+
+                    $(".case-page__btns").html(html);
                 } else {
                     console.log("HERE2");
                     open();
