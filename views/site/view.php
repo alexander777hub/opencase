@@ -79,7 +79,7 @@ if(!Yii::$app->user->isGuest){
                 var credit = $("#append-credit").text();
                 console.log("credit", credit);
                 console.log(case_price, "PRICE");
-                if(credit < case_price){
+                if(parseFloat(credit) < parseFloat(case_price)){
                     console.log("HERE1");
                     var diff =  case_price - case_price;
                     var html =    '<div class="case-page__btn">' +
