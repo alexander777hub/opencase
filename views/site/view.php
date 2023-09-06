@@ -97,6 +97,7 @@ if(!Yii::$app->user->isGuest){
                     $("#case-page__btns").empty();
                     $("#case-page__btns").html(html);
                 } else {
+                    console.log("HERE");
                     open();
                 }
             })
