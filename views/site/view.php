@@ -82,7 +82,7 @@ if(!Yii::$app->user->isGuest){
                 $(".case-page__btns").empty();
                 if(parseFloat(credit) < parseFloat(case_price)){
                     console.log("HERE1");
-                    var diff =  case_price - case_price;
+                    var diff =  parseFloat(case_price) - parseFloat(case_price);
                     var html =    '<div class="case-page__btn">' +
                             '<button class="btn btn_size-big btn_word-wrap btn_color-success btn_uppercase btn_type-fullwidth" disabled="">' +
                                 '<div class="btn__content">' +
