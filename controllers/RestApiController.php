@@ -5,6 +5,7 @@ namespace app\controllers;
 
 use app\models\Item;
 use app\models\Profile;
+use app\modules\mng\models\Bank;
 use app\modules\mng\models\Contract;
 use app\modules\mng\models\MarketOrder;
 use app\modules\mng\models\OpeningItem;
@@ -123,6 +124,10 @@ class RestApiController extends Controller
             $profile->credit = $profile->credit + floatval($post['price']);
 
             $profile->save(false);
+
+            $account = Bank::find()->one();
+            $account->account = $account->account + floatval($post['price']);
+            $account->save(false);
 
             $q = 'UPDATE `opening_item` SET is_sold=1 WHERE
                     `opening_item`.`id` = ' . intval($post['oi_id']) . '

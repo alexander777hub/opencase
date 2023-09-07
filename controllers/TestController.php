@@ -11,6 +11,7 @@ use app\models\Userform;
 use app\models\UserformAncetSearch;
 use app\models\UserformManager;
 use app\models\UserformSearch;
+use app\modules\mng\models\Bank;
 use Yii;
 use yii\data\ActiveDataFilter;
 use yii\helpers\Json;
@@ -62,6 +63,16 @@ class TestController extends \yii\web\Controller
             throw new NotFoundHttpException("Not found");
         }
 
+    }
+
+    public function actionBank()
+    {
+        $amount = 133000.00;
+        $bank = new Bank();
+        $bank->add($amount);
+        var_dump($bank->account);
+        var_dump($bank->profit);
+        exit;
     }
 
 }

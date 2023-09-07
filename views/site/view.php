@@ -175,6 +175,10 @@ if(!Yii::$app->user->isGuest){
 
                 success: function (response) {
                     console.log(response, "RESPONSE");
+                    if(response.error){
+                        alert("No money in bank");
+                        window.location.reload();
+                    }
                     $('.raffle-roller-container').stop();
                     goRoll(response.market_hash_name, response.icon_url, response.is_cheap, response.price, response.oi_id, response.item_id);
 

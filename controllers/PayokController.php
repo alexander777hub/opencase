@@ -5,6 +5,7 @@ namespace app\controllers;
 
 use app\models\PayokOrder;
 use app\models\User;
+use app\modules\mng\models\Bank;
 use dektrium\user\models\Profile;
 use yii\helpers\Json;
 use yii\helpers\Url;
@@ -101,6 +102,10 @@ class PayokController extends \yii\web\Controller
                 if ($profile && isset($post['profit'])) {
                     $profile->credit = $profile->credit + $post['profit'];
                     $profile->save(false);
+
+                    $bank = new Bank();
+                    $bank->add($post['profit']);
+
                 }
             }
 

@@ -717,7 +717,15 @@ class Opening extends \yii\db\ActiveRecord
                     echo "NO data for item" . '' . $item->market_hash_name . '<br>';
                 }
             }
-            $price = $arr[0];
+             $price = $arr[0];
+             $account = Bank::find()->one();
+             if($price > $account->account){
+                 return [
+                     "error" => 'Please wait. No money in the bank'
+                 ];
+             }
+             $account->account = $account->account - floatval($price);
+             $account->save(false);
             $this->setUsers();
             $this->setItems();
             $this->user_ids[] = intval(Yii::$app->user->id);
@@ -748,6 +756,7 @@ class Opening extends \yii\db\ActiveRecord
         }
         var_dump($winItemByRarity);
         var_dump($winItemByExterior);
+        \Yii::info("RETRY");
         $this->open();
 
     }

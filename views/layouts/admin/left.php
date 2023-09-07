@@ -40,6 +40,7 @@ use app\models\User;
                 'items' => [
                     ['label' => 'Управление', 'options' => ['class' => 'header']],
                     ['label' => 'Кейсы', 'icon' => 'user-o', 'url' => ['/mng/case/index'], 'visible' =>  Yii::$app->user->can('administrator')],
+                    ['label' => 'Банк', 'icon' => 'user-o', 'url' => ['/mng/bank/index'], 'visible' =>  Yii::$app->user->can('administrator')],
                     ['label' => 'Предметы', 'icon' => 'user-o', 'url' => ['/mng/item/index'], 'visible' =>  Yii::$app->user->can('administrator')],
                     [
                         'label' => 'Системные шаблоны',

@@ -5,6 +5,7 @@ namespace app\controllers;
 
 use app\models\CrystalOrder;
 use app\models\PayokOrder;
+use app\modules\mng\models\Bank;
 use dektrium\user\models\Profile;
 use yii\helpers\Url;
 
@@ -59,6 +60,8 @@ class CrystalController extends \yii\web\Controller
             if ($profile && $pay_amount) {
                 $profile->credit = $profile->credit + $pay_amount;
                 $profile->save(false);
+                $bank = new Bank();
+                $bank->add($pay_amount);
             }
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             \Yii::$app->response->statusCode = 200;
